@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -35,18 +35,18 @@ import blanco.commons.util.BlancoVbSourceUtil;
 
 /**
  * blancoCgのソースコード関連ユーティリティです。
- * 
+ *
  * このクラスはプログラミング言語を超えて利用されます。
- * 
+ *
  * @author IGA Tosiki
  */
 public class BlancoCgSourceUtil {
     /**
      * 与えられた文字列をソースコード文字列として出力するものとしてエスケープ処理します。
-     * 
+     *
      * ￥/バックスラッシュのエスケープおよび改行コードのエスケープを行います。<br>
      * それ以外の処理は行いません。たとえばインジェクション攻撃などへの耐性は、このメソッドは扱いません。
-     * 
+     *
      * @param targetLang
      *            出力対象のプログラミング言語。
      * @param originalString
@@ -59,6 +59,7 @@ public class BlancoCgSourceUtil {
         case BlancoCgSupportedLang.JAVA:
         case BlancoCgSupportedLang.CS:
         case BlancoCgSupportedLang.JS:
+        case BlancoCgSupportedLang.KOTLIN:
             return BlancoJavaSourceUtil
                     .escapeStringAsJavaSource(originalString);
         case BlancoCgSupportedLang.VB:
@@ -78,9 +79,9 @@ public class BlancoCgSourceUtil {
 
     /**
      * 与えられた文字列を言語ドキュメント文字列として扱うことができるように エスケープ処理します。
-     * 
+     *
      * JavaDoc文字列としてエスケープを行います。 HTMLとしてのエスケープと同等の処理が行われます。＜＞＆”がエスケープされます。
-     * 
+     *
      * @param targetLang
      *            出力対象のプログラミング言語。
      * @param originalString
@@ -99,20 +100,21 @@ public class BlancoCgSourceUtil {
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.SWIFT:
-            return BlancoJavaSourceUtil.escapeStringAsJavaDoc(originalString);
+        case BlancoCgSupportedLang.KOTLIN:
+                return BlancoJavaSourceUtil.escapeStringAsJavaDoc(originalString);
         default:
             throw new IllegalArgumentException(
                     "BlancoCgSourceUtil.escapeStringAsLangDoc にサポートされない言語("
                             + targetLang + ")が引数として与えられました。");
         }
     }
-    
+
     /**
      * 与えられた文字列をDelphiソースコード文字列として出力するためのエスケープ処理をします。
-     * 
+     *
      * ￥/バックスラッシュのエスケープおよび改行コードのエスケープを行います。<br>
      * それ以外の処理は行いません。たとえばインジェクション攻撃などへの耐性は、このメソッドは扱いません。
-     * 
+     *
      * @param originalString
      *            入力文字列
      * @return エスケープ処理が行われた後の文字列

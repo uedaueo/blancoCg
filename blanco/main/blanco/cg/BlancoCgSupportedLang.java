@@ -1,12 +1,3 @@
-/*
- * blanco Framework
- * Copyright (C) 2004-2009 IGA Tosiki
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- */
 package blanco.cg;
 
 /**
@@ -62,6 +53,11 @@ public class BlancoCgSupportedLang {
      * No.10 説明:Swift言語。
      */
     public static final int SWIFT = 10;
+
+    /**
+     * No.11 説明:Kotlin言語。
+     */
+    public static final int KOTLIN = 11;
 
     /**
      * 未定義。文字列グループ以外の文字列または定数が未定義のもの。
@@ -125,6 +121,11 @@ public class BlancoCgSupportedLang {
         if ("swift".equals(argCheck)) {
             return true;
         }
+        // No.11
+        // 説明:Kotlin言語。
+        if ("kotlin".equals(argCheck)) {
+            return true;
+        }
         return false;
     }
 
@@ -183,6 +184,11 @@ public class BlancoCgSupportedLang {
         // No.10
         // 説明:Swift言語。
         if ("swift".equalsIgnoreCase(argCheck)) {
+            return true;
+        }
+        // No.11
+        // 説明:Kotlin言語。
+        if ("kotlin".equalsIgnoreCase(argCheck)) {
             return true;
         }
         return false;
@@ -247,6 +253,11 @@ public class BlancoCgSupportedLang {
         if ("swift".equals(argCheck)) {
             return SWIFT;
         }
+        // No.11
+        // 説明:Kotlin言語。
+        if ("kotlin".equals(argCheck)) {
+            return KOTLIN;
+        }
 
         // 該当する定数が見つかりませんでした。
         return NOT_DEFINED;
@@ -310,6 +321,11 @@ public class BlancoCgSupportedLang {
         // 説明:Swift言語。
         if (argCheck == SWIFT) {
             return "swift";
+        }
+        // No.11
+        // 説明:Kotlin言語。
+        if (argCheck == KOTLIN) {
+            return "kotlin";
         }
         // 未定義。
         if (argCheck == NOT_DEFINED) {

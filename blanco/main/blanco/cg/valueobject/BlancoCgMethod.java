@@ -1,12 +1,3 @@
-/*
- * blanco Framework
- * Copyright (C) 2004-2009 IGA Tosiki
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- */
 package blanco.cg.valueobject;
 
 import java.util.List;
@@ -620,22 +611,62 @@ public class BlancoCgMethod {
         target.fStaticInitializer = this.fStaticInitializer;
         // Name: fParameterList
         // Type: java.util.List
-        // フィールド[fParameterList]はサポート外の型[java.util.List]です。
+        if (this.fParameterList != null) {
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgParameter> iterator = this.fParameterList.iterator();
+            for (; iterator.hasNext();) {
+                blanco.cg.valueobject.BlancoCgParameter loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgParameter loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgParameter]です。
+                target.fParameterList.add(loopTarget);
+            }
+        }
         // Name: fReturn
         // Type: blanco.cg.valueobject.BlancoCgReturn
         // フィールド[fReturn]はサポート外の型[blanco.cg.valueobject.BlancoCgReturn]です。
         // Name: fThrowList
         // Type: java.util.List
-        // フィールド[fThrowList]はサポート外の型[java.util.List]です。
+        if (this.fThrowList != null) {
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgException> iterator = this.fThrowList.iterator();
+            for (; iterator.hasNext();) {
+                blanco.cg.valueobject.BlancoCgException loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgException loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgException]です。
+                target.fThrowList.add(loopTarget);
+            }
+        }
         // Name: fAnnotationList
         // Type: java.util.List
-        // フィールド[fAnnotationList]はサポート外の型[java.util.List]です。
+        if (this.fAnnotationList != null) {
+            final java.util.Iterator<java.lang.String> iterator = this.fAnnotationList.iterator();
+            for (; iterator.hasNext();) {
+                java.lang.String loopSource = iterator.next();
+                java.lang.String loopTarget = null;
+                loopTarget = loopSource;
+                target.fAnnotationList.add(loopTarget);
+            }
+        }
         // Name: fLocalVariableList
         // Type: java.util.List
-        // フィールド[fLocalVariableList]はサポート外の型[java.util.List]です。
+        if (this.fLocalVariableList != null) {
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgLocalVariable> iterator = this.fLocalVariableList.iterator();
+            for (; iterator.hasNext();) {
+                blanco.cg.valueobject.BlancoCgLocalVariable loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgLocalVariable loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgLocalVariable]です。
+                target.fLocalVariableList.add(loopTarget);
+            }
+        }
         // Name: fLineList
         // Type: java.util.List
-        // フィールド[fLineList]はサポート外の型[java.util.List]です。
+        if (this.fLineList != null) {
+            final java.util.Iterator<java.lang.String> iterator = this.fLineList.iterator();
+            for (; iterator.hasNext();) {
+                java.lang.String loopSource = iterator.next();
+                java.lang.String loopTarget = null;
+                loopTarget = loopSource;
+                target.fLineList.add(loopTarget);
+            }
+        }
         // Name: fSuperclassInvocation
         // Type: java.lang.String
         target.fSuperclassInvocation = this.fSuperclassInvocation;

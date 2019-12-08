@@ -1,12 +1,3 @@
-/*
- * blanco Framework
- * Copyright (C) 2004-2009 IGA Tosiki
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- */
 package blanco.cg.valueobject;
 
 import java.util.List;
@@ -258,6 +249,14 @@ public class BlancoCgParameter {
         target.fNotnull = this.fNotnull;
         // Name: fAnnotationList
         // Type: java.util.List
-        // フィールド[fAnnotationList]はサポート外の型[java.util.List]です。
+        if (this.fAnnotationList != null) {
+            final java.util.Iterator<java.lang.String> iterator = this.fAnnotationList.iterator();
+            for (; iterator.hasNext();) {
+                java.lang.String loopSource = iterator.next();
+                java.lang.String loopTarget = null;
+                loopTarget = loopSource;
+                target.fAnnotationList.add(loopTarget);
+            }
+        }
     }
 }

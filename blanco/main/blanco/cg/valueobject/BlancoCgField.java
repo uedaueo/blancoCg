@@ -1,12 +1,3 @@
-/*
- * blanco Framework
- * Copyright (C) 2004-2009 IGA Tosiki
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- */
 package blanco.cg.valueobject;
 
 import java.util.List;
@@ -56,12 +47,28 @@ public class BlancoCgField {
     private boolean fStatic = false;
 
     /**
-     * finalかどうかをあらわします。
+     * finalかどうかをあらわします。（kotlinではフィールドのoverrideが可能なので、この修飾子は定数を表しません。）
      *
      * フィールド: [final]。
      * デフォルト: [false]。
      */
     private boolean fFinal = false;
+
+    /**
+     * 親クラスのfieldをoverrideしているかどうかを表します。（kotlin専用）
+     *
+     * フィールド: [override]。
+     * デフォルト: [false]。
+     */
+    private boolean fOverride = false;
+
+    /**
+     * 定数かどうかを表します。（Javaではfinalを使用します。）
+     *
+     * フィールド: [const]。
+     * デフォルト: [false]。
+     */
+    private boolean fConst = false;
 
     /**
      * デフォルト値をあらわします。
@@ -202,7 +209,7 @@ public class BlancoCgField {
     /**
      * フィールド [final] の値を設定します。
      *
-     * フィールドの説明: [finalかどうかをあらわします。]。
+     * フィールドの説明: [finalかどうかをあらわします。（kotlinではフィールドのoverrideが可能なので、この修飾子は定数を表しません。）]。
      *
      * @param argFinal フィールド[final]に設定する値。
      */
@@ -213,13 +220,59 @@ public class BlancoCgField {
     /**
      * フィールド [final] の値を取得します。
      *
-     * フィールドの説明: [finalかどうかをあらわします。]。
+     * フィールドの説明: [finalかどうかをあらわします。（kotlinではフィールドのoverrideが可能なので、この修飾子は定数を表しません。）]。
      * デフォルト: [false]。
      *
      * @return フィールド[final]から取得した値。
      */
     public boolean getFinal() {
         return fFinal;
+    }
+
+    /**
+     * フィールド [override] の値を設定します。
+     *
+     * フィールドの説明: [親クラスのfieldをoverrideしているかどうかを表します。（kotlin専用）]。
+     *
+     * @param argOverride フィールド[override]に設定する値。
+     */
+    public void setOverride(final boolean argOverride) {
+        fOverride = argOverride;
+    }
+
+    /**
+     * フィールド [override] の値を取得します。
+     *
+     * フィールドの説明: [親クラスのfieldをoverrideしているかどうかを表します。（kotlin専用）]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[override]から取得した値。
+     */
+    public boolean getOverride() {
+        return fOverride;
+    }
+
+    /**
+     * フィールド [const] の値を設定します。
+     *
+     * フィールドの説明: [定数かどうかを表します。（Javaではfinalを使用します。）]。
+     *
+     * @param argConst フィールド[const]に設定する値。
+     */
+    public void setConst(final boolean argConst) {
+        fConst = argConst;
+    }
+
+    /**
+     * フィールド [const] の値を取得します。
+     *
+     * フィールドの説明: [定数かどうかを表します。（Javaではfinalを使用します。）]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[const]から取得した値。
+     */
+    public boolean getConst() {
+        return fConst;
     }
 
     /**
@@ -314,6 +367,8 @@ public class BlancoCgField {
         buf.append(",access=" + fAccess);
         buf.append(",static=" + fStatic);
         buf.append(",final=" + fFinal);
+        buf.append(",override=" + fOverride);
+        buf.append(",const=" + fConst);
         buf.append(",default=" + fDefault);
         buf.append(",annotationList=" + fAnnotationList);
         buf.append(",langDoc=" + fLangDoc);
@@ -357,12 +412,26 @@ public class BlancoCgField {
         // Name: fFinal
         // Type: boolean
         target.fFinal = this.fFinal;
+        // Name: fOverride
+        // Type: boolean
+        target.fOverride = this.fOverride;
+        // Name: fConst
+        // Type: boolean
+        target.fConst = this.fConst;
         // Name: fDefault
         // Type: java.lang.String
         target.fDefault = this.fDefault;
         // Name: fAnnotationList
         // Type: java.util.List
-        // フィールド[fAnnotationList]はサポート外の型[java.util.List]です。
+        if (this.fAnnotationList != null) {
+            final java.util.Iterator<java.lang.String> iterator = this.fAnnotationList.iterator();
+            for (; iterator.hasNext();) {
+                java.lang.String loopSource = iterator.next();
+                java.lang.String loopTarget = null;
+                loopTarget = loopSource;
+                target.fAnnotationList.add(loopTarget);
+            }
+        }
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。

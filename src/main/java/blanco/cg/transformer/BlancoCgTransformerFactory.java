@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -31,6 +31,7 @@ import blanco.cg.transformer.cs.BlancoCgCsSourceTransformer;
 import blanco.cg.transformer.delphi.BlancoCgDelphiSourceTransformer;
 import blanco.cg.transformer.java.BlancoCgJavaSourceTransformer;
 import blanco.cg.transformer.js.BlancoCgJsSourceTransformer;
+import blanco.cg.transformer.kotlin.BlancoCgKotlinSourceTransformer;
 import blanco.cg.transformer.php.BlancoCgPhpSourceTransformer;
 import blanco.cg.transformer.python.BlancoCgPythonSourceTransformer;
 import blanco.cg.transformer.ruby.BlancoCgRubySourceTransformer;
@@ -39,16 +40,16 @@ import blanco.cg.transformer.vb.BlancoCgVbSourceTransformer;
 
 /**
  * BlancoCgTransformerを取得するためのファクトリです。
- * 
+ *
  * BlancoCgTransformerは、blancoCgのバリューオブジェクトをソースコードに変換します。
  * 現在の仕様では、変換時にバリューオブジェクトの内容が更新されるため、ソースコード変換は１度しか実行できない点にご注意下さい。
- * 
+ *
  * @author IGA Tosiki
  */
 public class BlancoCgTransformerFactory {
     /**
      * 指定されたプログラミング言語に対応したトランスフォーマーを取得します。
-     * 
+     *
      * @param targetLang
      *            取得したいトランスフォーマのプログラミング言語。BlancoCgSupportedLangで指定します。
      * @return ソースコード変換のためのトランスフォーマー。
@@ -85,7 +86,7 @@ public class BlancoCgTransformerFactory {
 
     /**
      * Javaソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return Java言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getJavaSourceTransformer() {
@@ -94,7 +95,7 @@ public class BlancoCgTransformerFactory {
 
     /**
      * C#.NETソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return C#.NET言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getCsSourceTransformer() {
@@ -103,7 +104,7 @@ public class BlancoCgTransformerFactory {
 
     /**
      * JavaScriptソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return JavaScript言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getJsSourceTransformer() {
@@ -112,7 +113,7 @@ public class BlancoCgTransformerFactory {
 
     /**
      * VB.NETソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return VB.NET言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getVbSourceTransformer() {
@@ -121,7 +122,7 @@ public class BlancoCgTransformerFactory {
 
     /**
      * PHPソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return PHP言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getPhpSourceTransformer() {
@@ -129,9 +130,9 @@ public class BlancoCgTransformerFactory {
     }
 
     /**
-     * 
+     *
      * Rubyソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return Ruby言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getRubySourceTransformer() {
@@ -139,18 +140,18 @@ public class BlancoCgTransformerFactory {
     }
 
     /**
-     * 
+     *
      * Pythonソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return Python言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getPythonSourceTransformer() {
         return new BlancoCgPythonSourceTransformer();
     }
- 
+
     /**
      * Delphiソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return Delphi言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getDelphiSourceTransformer() {
@@ -159,7 +160,7 @@ public class BlancoCgTransformerFactory {
 
     /**
      * C++11 ソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return C++11 言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getCpp11SourceTransformer() {
@@ -168,10 +169,19 @@ public class BlancoCgTransformerFactory {
 
     /**
      * Swift ソースコードを生成するトランスフォーマーを取得します。
-     * 
+     *
      * @return Swift 言語ソースコードを生成するトランスフォーマー。
      */
     public static BlancoCgTransformer getSwiftSourceTransformer() {
         return new BlancoCgSwiftSourceTransformer();
+    }
+
+    /**
+     * Kotlin ソースコードを生成するトランスフォーマーを取得します。
+     *
+     * @return Kotlin 言語ソースコードを生成するトランスフォーマー。
+     */
+    public static BlancoCgTransformer getKotlinSourceTransformer() {
+        return new BlancoCgKotlinSourceTransformer();
     }
 }

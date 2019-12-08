@@ -1,12 +1,3 @@
-/*
- * blanco Framework
- * Copyright (C) 2004-2009 IGA Tosiki
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- */
 package blanco.cg.valueobject;
 
 import java.util.List;
@@ -352,19 +343,51 @@ public class BlancoCgInterface {
         target.fGenerics = this.fGenerics;
         // Name: fExtendClassList
         // Type: java.util.List
-        // フィールド[fExtendClassList]はサポート外の型[java.util.List]です。
+        if (this.fExtendClassList != null) {
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgType> iterator = this.fExtendClassList.iterator();
+            for (; iterator.hasNext();) {
+                blanco.cg.valueobject.BlancoCgType loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgType loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgType]です。
+                target.fExtendClassList.add(loopTarget);
+            }
+        }
         // Name: fAccess
         // Type: java.lang.String
         target.fAccess = this.fAccess;
         // Name: fAnnotationList
         // Type: java.util.List
-        // フィールド[fAnnotationList]はサポート外の型[java.util.List]です。
+        if (this.fAnnotationList != null) {
+            final java.util.Iterator<java.lang.String> iterator = this.fAnnotationList.iterator();
+            for (; iterator.hasNext();) {
+                java.lang.String loopSource = iterator.next();
+                java.lang.String loopTarget = null;
+                loopTarget = loopSource;
+                target.fAnnotationList.add(loopTarget);
+            }
+        }
         // Name: fFieldList
         // Type: java.util.List
-        // フィールド[fFieldList]はサポート外の型[java.util.List]です。
+        if (this.fFieldList != null) {
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgField> iterator = this.fFieldList.iterator();
+            for (; iterator.hasNext();) {
+                blanco.cg.valueobject.BlancoCgField loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgField loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgField]です。
+                target.fFieldList.add(loopTarget);
+            }
+        }
         // Name: fMethodList
         // Type: java.util.List
-        // フィールド[fMethodList]はサポート外の型[java.util.List]です。
+        if (this.fMethodList != null) {
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgMethod> iterator = this.fMethodList.iterator();
+            for (; iterator.hasNext();) {
+                blanco.cg.valueobject.BlancoCgMethod loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgMethod loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgMethod]です。
+                target.fMethodList.add(loopTarget);
+            }
+        }
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。

@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -29,17 +29,17 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * blancoCgの行に関するユーティリティです。
- * 
+ *
  * このクラスはプログラミング言語を超えて利用されます。
- * 
+ *
  * @author IGA Tosiki
  */
 public class BlancoCgLineUtil {
     /**
      * １行コメントの開始を表す文字列を取得します。
-     * 
+     *
      * コメントの開始を表す文字列と、それに続く空白を戻します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return コメントの開始を表す文字列。
@@ -53,6 +53,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.SWIFT:
+        case BlancoCgSupportedLang.KOTLIN:
             return "// ";
         case BlancoCgSupportedLang.VB:
             return "' ";
@@ -68,9 +69,9 @@ public class BlancoCgLineUtil {
 
     /**
      * 文字列リテラルを囲む文字列を取得します。
-     * 
+     *
      * 出力対象のプログラミング言語に応じて、ダブルクオートまたは シングルクオートを戻します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return 文字列リテラルを囲む文字列
@@ -81,6 +82,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.CS:
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.VB:
+        case BlancoCgSupportedLang.KOTLIN:
             return "\"";
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.RUBY:
@@ -96,7 +98,7 @@ public class BlancoCgLineUtil {
 
     /**
      * 文字列を連結するオペレータを取得します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return 文字列を連結するオペレータ。
@@ -111,6 +113,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.RUBY:
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
+        case BlancoCgSupportedLang.KOTLIN:
             return "+";
         case BlancoCgSupportedLang.PHP:
             return ".";
@@ -123,10 +126,10 @@ public class BlancoCgLineUtil {
 
     /**
      * 変数のプレフィックスを取得します。
-     * 
+     *
      * 文法的に変数にプレフィックスが必要な場合、その文字列を戻します。プレフィックスが必要ない言語では、長さ0の文字列を戻します。
      * PHPの場合、$を戻します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return ローカル変数のプレフィックス
@@ -142,9 +145,9 @@ public class BlancoCgLineUtil {
 
     /**
      * 変数宣言を表す文字列を取得します。
-     * 
+     *
      * 変数宣言１行を戻します。行の終端を表す文字（Javaの場合、セミコロン）は 含まれません。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argVariableName
@@ -184,7 +187,43 @@ public class BlancoCgLineUtil {
             // 型名は利用しません。
             result = argVariableName;
             break;
+        case BlancoCgSupportedLang.KOTLIN:
+            // ここでは変数のみ生成します。
+            result = "var " + argVariableName + " : " + argTypeShortName;
+            break;
         }
+
+        if (BlancoStringUtil.null2Blank(argInitialValue).length() > 0) {
+            result += " = " + argInitialValue;
+        }
+        return result;
+    }
+
+    /**
+     * 諸帰化後の変更ができないタイプの変数宣言を表す文字列を取得します。
+     *
+     * 変数宣言１行を戻します。行の終端を表す文字（Javaの場合、セミコロン）は 含まれません。
+     *
+     * @param argTargetLang
+     * @param argValueName
+     * @param argTypeShortName
+     * @param argInitialValue
+     * @return
+     */
+    public static final String getValueDeclaration(
+            final int argTargetLang,
+            final String argValueName,
+            final String argTypeShortName,
+            final String argInitialValue) {
+        String result = "";
+        switch (argTargetLang) {
+            case BlancoCgSupportedLang.KOTLIN:
+                result = "val " + argValueName + " : " + argTypeShortName;
+                break;
+            default:
+                result = argTypeShortName + " " + argValueName;
+        }
+
 
         if (BlancoStringUtil.null2Blank(argInitialValue).length() > 0) {
             result += " = " + argInitialValue;
@@ -196,10 +235,10 @@ public class BlancoCgLineUtil {
 
     /**
      * if文の開始部分を表す文字列を取得します。
-     * 
+     *
      * 実際の処理は、{@link BlancoCgStatementUtil#getIfBegin(int, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argExpr
@@ -213,9 +252,9 @@ public class BlancoCgLineUtil {
 
     /**
      * if文の終了部分を表す文字列を取得します。
-     * 
+     *
      * 実際の処理は、{@link BlancoCgStatementUtil#getIfEnd(int)}に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return if文の終了部分を表す文字列
@@ -226,11 +265,11 @@ public class BlancoCgLineUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * Java, C#, JavaScript, PHPに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getForBeginJava(int, java.lang.String, java.lang.String, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argExpr1
@@ -249,11 +288,11 @@ public class BlancoCgLineUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * VB.NETに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCounter
@@ -270,11 +309,11 @@ public class BlancoCgLineUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * VB.NETに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCounter
@@ -293,11 +332,11 @@ public class BlancoCgLineUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * Rubyに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getForBeginRuby(int, java.lang.String, java.lang.String, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCounter
@@ -316,11 +355,11 @@ public class BlancoCgLineUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * Delphiに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getForBeginDelphi(int , java.lang.String,java.lang.String, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCounter
@@ -339,11 +378,11 @@ public class BlancoCgLineUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * Pythonに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getForBeginPython(int, java.lang.String, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argItem
@@ -360,11 +399,11 @@ public class BlancoCgLineUtil {
 
     /**
      * eachブロックの開始部分を表す文字列を取得します。
-     * 
+     *
      * Rubyに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getEachBeginRuby(int, java.lang.String, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argObject
@@ -381,10 +420,10 @@ public class BlancoCgLineUtil {
 
     /**
      * eachブロックの終了部分を表す文字列を取得します。
-     * 
+     *
      * Rubyに対応しています。 実際の処理は、{@link BlancoCgStatementUtil#getEachEnd(int)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return eachブロックの終了部分を表す文字列。
@@ -395,9 +434,9 @@ public class BlancoCgLineUtil {
 
     /**
      * for文の終了部分を表す文字列を取得します。
-     * 
+     *
      * 実際の処理は、{@link BlancoCgStatementUtil#getForEnd(int)}に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return for文の終了部分を表す文字列。
@@ -408,9 +447,9 @@ public class BlancoCgLineUtil {
 
     /**
      * for文を抜ける文を表わす文字列を取得します。
-     * 
+     *
      * 実際の処理は、{@link BlancoCgStatementUtil#getForExit(int)}に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return breakまたは Exit Forが戻ります。
@@ -421,9 +460,9 @@ public class BlancoCgLineUtil {
 
     /**
      * 文の終わりを示す文字を取得します。
-     * 
+     *
      * 実際の処理は、{@link BlancoCgStatementUtil#getTerminator(int)}に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return 文の終わりを示す文字。
@@ -434,11 +473,11 @@ public class BlancoCgLineUtil {
 
     /**
      * while文の開始部分を表わす文字列を取得します。
-     * 
+     *
      * Ruby, Pythonに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getWhileBeginRuby(int, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCon
@@ -452,11 +491,11 @@ public class BlancoCgLineUtil {
 
     /**
      * while文の開始部分を表わす文字列を取得します。
-     * 
+     *
      * Delphiに対応しています。 実際の処理は、
      * {@link BlancoCgStatementUtil#getWhileBeginDelphi(int, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCon
@@ -470,10 +509,10 @@ public class BlancoCgLineUtil {
 
     /**
      * return文を表す文字列を取得します。
-     * 
+     *
      * 実際の処理は、{@link BlancoCgStatementUtil#getReturn(int, java.lang.String)}
      * に委譲されます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argExpr

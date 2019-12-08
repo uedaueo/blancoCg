@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -29,17 +29,17 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * blancoCgのステートメントに関するユーティリティです。
- * 
+ *
  * このクラスはプログラミング言語を超えて利用されます。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgStatementUtil {
     /**
      * if文の開始部分を表す文字列を取得します。
-     * 
+     *
      * ブロック開始を表す文字列（Javaの場合、中括弧）も含みます。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argExpr
@@ -53,6 +53,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.CS:
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.KOTLIN:
             return "if (" + argExpr + ") {";
         case BlancoCgSupportedLang.VB:
             return "If (" + argExpr + ") Then";
@@ -71,9 +72,9 @@ class BlancoCgStatementUtil {
 
     /**
      * if文の終了部分を表す文字列を取得します。
-     * 
+     *
      * Pythonでは、if文の終了部分は文法的に必要ありませんが、 自動生成されたソースコードを整形するために、コメント文字列 を戻します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return if文の終了部分を表す文字列。
@@ -84,6 +85,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.CS:
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.KOTLIN:
             return "}";
         case BlancoCgSupportedLang.VB:
             return "End If";
@@ -102,9 +104,9 @@ class BlancoCgStatementUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * Java, C#, JavaScript, PHPに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argExpr1
@@ -133,9 +135,9 @@ class BlancoCgStatementUtil {
 
     /**
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * VB.NETに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCounter
@@ -166,11 +168,11 @@ class BlancoCgStatementUtil {
     }
 
     /**
-     * 
+     *
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * Rubyに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCounter
@@ -198,11 +200,11 @@ class BlancoCgStatementUtil {
     }
 
     /**
-     * 
+     *
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
      * Pythonに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argItem
@@ -228,18 +230,47 @@ class BlancoCgStatementUtil {
     }
 
     /**
-     * 
+     *
      * for文の開始部分を表す文字列を取得します。
-     * 
+     *
+     * Kotlin に対応しています。
+     * 整数範囲でloopを組みたい場合は argItems に
+     *   1..100
+     * などと記述します。
+     *
+     * @param argTargetLang
+     * @param argItem
+     * @param argItems
+     * @return
+     */
+    public static String getForBeginKotlin(int argTargetLang, String argItem, String argItems) {
+        switch (argTargetLang) {
+            case BlancoCgSupportedLang.KOTLIN:
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "BlancoCgStatementUtil.getForBeginKotlin: サポートしないプログラミング言語("
+                                + argTargetLang + ")が与えられました。");
+        }
+
+        String argLine = "for (" + argItem + " in " + argItems + ") {";
+
+        return argLine;
+    }
+
+    /**
+     *
+     * for文の開始部分を表す文字列を取得します。
+     *
      * Delphiに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
-     * @param argItem
+     * @param argCounter
      *            ループカウンタ。
-     * @param argStart
+     * @param argFrom
      *            ループの開始値。
-     * @param argEnd
+     * @param argTo
      *            ループの終了値。
      * @return for文の開始部分を表す文字列。
      */
@@ -262,7 +293,7 @@ class BlancoCgStatementUtil {
 
     /**
      * for文の終了部分を表す文字列を取得します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return for文の終了部分を表す文字列。
@@ -273,6 +304,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.CS:
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.KOTLIN:
             return "}";
         case BlancoCgSupportedLang.VB:
             // ループ変数は省略します。
@@ -292,9 +324,9 @@ class BlancoCgStatementUtil {
 
     /**
      * for文を抜ける文を表わす文字列を取得します。
-     * 
+     *
      * 文の終わりを示す文字(Javaの場合、セミコロン)は含みません。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return for文を抜ける文を表わす文字列。
@@ -308,6 +340,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.RUBY:
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
+        case BlancoCgSupportedLang.KOTLIN:
             return "break";
         case BlancoCgSupportedLang.VB:
             return "Exit For";
@@ -320,9 +353,9 @@ class BlancoCgStatementUtil {
 
     /**
      * while文の開始部分を表わす文字列を取得します。
-     * 
+     *
      * Ruby, Pythonに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCon
@@ -346,9 +379,9 @@ class BlancoCgStatementUtil {
 
     /**
      * while文の開始部分を表わす文字列を取得します。
-     * 
+     *
      * Delphiに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argCon
@@ -368,10 +401,10 @@ class BlancoCgStatementUtil {
 
     /**
      * while文の終了部分を表す文字列を取得します。
-     * 
+     *
      * Ruby, Pythonに対応しています。 Pythonでは、while文の終了部分は文法的に必要ありませんが、
      * 自動生成されたソースコードを整形するために、コメント文字列 を戻します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return while文の終了部分を表す文字列。
@@ -393,9 +426,9 @@ class BlancoCgStatementUtil {
 
     /**
      * eachブロックの開始部分を表す文字列を取得します。
-     * 
+     *
      * Rubyに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argObject
@@ -419,9 +452,9 @@ class BlancoCgStatementUtil {
 
     /**
      * eachブロックの終了部分を表す文字列を取得します。
-     * 
+     *
      * Rubyに対応しています。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return eachブロックの終了部分を表す文字列。
@@ -439,9 +472,9 @@ class BlancoCgStatementUtil {
 
     /**
      * 文の終わりを示す文字を取得します。
-     * 
+     *
      * Javaなど多くの言語では、セミコロンを戻します。 Rubyなど文の終わりを示す文字が必要ない言語では、長さ0の文字列を 戻します。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @return 文の終わりを示す文字。
@@ -458,6 +491,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.RUBY:
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.SWIFT:
+        case BlancoCgSupportedLang.KOTLIN:
             return "";
         default:
             throw new IllegalArgumentException(
@@ -468,9 +502,9 @@ class BlancoCgStatementUtil {
 
     /**
      * return文を表す文字列を取得します。
-     * 
+     *
      * 文の終わりを示す文字(Javaの場合、セミコロン)は含みません。
-     * 
+     *
      * @param argTargetLang
      *            出力対象のプログラミング言語。
      * @param argExpr
@@ -487,6 +521,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.RUBY:
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
+        case BlancoCgSupportedLang.KOTLIN:
             // 注意。セミコロンは含みません。
             return "return " + argExpr;
         case BlancoCgSupportedLang.VB:

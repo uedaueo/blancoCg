@@ -1,14 +1,52 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>jp.igapyon.blanco.cg</groupId>
+    <groupId>blanco.cg</groupId>
     <artifactId>blanco-cg</artifactId>
     <packaging>jar</packaging>
-    <version>2.1.14-SNAPSHOT</version>
+    <version>2.3.0</version>
 
     <name>blanco-cg</name>
-    <description>blancoCg is a simple code generator library. blancoCg supports Java/C#/JavaScript/VB.NET/PHP/Ruby/Python/Delphi/Swift/C++11.</description>
+    <description>blancoCg is a simple code generator library. blancoCg supports Java/C#/JavaScript/VB.NET/PHP/Ruby/Python/Delphi/Swift/C++11/Kotlin.</description>
     <url>https://github.com/igapyon/blancoCg/</url>
+
+    <!-- basic spec for jar -->
+    <properties>
+        <!-- set source as UTF-8 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <github.global.server>github</github.global.server>
+        <git.branchName>gh-pages</git.branchName>
+        <git.repositoryOwner>uedaueo</git.repositoryOwner>
+        <git.repositoryName>blancofw-maven2</git.repositoryName>
+        <git.isMerge>true</git.isMerge>
+    </properties>
+
+    <distributionManagement>
+        <!-- deploy into local repository for github -->
+        <repository>
+            <id>deploy-repository</id>
+            <name>deployRepository</name>
+            <url>file:///${project.build.directory}/gh-pages</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://central.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <!-- blancofw repository -->
+        <repository>
+            <id>blancofw</id>
+            <name>blancofw maven repos</name>
+            <url>https://raw.github.com/uedaueo/blancofw-maven2/gh-pages/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -19,11 +57,101 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/jp.igapyon.blanco.commons/blanco-commons -->
         <dependency>
-            <groupId>jp.igapyon.blanco.commons</groupId>
+            <groupId>blanco.anttask</groupId>
+            <artifactId>blanco-anttask</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.batchprocess</groupId>
+            <artifactId>blanco-batchprocess</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.commons.io</groupId>
             <artifactId>blanco-commons</artifactId>
-            <version>2.1.1</version>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.cg</groupId>
+            <artifactId>blanco-cg</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.valueobject</groupId>
+            <artifactId>blanco-valueobject</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.constants</groupId>
+            <artifactId>blanco-constants</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.message</groupId>
+            <artifactId>blanco-message</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.meta2xml</groupId>
+            <artifactId>blanco-meta2xml</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.resourcebundle</groupId>
+            <artifactId>blanco-resourcebundle</artifactId>
+            <version>[2.0,3.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.beanutils</groupId>
+            <artifactId>blanco-beanutils</artifactId>
+            <version>[1.0,2.0)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>blanco.stringgroup</groupId>
+            <artifactId>blanco-stringgroup</artifactId>
+            <version>[0.0,1.0)</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.13</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.13</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>3.13</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-scratchpad -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>3.13</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans -->
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>2.6.0</version>
         </dependency>
     </dependencies>
 
@@ -41,12 +169,12 @@
         </license>
     </licenses>
 
-    <scm>
-        <url>https://github.com/igapyon/blancoCg/</url>
-        <connection>scm:git:https://github.com/igapyon/blancoCg.git</connection>
-        <developerConnection>scm:git:https://github.com/igapyon/blancoCg.git</developerConnection>
-        <tag>blancoCg-2.1.0</tag>
-    </scm>
+<!--    <scm>-->
+<!--        <url>https://github.com/igapyon/blancoCg/</url>-->
+<!--        <connection>scm:git:https://github.com/igapyon/blancoCg.git</connection>-->
+<!--        <developerConnection>scm:git:https://github.com/igapyon/blancoCg.git</developerConnection>-->
+<!--        <tag>blancoCg-2.1.0</tag>-->
+<!--    </scm>-->
 
     <!-- ref: https://maven.apache.org/pom.html#Developers -->
     <developers>
@@ -106,33 +234,115 @@
         </developer>
     </developers>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
-            </url>
-        </repository>
-    </distributionManagement>
-
-    <properties>
-        <!-- set source as UTF-8 -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>blanco-meta-valueobject</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <taskdef name="blancovalueobject" classname="blanco.valueobject.task.BlancoValueObjectTask" classpathref="maven.runtime.classpath">
+                                </taskdef>
+                                <blancovalueobject metadir="meta/program" encoding="${project.build.sourceEncoding}" sheetType="php"/>
+                                <!--								<blancovalueobject metadir="meta/objects" encoding="${project.build.sourceEncoding}" sheetType="php" targetdir="sample" targetStyle="maven" verbose="true" />-->
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>blanco-meta-resourcebundle</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <taskdef name="blancoresourcebundle" classname="blanco.resourcebundle.task.BlancoResourceBundleTask" classpathref="maven.runtime.classpath">
+                                </taskdef>
+                                <blancoresourcebundle metadir="meta/program" encoding="${project.build.sourceEncoding}" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>blanco-meta-stringgroup</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <taskdef name="blancostringgroup" classname="blanco.stringgroup.task.BlancoStringGroupTask" classpathref="maven.runtime.classpath">
+                                </taskdef>
+                                <blancostringgroup metadir="meta/program" encoding="${project.build.sourceEncoding}" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>blanco-cgcg</id>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <target>
+                                <java classname="blanco.cg.cg.BlancoCgCg" classpathref="maven.runtime.classpath">
+                                </java>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>blanco-clean</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target>
+                                <delete dir="tmp" />
+                                <delete dir="blanco" />
+                                <delete dir="sample" />
+                                <delete dir="bin" />
+                                <delete dir="classes" />
+                                <mkdir dir="bin" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>commons-net</groupId>
+                        <artifactId>commons-net</artifactId>
+                        <version>1.4.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-commons-net</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
             <!-- add java source folder -->
-            <!-- ref: http://www.mojohaus.org/build-helper-maven-plugin/usage.html -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>1.12</version>
                 <executions>
                     <execution>
+                        <id>blanco-meta-compile</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
@@ -144,18 +354,30 @@
                             </sources>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>blanco-meta-cgcg</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src.cg</source>
+                            </sources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
-            <!-- compile with jdk 1.6 -->
-            <!-- ref: https://maven.apache.org/plugins/maven-compiler-plugin/usage.html -->
+            <!-- compile as 1.8 compatible -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.6.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <excludes>
                         <exclude>blanco/sample/**/*</exclude>
                     </excludes>
@@ -163,91 +385,74 @@
             </plugin>
 
             <!-- create sources.jar -->
-            <!-- ref: https://maven.apache.org/plugins/maven-source-plugin/usage.html -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.0.1</version>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
+                        <phase>attach-sources</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- javadoc -->
-            <!-- ref: https://maven.apache.org/plugins/maven-javadoc-plugin/usage.html -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0-M1</version>
                 <configuration>
-                    <author>true</author>
-                    <source>1.6</source>
-                    <locale>en</locale>
-                    <showPackage>true</showPackage>
-                    <charset>utf-8</charset>
                     <excludes>
                         <exclude>blanco/sample/</exclude>
                         <exclude>blanco/sample/**/*</exclude>
                     </excludes>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
-            <!-- for release -->
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-release-plugin -->
+            <!-- copy jar files into lib directory. -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-            </plugin>
-
-            <!-- gpg -->
-            <!-- ref: http://maven.apache.org/components/plugins/maven-gpg-plugin/usage.html -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- for dependency -->
-            <!-- https://maven.apache.org/plugins/maven-dependency-plugin/usage.html -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.2</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <!-- git commit message -->
+                    <message>Maven artifacts for ${project.version}</message>
+                    <noJekyll>true</noJekyll>
+                    <outputDirectory>${project.build.directory}/${git.branchName}</outputDirectory>
+                    <branch>refs/heads/${git.branchName}</branch>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+
+                    <repositoryName>${git.repositoryName}</repositoryName>
+                    <repositoryOwner>${git.repositoryOwner}</repositoryOwner>
+
+                    <!-- true：履歴を残す　false：直近バージョンのみ repositoryに残る -->
+                    <merge>${git.isMerge}</merge>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
+
 </project>
