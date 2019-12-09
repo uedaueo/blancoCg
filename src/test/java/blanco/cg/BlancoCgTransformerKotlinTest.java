@@ -77,7 +77,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         constType.setName("kotlin.collections.List");
         constType.setGenerics("String");
 
-        // 列挙体
+        // 列挙体（kotlin言語の生成では列挙体は当面無視します）
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
                 "列挙体の試験。");
         cgClass.getEnumList().add(cgEnum);
@@ -148,6 +148,8 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         // メソッドの内容を追加します。
         cgMethod.getLineList().add("// 代入の試験です。");
         cgMethod.getLineList().add("val a : Int = 0");
+        cgMethod.getLineList().add("");
+        cgMethod.getLineList().add("return true");
 
         final BlancoCgTransformer cgTransformerKotlin = BlancoCgTransformerFactory
                 .getKotlinSourceTransformer();

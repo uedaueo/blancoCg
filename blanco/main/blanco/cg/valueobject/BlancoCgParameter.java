@@ -44,6 +44,15 @@ public class BlancoCgParameter {
     private boolean fNotnull = false;
 
     /**
+     * デフォルト値をあらわします。
+     *
+     * Stringなら ""、intなら 3 などのように実際の文を指定します。
+     * (ダブルクオートなども含んだ形で表現します。)
+     * フィールド: [default]。
+     */
+    private String fDefault;
+
+    /**
      * このクラスに付与されているアノテーションのリストです。
      *
      * .NET Framework版の自動生成のみ対応しています。
@@ -165,6 +174,32 @@ public class BlancoCgParameter {
     }
 
     /**
+     * フィールド [default] の値を設定します。
+     *
+     * フィールドの説明: [デフォルト値をあらわします。]。
+     * Stringなら ""、intなら 3 などのように実際の文を指定します。
+     * (ダブルクオートなども含んだ形で表現します。)
+     *
+     * @param argDefault フィールド[default]に設定する値。
+     */
+    public void setDefault(final String argDefault) {
+        fDefault = argDefault;
+    }
+
+    /**
+     * フィールド [default] の値を取得します。
+     *
+     * フィールドの説明: [デフォルト値をあらわします。]。
+     * Stringなら ""、intなら 3 などのように実際の文を指定します。
+     * (ダブルクオートなども含んだ形で表現します。)
+     *
+     * @return フィールド[default]から取得した値。
+     */
+    public String getDefault() {
+        return fDefault;
+    }
+
+    /**
      * フィールド [annotationList] の値を設定します。
      *
      * フィールドの説明: [このクラスに付与されているアノテーションのリストです。]。
@@ -209,6 +244,7 @@ public class BlancoCgParameter {
         buf.append(",type=" + fType);
         buf.append(",final=" + fFinal);
         buf.append(",notnull=" + fNotnull);
+        buf.append(",default=" + fDefault);
         buf.append(",annotationList=" + fAnnotationList);
         buf.append("]");
         return buf.toString();
@@ -247,6 +283,9 @@ public class BlancoCgParameter {
         // Name: fNotnull
         // Type: boolean
         target.fNotnull = this.fNotnull;
+        // Name: fDefault
+        // Type: java.lang.String
+        target.fDefault = this.fDefault;
         // Name: fAnnotationList
         // Type: java.util.List
         if (this.fAnnotationList != null) {

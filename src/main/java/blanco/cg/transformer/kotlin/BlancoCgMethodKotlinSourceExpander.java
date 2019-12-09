@@ -160,50 +160,34 @@ class BlancoCgMethodKotlinSourceExpander {
             final boolean argIsInterface) {
         final StringBuffer buf = new StringBuffer();
 
-        if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
-            if (argIsInterface && cgMethod.getAccess().equals("public")) {
-                // インタフェース且つpublicの場合には出力を抑制します。
-                // これはCheckstyle対策となります。
-            } else {
-                if (cgMethod.getStaticInitializer() == false) {
-                    buf.append(cgMethod.getAccess() + " ");
+        // static initializer の場合は修飾子はつきません。
+        if (!cgMethod.getStaticInitializer()) {
+            if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
+                // kotlin ではデフォルトでpublicとなります。
+                if (!cgMethod.getAccess().equals("public")) {
+                    if (cgMethod.getStaticInitializer() == false) {
+                        buf.append(cgMethod.getAccess() + " ");
+                    }
                 }
             }
-        }
 
-        if (cgMethod.getAbstract() && argIsInterface == false) {
-            // ※インタフェースの場合には abstractは付与しません。
-            buf.append("abstract ");
-        }
-        if (cgMethod.getStatic()) {
-            buf.append("static ");
-        }
-        if (cgMethod.getStaticInitializer()) {
-            buf.append("static");
-        }
-        if (cgMethod.getFinal() && argIsInterface == false) {
-            // ※インタフェースの場合には finalは付与しません。
-            buf.append("final ");
-        }
-
-        if (cgMethod.getConstructor()) {
-            // コンストラクタの場合には、戻り値は存在しません。
-            // このため、ここでは何も出力しません。
-        } else if (cgMethod.getStaticInitializer()) {
-            // static initializer の場合には、戻り値は存在しません。
-            // このため、ここでは何も出力しません。
-        } else {
-            if (cgMethod.getReturn() != null
-                    && cgMethod.getReturn().getType() != null) {
-                buf.append(BlancoCgTypeKotlinSourceExpander.toTypeString(cgMethod
-                        .getReturn().getType())
-                        + " ");
-            } else {
-                buf.append("void ");
+            if (cgMethod.getOverride()) {
+                // 親クラスのメソッドを override する場合は修飾子 override が必要です。
+                buf.append("override ");
             }
-        }
 
-        if (cgMethod.getStaticInitializer() == false) {
+            if (cgMethod.getAbstract() && argIsInterface == false) {
+                // ※インタフェースの場合には abstractは付与しません。
+                buf.append("abstract ");
+            }
+            // kotlin では通常クラスのメソッドはデフォルトで final です。
+            if (!cgMethod.getFinal() && argIsInterface == false) {
+                // ※インタフェースの場合には デフォルトで open となります。
+                buf.append("open ");
+            }
+
+            buf.append("fun ");
+
             buf.append(cgMethod.getName() + "(");
             for (int index = 0; index < cgMethod.getParameterList().size(); index++) {
                 final BlancoCgParameter cgParameter = cgMethod
@@ -218,22 +202,41 @@ class BlancoCgMethodKotlinSourceExpander {
                     buf.append(", ");
                 }
 
-                if (cgParameter.getFinal()) {
-                    buf.append("final ");
-                }
+                buf.append(cgParameter.getName() + " : ");
+
                 buf.append(BlancoCgTypeKotlinSourceExpander
                         .toTypeString(cgParameter.getType()));
-                buf.append(" ");
-                buf.append(cgParameter.getName());
+                if (!cgParameter.getNotnull()) {
+                    // nullable
+                    buf.append("?");
+                }
+
+                // デフォルト値の指定がある場合にはこれを展開します。
+                if (BlancoStringUtil.null2Blank(cgParameter.getDefault()).length() > 0) {
+                    buf.append(" = " + cgParameter.getDefault());
+                }
             }
             buf.append(")");
+
+            if (cgMethod.getConstructor()) {
+                // コンストラクタの場合には、戻り値は存在しません。
+                // このため、ここでは何も出力しません。
+            } else {
+                if (cgMethod.getReturn() != null
+                        && cgMethod.getReturn().getType() != null) {
+                    buf.append(" : " + BlancoCgTypeKotlinSourceExpander.toTypeString(cgMethod
+                            .getReturn().getType()));
+                }
+            }
+        } else {
+            // static initializer
+            buf.append("init");
         }
 
-        // 例外スローを展開。
-        expandThrowList(cgMethod, buf);
+        // kotlin では throws 切は不要です。
 
-        if (cgMethod.getAbstract() || argIsInterface) {
-            // 抽象メソッドまたはインタフェースの場合には、メソッドの本体を展開しません。
+        if (cgMethod.getAbstract()) {
+            // 抽象メソッドの場合には、メソッドの本体を展開しません。
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
@@ -251,39 +254,13 @@ class BlancoCgMethodKotlinSourceExpander {
                         + BlancoCgLineUtil.getTerminator(TARGET_LANG));
             }
 
-            // パラメータの非null制約の展開。
-            expandParameterCheck(cgMethod, argSourceLines);
+            // kotlin ではパラメータの非null制約はコンパイル時にcheckされるので、例外処理を実装する必要はありません。
 
             // 行を展開します。
             expandLineList(cgMethod, argSourceLines);
 
             // メソッドブロックの終了。
             argSourceLines.add("}");
-        }
-    }
-
-    /**
-     * 例外スローを展開します。
-     *
-     * @param cgMethod
-     *            メソッド。
-     * @param buf
-     *            出力バッファ。
-     */
-    private void expandThrowList(final BlancoCgMethod cgMethod,
-            final StringBuffer buf) {
-        for (int index = 0; index < cgMethod.getThrowList().size(); index++) {
-            final BlancoCgException cgException = cgMethod.getThrowList().get(
-                    index);
-            if (index == 0) {
-                buf.append(" throws ");
-            } else {
-                buf.append(", ");
-            }
-            // 言語ドキュメント処理においては、blancoCgのTypeに関する共通処理を利用することはできません。
-            // 個別に記述を行います。
-            buf.append(BlancoNameUtil.trimJavaPackage(cgException.getType()
-                    .getName()));
         }
     }
 
@@ -301,37 +278,6 @@ class BlancoCgMethodKotlinSourceExpander {
         for (String strAnnotation : cgMethod.getAnnotationList()) {
             // Java言語のAnnotationは @ から記述します。
             argSourceLines.add("@" + strAnnotation);
-        }
-    }
-
-    /**
-     * パラメータの非null制約の展開。
-     *
-     * @param cgMethod
-     *            メソッド。
-     * @param argSourceLines
-     *            ソースコード。
-     */
-    private void expandParameterCheck(final BlancoCgMethod cgMethod,
-            final List<java.lang.String> argSourceLines) {
-        boolean isProcessed = false;
-        for (BlancoCgParameter cgParameter : cgMethod.getParameterList()) {
-            if (cgParameter.getNotnull()) {
-                isProcessed = true;
-
-                argSourceLines.add(BlancoCgLineUtil.getIfBegin(TARGET_LANG,
-                        cgParameter.getName() + " == null"));
-                argSourceLines.add("throw new IllegalArgumentException(\"メソッド["
-                        + cgMethod.getName() + "]のパラメータ["
-                        + cgParameter.getName()
-                        + "]にnullが与えられました。しかし、このパラメータにnullを与えることはできません。\");");
-                argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
-            }
-        }
-
-        if (isProcessed) {
-            // パラメータチェックが展開された場合には空行を挿入します。
-            argSourceLines.add("");
         }
     }
 

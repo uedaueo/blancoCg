@@ -118,6 +118,11 @@ class BlancoCgFieldKotlinSourceExpander {
         buf.append(cgField.getName() + " : ");
         buf.append(BlancoCgTypeKotlinSourceExpander.toTypeString(cgField.getType()));
 
+        if (!cgField.getNotnull()) {
+            // nullable
+            buf.append("?");
+        }
+
         // デフォルト値の指定がある場合にはこれを展開します。
         if (BlancoStringUtil.null2Blank(cgField.getDefault()).length() > 0) {
             buf.append(" = " + cgField.getDefault());

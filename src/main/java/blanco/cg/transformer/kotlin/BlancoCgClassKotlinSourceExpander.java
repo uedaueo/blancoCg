@@ -103,11 +103,8 @@ class BlancoCgClassKotlinSourceExpander {
 
         // kotlinでは列挙型はクラスとして定義されますが、当面、自動生成の対象外とします。(tueda)
 
-        // ここでフィールドを展開。
-        expandFieldList(cgClass, argSourceFile, argSourceLines);
-
-        // ここでメソッドを展開。
-        expandMethodList(cgClass, argSourceFile, argSourceLines);
+        // ここでフィールドとメソッドを展開。
+        expandFieldAndMethodList(cgClass, argSourceFile, argSourceLines);
 
         // クラスのブロックの終了。
         argSourceLines.add("}");
@@ -129,8 +126,20 @@ class BlancoCgClassKotlinSourceExpander {
         }
     }
 
-    private void expandPrimaryConstructorList(final BlancoCgClass cgClass,
-                                              final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
+    /**
+     * kotlin のプライマリコンストラクタを展開します。
+     *
+     * @param cgClass
+     *            クラスのバリューオブジェクト。
+     * @param argSourceFile
+     *            ソースファイル。
+     * @param argBuf
+     *            出力先文字列バッファ。
+     */
+    private void expandPrimaryConstructorList(
+            final BlancoCgClass cgClass,
+            final BlancoCgSourceFile argSourceFile,
+            final StringBuffer argBuf) {
         List<blanco.cg.valueobject.BlancoCgParameter> constructorArgs = cgClass.getConstructorArgList();
         if (constructorArgs == null || constructorArgs.size() <= 0) {
             return;
@@ -148,6 +157,11 @@ class BlancoCgClassKotlinSourceExpander {
             }
 
             argBuf.append("val " + arg.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+            if (!arg.getNotnull()) {
+                // nullable
+                argBuf.append("?");
+            }
+
             count++;
         }
         argBuf.append(")");
@@ -211,7 +225,7 @@ class BlancoCgClassKotlinSourceExpander {
     }
 
     /**
-     * クラスに含まれる各々のフィールドを展開します。
+     * クラスに含まれる各々のフィールドとメソッドを展開します。
      *
      * TODO 定数宣言を優先して展開し、その後変数宣言を展開するなどの工夫が必要です。<br>
      * 現在は 登録順でソースコード展開します。
@@ -223,7 +237,8 @@ class BlancoCgClassKotlinSourceExpander {
      * @param argSourceLines
      *            ソースコード行リスト。
      */
-    private void expandFieldList(final BlancoCgClass cgClass,
+    private void expandFieldAndMethodList(
+            final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgClass.getFieldList() == null) {
@@ -231,10 +246,15 @@ class BlancoCgClassKotlinSourceExpander {
             // かならずフィールドのリストにはListをセットしてください。
             throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
         }
+        if (cgClass.getMethodList() == null) {
+            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
+        }
 
-        // kotlin では static なフィールドは companion オブジェクト内に宣言するため、
+        // kotlin では static なフィールドと Method は companion オブジェクト内に宣言するため、
         // フィールドの展開は2段階に分けます。
         // Java からの呼び出しがある場合には @JvmField アノテーションで対応して頂く想定です。
+
+        // まず static フィールドを展開します。
         boolean foundStatic = false;
         for (BlancoCgField cgField : cgClass.getFieldList()) {
             if (cgField.getStatic()) {
@@ -243,6 +263,19 @@ class BlancoCgClassKotlinSourceExpander {
                     foundStatic = true;
                 }
                 new BlancoCgFieldKotlinSourceExpander().transformField(cgField,
+                        argSourceFile, argSourceLines, false);
+            }
+        }
+
+        // 次に static Method を展開します。
+        for (BlancoCgMethod cgMethod : cgClass.getMethodList()) {
+            // クラスのメソッドとして展開を行います。
+            if (cgMethod.getStatic()) {
+                if (!foundStatic) {
+                    argSourceLines.add("companion object {");
+                    foundStatic = true;
+                }
+                new BlancoCgMethodKotlinSourceExpander().transformMethod(cgMethod,
                         argSourceFile, argSourceLines, false);
             }
         }
@@ -257,28 +290,14 @@ class BlancoCgClassKotlinSourceExpander {
                         argSourceFile, argSourceLines, false);
             }
         }
-    }
 
-    /**
-     * クラスに含まれる各々のメソッドを展開します。
-     *
-     * @param cgClass
-     *            処理中のクラス。
-     * @param argSourceFile
-     *            ソースファイル。
-     * @param argSourceLines
-     *            ソースコード行リスト。
-     */
-    private void expandMethodList(final BlancoCgClass cgClass,
-            final BlancoCgSourceFile argSourceFile,
-            final List<java.lang.String> argSourceLines) {
-        if (cgClass.getMethodList() == null) {
-            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
-        }
+        // 最後に非 static Method を展開します。
         for (BlancoCgMethod cgMethod : cgClass.getMethodList()) {
             // クラスのメソッドとして展開を行います。
-            new BlancoCgMethodKotlinSourceExpander().transformMethod(cgMethod,
-                    argSourceFile, argSourceLines, false);
+            if (!cgMethod.getStatic()) {
+                new BlancoCgMethodKotlinSourceExpander().transformMethod(cgMethod,
+                        argSourceFile, argSourceLines, false);
+            }
         }
     }
 }

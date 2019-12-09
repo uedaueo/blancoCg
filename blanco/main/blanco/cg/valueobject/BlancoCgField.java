@@ -71,6 +71,14 @@ public class BlancoCgField {
     private boolean fConst = false;
 
     /**
+     * このフィールドにnullを与えられた際に引数例外を発生させるかどうか。
+     *
+     * フィールド: [notnull]。
+     * デフォルト: [false]。
+     */
+    private boolean fNotnull = false;
+
+    /**
      * デフォルト値をあらわします。
      *
      * Stringなら ""、intなら 3 などのように実際の文を指定します。
@@ -276,6 +284,29 @@ public class BlancoCgField {
     }
 
     /**
+     * フィールド [notnull] の値を設定します。
+     *
+     * フィールドの説明: [このフィールドにnullを与えられた際に引数例外を発生させるかどうか。]。
+     *
+     * @param argNotnull フィールド[notnull]に設定する値。
+     */
+    public void setNotnull(final boolean argNotnull) {
+        fNotnull = argNotnull;
+    }
+
+    /**
+     * フィールド [notnull] の値を取得します。
+     *
+     * フィールドの説明: [このフィールドにnullを与えられた際に引数例外を発生させるかどうか。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[notnull]から取得した値。
+     */
+    public boolean getNotnull() {
+        return fNotnull;
+    }
+
+    /**
      * フィールド [default] の値を設定します。
      *
      * フィールドの説明: [デフォルト値をあらわします。]。
@@ -369,6 +400,7 @@ public class BlancoCgField {
         buf.append(",final=" + fFinal);
         buf.append(",override=" + fOverride);
         buf.append(",const=" + fConst);
+        buf.append(",notnull=" + fNotnull);
         buf.append(",default=" + fDefault);
         buf.append(",annotationList=" + fAnnotationList);
         buf.append(",langDoc=" + fLangDoc);
@@ -418,6 +450,9 @@ public class BlancoCgField {
         // Name: fConst
         // Type: boolean
         target.fConst = this.fConst;
+        // Name: fNotnull
+        // Type: boolean
+        target.fNotnull = this.fNotnull;
         // Name: fDefault
         // Type: java.lang.String
         target.fDefault = this.fDefault;
