@@ -295,6 +295,26 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgMethod.getThrowList().add(
                 cgOf.createException("java.io.IOException", "入出力例外が発生した場合。"));
 
+        // abstract メソッドを生成します。
+        final BlancoCgMethod cgMethodAbst = cgOf.createMethod("myMethodAbst",
+                "abstract メソッドの試験です。");
+        cgMethodAbst.setAbstract(true);
+
+        cgInterface.getMethodList().add(cgMethodAbst);
+
+        // パラメータを追加します。
+        cgMethodAbst.getParameterList()
+                .add(
+                        cgOf.createParameter("argString", "java.lang.String",
+                                "文字列引数。", false));
+        cgMethodAbst.getParameterList().add(
+                cgOf.createParameter("argDate", "java.util.Date", "日付引数。", true));
+        // 戻り値を設定します。
+        cgMethodAbst.setReturn(cgOf.createReturn("boolean", "成功ならtrue。"));
+
+        cgMethodAbst.getThrowList().add(
+                cgOf.createException("java.io.IOException", "入出力例外が発生した場合。"));
+
         final BlancoCgTransformer cgTransformerKotlin = BlancoCgTransformerFactory
                 .getKotlinSourceTransformer();
         cgTransformerKotlin.transform(cgSourceFile, new File("./tmp/blanco"));

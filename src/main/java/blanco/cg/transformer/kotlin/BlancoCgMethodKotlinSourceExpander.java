@@ -233,7 +233,7 @@ class BlancoCgMethodKotlinSourceExpander {
             buf.append("init");
         }
 
-        // kotlin では throws 切は不要です。
+        // kotlin では throws 節は不要です。
 
         if (cgMethod.getAbstract()) {
             // 抽象メソッドの場合には、メソッドの本体を展開しません。

@@ -26,12 +26,7 @@ package blanco.cg.transformer.kotlin;
 
 import java.util.List;
 
-import blanco.cg.valueobject.BlancoCgField;
-import blanco.cg.valueobject.BlancoCgInterface;
-import blanco.cg.valueobject.BlancoCgLangDoc;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgSourceFile;
-import blanco.cg.valueobject.BlancoCgType;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
@@ -75,13 +70,16 @@ class BlancoCgInterfaceKotlinSourceExpander {
         final StringBuffer buf = new StringBuffer();
 
         if (BlancoStringUtil.null2Blank(cgInterface.getAccess()).length() > 0) {
-            buf.append(cgInterface.getAccess() + " ");
+            // kotlin ではデフォルトがpublic
+            if (!"public".equals(cgInterface.getAccess())) {
+                buf.append(cgInterface.getAccess() + " ");
+            }
         }
         // staticやfinalは展開しません。
         buf.append("interface " + cgInterface.getName());
 
         // ここで親クラスを展開。
-        expandExtendClassList(cgInterface, buf);
+        expandExtendClassList(cgInterface, argSourceFile, buf);
 
         // ※ポイント: 親インタフェース展開は interfaceには存在しません。
 
@@ -118,18 +116,23 @@ class BlancoCgInterfaceKotlinSourceExpander {
      * 親クラスを展開します。
      *
      * @param cgClass
-     * @param buf
+     * @param argSourceFile
+     * @param argBuf
+     * @return
      */
     private void expandExtendClassList(final BlancoCgInterface cgClass,
-            final StringBuffer buf) {
+                                          final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
             final BlancoCgType type = cgClass.getExtendClassList().get(index);
 
+            // import文に型を追加。
+            argSourceFile.getImportList().add(type.getName());
+
             if (index == 0) {
-                buf.append(" extends "
-                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+                argBuf.append(" : "
+                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + "()");
             } else {
-                throw new IllegalArgumentException("Java言語では継承は一回しか実施できません。");
+                throw new IllegalArgumentException("Kotlin 言語では継承は一回しか実施できません。");
             }
         }
     }

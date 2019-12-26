@@ -123,12 +123,26 @@ class BlancoCgFieldKotlinSourceExpander {
             buf.append("?");
         }
 
+        // アクセサ用のbuffer
+        final StringBuffer bufGetter = new StringBuffer();
+
         // デフォルト値の指定がある場合にはこれを展開します。
         if (BlancoStringUtil.null2Blank(cgField.getDefault()).length() > 0) {
-            buf.append(" = " + cgField.getDefault());
+            // Kotlin の Interface はバッキングインタフェイスを持てないので、
+            // 初期値を設定することはできません。それ故、初期値の設定があった
+            // 場合にはアクセサを定義します。
+            if (!argIsInterface) {
+                buf.append(" = " + cgField.getDefault());
+            } else {
+                bufGetter.append("get() = " + cgField.getDefault());
+                bufGetter.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
+            }
         }
         buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
         argSourceLines.add(buf.toString());
+        if (bufGetter.length() > 0) {
+            argSourceLines.add(bufGetter.toString());
+        }
     }
 
     /**

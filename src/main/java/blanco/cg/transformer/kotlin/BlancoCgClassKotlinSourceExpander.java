@@ -206,8 +206,11 @@ class BlancoCgClassKotlinSourceExpander {
      * @param argBuf
      * @param expanded
      */
-    private void expandImplementInterfaceList(final BlancoCgClass cgClass,
-                                              final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf, boolean expanded) {
+    private void expandImplementInterfaceList(
+            final BlancoCgClass cgClass,
+            final BlancoCgSourceFile argSourceFile,
+            final StringBuffer argBuf,
+            boolean expanded) {
         for (int index = 0; index < cgClass.getImplementInterfaceList().size(); index++) {
             final BlancoCgType type = cgClass.getImplementInterfaceList().get(
                     index);
@@ -221,6 +224,7 @@ class BlancoCgClassKotlinSourceExpander {
                 argBuf.append(", ");
             }
             argBuf.append(BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+
         }
     }
 
