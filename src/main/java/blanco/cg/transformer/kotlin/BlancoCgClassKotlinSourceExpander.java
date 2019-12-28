@@ -29,6 +29,7 @@ import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * BlancoCgClassをソースコードへと展開します。
@@ -211,6 +212,11 @@ class BlancoCgClassKotlinSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final StringBuffer argBuf,
             boolean expanded) {
+        /*
+         * 委譲リストを取得する
+         */
+        Map<String, String> delegateMap = cgClass.getDelegateMap();
+
         for (int index = 0; index < cgClass.getImplementInterfaceList().size(); index++) {
             final BlancoCgType type = cgClass.getImplementInterfaceList().get(
                     index);
@@ -223,8 +229,31 @@ class BlancoCgClassKotlinSourceExpander {
             } else {
                 argBuf.append(", ");
             }
-            argBuf.append(BlancoCgTypeKotlinSourceExpander.toTypeString(type));
 
+            String typeString = BlancoCgTypeKotlinSourceExpander.toTypeString(type);
+
+            /*
+             * 委譲があれば設定
+             */
+            String delegateArg = delegateMap.get(type.getName());
+//            System.out.println("type: " + type.getName() + ", delegateArg: " + delegateArg);
+            if (delegateArg != null && delegateArg.length() != 0) {
+                /*
+                 * プライマリコンストラクタに無ければ無視
+                 */
+                List<blanco.cg.valueobject.BlancoCgParameter> constructorArgs = cgClass.getConstructorArgList();
+                boolean found = false;
+                for (BlancoCgParameter arg : constructorArgs) {
+                    if (delegateArg.equals(arg.getName())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    typeString += " by " + delegateArg;
+                }
+            }
+            argBuf.append(typeString);
         }
     }
 

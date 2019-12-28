@@ -15,7 +15,9 @@ import junit.framework.TestCase;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Kotlin言語用の生成試験。
@@ -51,6 +53,8 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                 cgFactory.createType("java.lang.Thread"));
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("java.lang.Runnable"));
+        cgClass.getImplementInterfaceList().add(
+                cgFactory.createType("myprog.MyInterface"));
 
         // プライマリコンストラクタのテストです
         BlancoCgParameter constParam = new BlancoCgParameter();
@@ -75,7 +79,21 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         constParam.setType(constType);
         constParam.setName("third");
         constType.setName("kotlin.collections.List");
-        constType.setGenerics("String");
+        constType.setGenerics("java.lang.String");
+
+        // 委譲のテスト
+
+        constParam = new BlancoCgParameter();
+        constType = new BlancoCgType();
+        cgClass.getConstructorArgList().add(constParam);
+        constParam.setType(constType);
+        constParam.setName("fourth");
+        constParam.setNotnull(true);
+        constType.setName("myprog.MyInterface");
+
+        Map<java.lang.String, java.lang.String> delegateMap = cgClass.getDelegateMap();
+        delegateMap.put("myprog.MyInterface", "fourth");
+        delegateMap.put("java.lang.Runnable", "fifth"); // ignored.
 
         // 列挙体（kotlin言語の生成では列挙体は当面無視します）
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",

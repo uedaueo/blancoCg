@@ -74,12 +74,12 @@ public class BlancoCgClass {
     private boolean fFinal = false;
 
     /**
-     * このクラスが実装しているインタフェイスの委譲元となる変数名を、インタフェイスの型をキーとして指定します。
+     * このクラスが実装しているインタフェイスの委譲元となる変数名を、インタフェイスの型名をキーとして指定します。
      *
      * フィールド: [delegateMap]。
      * デフォルト: [new java.util.HashMap&lt;&gt;()]。
      */
-    private Map<blanco.cg.valueobject.BlancoCgType, java.lang.String> fDelegateMap = new java.util.HashMap<>();
+    private Map<java.lang.String, java.lang.String> fDelegateMap = new java.util.HashMap<>();
 
     /**
      * このクラスに付与されているアノテーションのリストです。
@@ -316,23 +316,23 @@ public class BlancoCgClass {
     /**
      * フィールド [delegateMap] の値を設定します。
      *
-     * フィールドの説明: [このクラスが実装しているインタフェイスの委譲元となる変数名を、インタフェイスの型をキーとして指定します。]。
+     * フィールドの説明: [このクラスが実装しているインタフェイスの委譲元となる変数名を、インタフェイスの型名をキーとして指定します。]。
      *
      * @param argDelegateMap フィールド[delegateMap]に設定する値。
      */
-    public void setDelegateMap(final Map<blanco.cg.valueobject.BlancoCgType, java.lang.String> argDelegateMap) {
+    public void setDelegateMap(final Map<java.lang.String, java.lang.String> argDelegateMap) {
         fDelegateMap = argDelegateMap;
     }
 
     /**
      * フィールド [delegateMap] の値を取得します。
      *
-     * フィールドの説明: [このクラスが実装しているインタフェイスの委譲元となる変数名を、インタフェイスの型をキーとして指定します。]。
+     * フィールドの説明: [このクラスが実装しているインタフェイスの委譲元となる変数名を、インタフェイスの型名をキーとして指定します。]。
      * デフォルト: [new java.util.HashMap&lt;&gt;()]。
      *
      * @return フィールド[delegateMap]から取得した値。
      */
-    public Map<blanco.cg.valueobject.BlancoCgType, java.lang.String> getDelegateMap() {
+    public Map<java.lang.String, java.lang.String> getDelegateMap() {
         return fDelegateMap;
     }
 
@@ -568,10 +568,10 @@ public class BlancoCgClass {
         // Name: fDelegateMap
         // Type: java.util.Map
         if (this.fDelegateMap != null) {
-            final java.util.Iterator<java.util.Map.Entry<blanco.cg.valueobject.BlancoCgType, java.lang.String>> iterator = this.fDelegateMap.entrySet().iterator();
+            final java.util.Iterator<java.util.Map.Entry<java.lang.String, java.lang.String>> iterator = this.fDelegateMap.entrySet().iterator();
             for (; iterator.hasNext();) {
-                java.util.Map.Entry<blanco.cg.valueobject.BlancoCgType, java.lang.String> loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgType loopKeyTarget = null;
+                java.util.Map.Entry<java.lang.String, java.lang.String> loopSource = iterator.next();
+                java.lang.String loopKeyTarget = null;
                 java.lang.String loopValueTarget = null;
                 loopKeyTarget = loopSource.getKey();
                 loopValueTarget = loopSource.getValue();
