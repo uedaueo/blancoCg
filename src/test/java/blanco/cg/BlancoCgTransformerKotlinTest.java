@@ -57,33 +57,39 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                 cgFactory.createType("myprog.MyInterface"));
 
         // プライマリコンストラクタのテストです
-        BlancoCgParameter constParam = new BlancoCgParameter();
+        BlancoCgField constParam = new BlancoCgField();
         BlancoCgType constType = new BlancoCgType();
         cgClass.getConstructorArgList().add(constParam);
         constParam.setType(constType);
         constParam.setName("first");
+        constParam.setConst(true);
+        constParam.setDefault("0");
         constType.setName("Int");
 
         // プライマリコンストラクタのテストです
-        constParam = new BlancoCgParameter();
+        constParam = new BlancoCgField();
         constType = new BlancoCgType();
         cgClass.getConstructorArgList().add(constParam);
         constParam.setType(constType);
         constParam.setName("second");
+        constParam.setConst(true);
         constType.setName("kotlin.Number");
 
         // プライマリコンストラクタのテストです
-        constParam = new BlancoCgParameter();
+        constParam = new BlancoCgField();
         constType = new BlancoCgType();
         cgClass.getConstructorArgList().add(constParam);
         constParam.setType(constType);
         constParam.setName("third");
         constType.setName("kotlin.collections.List");
+        constParam.setConst(false);
+        constParam.setNotnull(false);
+        constParam.setDefault("null");
         constType.setGenerics("java.lang.String");
 
         // 委譲のテスト
 
-        constParam = new BlancoCgParameter();
+        constParam = new BlancoCgField();
         constType = new BlancoCgType();
         cgClass.getConstructorArgList().add(constParam);
         constParam.setType(constType);

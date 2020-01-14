@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -37,7 +37,7 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * Java / C#.NET スタイルの抽象トランスフォーマーです。
- * 
+ *
  * @author IGA Tosiki
  */
 public abstract class AbstractBlancoCgJavaStyleTransformer extends
@@ -49,9 +49,9 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
 
     /**
      * ソースファイル・バリューオブジェクトをJavaソースコードに変換して出力先ディレクトリに出力します。
-     * 
+     *
      * このAPIではパッケージ構造をディレクトリ構造として考慮します。
-     * 
+     *
      * @param argSourceFile
      *            ソースファイル・バリューオブジェクト。
      * @param outputDirectory
@@ -163,13 +163,13 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
 
     /**
      * ソースコードのリストを整形します。
-     * 
+     *
      * Java言語 および C#.NET言語用の整形を行います。
-     * 
+     *
      * 現時点でのソース整形ルーチンは Java/C#.NET共通と考えることができると判断します。<br>
      * なお、この処理のなかで { や } は特別な意味を持っています。行末コメントなどが入ると期待する動作ができません。<br>
      * TODO 中カッコを文末に付与する、などのフォーマットなどは未実装です。
-     * 
+     *
      * @param argSourceLines
      *            ソースコード行リスト。
      */
@@ -184,6 +184,8 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
             } else {
                 boolean isBeginIndent = false;
                 boolean isEndIndent = false;
+                boolean isBeginDoubleIndent = false;
+                boolean isEndDoubleIndent = false;
                 final char startChar = strLine.charAt(0);
                 final char endChar = strLine.charAt(strLine.length() - 1);
                 if (startChar == '*') {
@@ -211,9 +213,27 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                     isEndIndent = true;
                 }
 
+                // ( ) の対応をします。 2020/01/14 by tueda
+                if (startChar == '(') {
+                    // ブロック開始と見なして字下げを予約します。
+                    isBeginDoubleIndent = true;
+                } else if (startChar == ')') {
+                    // ブロック終了と見なして字下げします。
+                    isEndDoubleIndent = true;
+                }
+                if (endChar == '(') {
+                    // ブロック開始と見なして字下げを予約します。
+                    isBeginDoubleIndent = true;
+                } else if (endChar == ')') {
+                    // ブロック終了と見なして字下げします。
+                    isEndDoubleIndent = true;
+                }
+
                 if (isEndIndent) {
                     // フラグ一回につき、インデント一個を反映します。
                     sourceIndent--;
+                } else if (isEndDoubleIndent) {
+                    sourceIndent -= 2;
                 }
 
                 // インデントを実施します。
@@ -223,6 +243,8 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                 }
                 if (isBeginIndent) {
                     sourceIndent++;
+                } else if (isBeginDoubleIndent) {
+                    sourceIndent += 2;
                 }
 
                 // 更新後の行イメージでリストを更新します。

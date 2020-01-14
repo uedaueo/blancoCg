@@ -25,6 +25,8 @@
  */
 package blanco.cg.transformer.kotlin;
 
+import blanco.cg.BlancoCgSupportedLang;
+import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
@@ -88,7 +90,7 @@ class BlancoCgClassKotlinSourceExpander {
         /*
          * kotlin ではプライマリコンストラクタは class 定義の一部として記述されます。
          */
-        expandPrimaryConstructorList(cgClass, argSourceFile, buf);
+        expandPrimaryConstructorList(cgClass, argSourceFile, buf, argSourceLines);
 
         // 親クラスを展開。
         boolean expanded = expandExtendClassList(cgClass, argSourceFile, buf);
@@ -128,6 +130,22 @@ class BlancoCgClassKotlinSourceExpander {
     }
 
     /**
+     * アノテーションを展開します。
+     *
+     * @param cgField
+     *            フィールド。
+     * @param argSourceLines
+     *            ソースコード。
+     */
+    private void expandAnnotationList(final BlancoCgField cgField, final List<java.lang.String> argSourceLines) {
+        for (String strAnnotation : cgField.getAnnotationList()) {
+            // Java言語のAnnotationは @ から記述します。
+            // constractor 引数へのアノテーションはすべて改行する方針とします
+            argSourceLines.add("    @" + strAnnotation);
+        }
+    }
+
+    /**
      * kotlin のプライマリコンストラクタを展開します。
      *
      * @param cgClass
@@ -140,30 +158,56 @@ class BlancoCgClassKotlinSourceExpander {
     private void expandPrimaryConstructorList(
             final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
-            final StringBuffer argBuf) {
-        List<blanco.cg.valueobject.BlancoCgParameter> constructorArgs = cgClass.getConstructorArgList();
+            final StringBuffer argBuf,
+            final List<java.lang.String> argSourceLines) {
+        List<blanco.cg.valueobject.BlancoCgField> constructorArgs = cgClass.getConstructorArgList();
         if (constructorArgs == null || constructorArgs.size() <= 0) {
             return;
         }
 
-        argBuf.append("(");
+        argBuf.append(" constructor (");
+
+        // Constractor 指定が存在する場合はここで一旦改行する
+        argSourceLines.add(argBuf.toString());
+        argBuf.delete(0, argBuf.length());
+
         int count = 0;
-        for (blanco.cg.valueobject.BlancoCgParameter arg : constructorArgs) {
+        for (blanco.cg.valueobject.BlancoCgField arg : constructorArgs) {
             final BlancoCgType type = arg.getType();
             // import文に型を追加
             argSourceFile.getImportList().add(type.getName());
 
             if (count != 0) {
-                argBuf.append(", ");
+                argBuf.append(",");
+                argSourceLines.add(argBuf.toString());
+                argBuf.delete(0, argBuf.length());
             }
 
-            argBuf.append("val " + arg.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+            // アノテーションを展開。
+            expandAnnotationList(arg, argSourceLines);
+
+            // 変数が変更可能か不可かを設定します。
+            // コンストラクタ引数なので、通常はvalで良いようには思います, tueda
+            if (arg.getConst()) {
+                argBuf.append("    val ");
+            } else {
+                argBuf.append("    var ");
+            }
+            argBuf.append(arg.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
             if (!arg.getNotnull()) {
                 // nullable
                 argBuf.append("?");
             }
 
+            // デフォルト値の指定がある場合にはこれを展開します。
+            if (BlancoStringUtil.null2Blank(arg.getDefault()).length() > 0) {
+                argBuf.append(" = " + arg.getDefault());
+            }
             count++;
+        }
+        if (argBuf.length() > 0) {
+            argSourceLines.add(argBuf.toString());
+            argBuf.delete(0, argBuf.length());
         }
         argBuf.append(")");
     }
@@ -241,9 +285,9 @@ class BlancoCgClassKotlinSourceExpander {
                 /*
                  * プライマリコンストラクタに無ければ無視
                  */
-                List<blanco.cg.valueobject.BlancoCgParameter> constructorArgs = cgClass.getConstructorArgList();
+                List<blanco.cg.valueobject.BlancoCgField> constructorArgs = cgClass.getConstructorArgList();
                 boolean found = false;
-                for (BlancoCgParameter arg : constructorArgs) {
+                for (BlancoCgField arg : constructorArgs) {
                     if (delegateArg.equals(arg.getName())) {
                         found = true;
                         break;

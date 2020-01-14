@@ -124,9 +124,9 @@ public class BlancoCgClass {
      * クラス定義に含めるコンストラクタの引数マップです。&lt;引数名, 型&gt; となります。
      *
      * フィールド: [constructorArgList]。
-     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgParameter&gt;()]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgField&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgParameter> fConstructorArgList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgParameter>();
+    private List<blanco.cg.valueobject.BlancoCgField> fConstructorArgList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgField>();
 
     /**
      * フィールド [name] の値を設定します。
@@ -457,7 +457,7 @@ public class BlancoCgClass {
      *
      * @param argConstructorArgList フィールド[constructorArgList]に設定する値。
      */
-    public void setConstructorArgList(final List<blanco.cg.valueobject.BlancoCgParameter> argConstructorArgList) {
+    public void setConstructorArgList(final List<blanco.cg.valueobject.BlancoCgField> argConstructorArgList) {
         fConstructorArgList = argConstructorArgList;
     }
 
@@ -465,11 +465,11 @@ public class BlancoCgClass {
      * フィールド [constructorArgList] の値を取得します。
      *
      * フィールドの説明: [クラス定義に含めるコンストラクタの引数マップです。<引数名, 型> となります。]。
-     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgParameter&gt;()]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgField&gt;()]。
      *
      * @return フィールド[constructorArgList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgParameter> getConstructorArgList() {
+    public List<blanco.cg.valueobject.BlancoCgField> getConstructorArgList() {
         return fConstructorArgList;
     }
 
@@ -628,11 +628,11 @@ public class BlancoCgClass {
         // Name: fConstructorArgList
         // Type: java.util.List
         if (this.fConstructorArgList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgParameter> iterator = this.fConstructorArgList.iterator();
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgField> iterator = this.fConstructorArgList.iterator();
             for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgParameter loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgParameter loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgParameter]です。
+                blanco.cg.valueobject.BlancoCgField loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgField loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgField]です。
                 target.fConstructorArgList.add(loopTarget);
             }
         }
