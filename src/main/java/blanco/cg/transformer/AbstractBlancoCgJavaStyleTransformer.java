@@ -175,10 +175,13 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
      */
     protected void formatSource(final List<java.lang.String> argSourceLines) {
         int sourceIndent = 0;
+        int curlyIndented = 0;
+        int roundIndented = 0;
         for (int index = 0; index < argSourceLines.size(); index++) {
             String strLine = argSourceLines.get(index);
             // 前後の空白は、あらかじめ除去します。
             strLine = strLine.trim();
+
             if (strLine.length() == 0) {
                 // 空行です。
             } else {
@@ -195,45 +198,50 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
 
                 // まずは開始文字列の判定を行います。
                 // ※開始文字列と終了文字列とは別個に判定する必要があります。
+                // ( ) の対応をします。 2020/01/14 by tueda
                 if (startChar == '{') {
                     // ブロック開始と見なして字下げを予約します。
                     isBeginIndent = true;
+                    curlyIndented++;
                 } else if (startChar == '}') {
                     // ブロック終了と見なして字下げします。
                     isEndIndent = true;
-                }
-
-                // 次に終了文字列の判定を行います。
-                // ※開始文字列と終了文字列とは別個に判定する必要があります。
-                if (endChar == '{') {
-                    // ブロック開始と見なして字下げを予約します。
-                    isBeginIndent = true;
-                } else if (endChar == '}') {
-                    // ブロック終了と見なして字下げします。
-                    isEndIndent = true;
-                }
-
-                // ( ) の対応をします。 2020/01/14 by tueda
-                if (startChar == '(') {
+                } else if (startChar == '(') {
                     // ブロック開始と見なして字下げを予約します。
                     isBeginDoubleIndent = true;
+                    roundIndented++;
                 } else if (startChar == ')') {
                     // ブロック終了と見なして字下げします。
                     isEndDoubleIndent = true;
                 }
-                if (endChar == '(') {
+
+                // 次に終了文字列の判定を行います。
+                // ※開始文字列と終了文字列とは別個に判定する必要があります。
+                // ( ) の対応をします。 2020/01/14 by tueda
+                if (endChar == '{') {
+                    // ブロック開始と見なして字下げを予約します。
+                    isBeginIndent = true;
+                    curlyIndented++;
+                } else if (endChar == '}') {
+                    // ブロック終了と見なして字下げします。
+                    isEndIndent = true;
+                } else if (endChar == '(') {
                     // ブロック開始と見なして字下げを予約します。
                     isBeginDoubleIndent = true;
+                    roundIndented++;
                 } else if (endChar == ')') {
                     // ブロック終了と見なして字下げします。
                     isEndDoubleIndent = true;
                 }
 
-                if (isEndIndent) {
+                if (isEndIndent && curlyIndented > 0) {
                     // フラグ一回につき、インデント一個を反映します。
                     sourceIndent--;
-                } else if (isEndDoubleIndent) {
+                    curlyIndented--;
+                }
+                if (isEndDoubleIndent && roundIndented > 0) {
                     sourceIndent -= 2;
+                    roundIndented--;
                 }
 
                 // インデントを実施します。
@@ -241,9 +249,11 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                     // 4タブで字下げします。
                     strLine = "    " + strLine;
                 }
+
                 if (isBeginIndent) {
                     sourceIndent++;
-                } else if (isBeginDoubleIndent) {
+                }
+                if (isBeginDoubleIndent) {
                     sourceIndent += 2;
                 }
 
