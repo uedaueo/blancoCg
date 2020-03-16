@@ -54,6 +54,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return "if (" + argExpr + ") {";
         case BlancoCgSupportedLang.VB:
             return "If (" + argExpr + ") Then";
@@ -86,6 +87,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return "}";
         case BlancoCgSupportedLang.VB:
             return "End If";
@@ -305,6 +307,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return "}";
         case BlancoCgSupportedLang.VB:
             // ループ変数は省略します。
@@ -341,6 +344,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return "break";
         case BlancoCgSupportedLang.VB:
             return "Exit For";
@@ -486,6 +490,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.DELPHI:
+        case BlancoCgSupportedLang.TS:
             return ";";
         case BlancoCgSupportedLang.VB:
         case BlancoCgSupportedLang.RUBY:

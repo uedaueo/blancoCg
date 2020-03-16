@@ -60,6 +60,11 @@ public class BlancoCgSupportedLang {
     public static final int KOTLIN = 11;
 
     /**
+     * No.12 説明:TypeScript言語。
+     */
+    public static final int TS = 12;
+
+    /**
      * 未定義。文字列グループ以外の文字列または定数が未定義のもの。
      */
     public static final int NOT_DEFINED = -1;
@@ -126,6 +131,11 @@ public class BlancoCgSupportedLang {
         if ("kotlin".equals(argCheck)) {
             return true;
         }
+        // No.12
+        // 説明:TypeScript言語。
+        if ("ts".equals(argCheck)) {
+            return true;
+        }
         return false;
     }
 
@@ -189,6 +199,11 @@ public class BlancoCgSupportedLang {
         // No.11
         // 説明:Kotlin言語。
         if ("kotlin".equalsIgnoreCase(argCheck)) {
+            return true;
+        }
+        // No.12
+        // 説明:TypeScript言語。
+        if ("ts".equalsIgnoreCase(argCheck)) {
             return true;
         }
         return false;
@@ -258,6 +273,11 @@ public class BlancoCgSupportedLang {
         if ("kotlin".equals(argCheck)) {
             return KOTLIN;
         }
+        // No.12
+        // 説明:TypeScript言語。
+        if ("ts".equals(argCheck)) {
+            return TS;
+        }
 
         // 該当する定数が見つかりませんでした。
         return NOT_DEFINED;
@@ -326,6 +346,11 @@ public class BlancoCgSupportedLang {
         // 説明:Kotlin言語。
         if (argCheck == KOTLIN) {
             return "kotlin";
+        }
+        // No.12
+        // 説明:TypeScript言語。
+        if (argCheck == TS) {
+            return "ts";
         }
         // 未定義。
         if (argCheck == NOT_DEFINED) {

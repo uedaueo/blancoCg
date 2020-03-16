@@ -60,6 +60,7 @@ public class BlancoCgSourceUtil {
         case BlancoCgSupportedLang.CS:
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return BlancoJavaSourceUtil
                     .escapeStringAsJavaSource(originalString);
         case BlancoCgSupportedLang.VB:
@@ -101,6 +102,7 @@ public class BlancoCgSourceUtil {
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.SWIFT:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
                 return BlancoJavaSourceUtil.escapeStringAsJavaDoc(originalString);
         default:
             throw new IllegalArgumentException(

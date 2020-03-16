@@ -54,6 +54,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.SWIFT:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return "// ";
         case BlancoCgSupportedLang.VB:
             return "' ";
@@ -83,6 +84,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.VB:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return "\"";
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.RUBY:
@@ -114,6 +116,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.TS:
             return "+";
         case BlancoCgSupportedLang.PHP:
             return ".";
@@ -191,6 +194,10 @@ public class BlancoCgLineUtil {
             // ここでは変数のみ生成します。
             result = "var " + argVariableName + " : " + argTypeShortName;
             break;
+        case BlancoCgSupportedLang.TS:
+                // ここでは変数のみ生成します。
+            result = "let " + argVariableName + ": " + argTypeShortName;
+            break;
         }
 
         if (BlancoStringUtil.null2Blank(argInitialValue).length() > 0) {
@@ -219,6 +226,9 @@ public class BlancoCgLineUtil {
         switch (argTargetLang) {
             case BlancoCgSupportedLang.KOTLIN:
                 result = "val " + argValueName + " : " + argTypeShortName;
+                break;
+            case BlancoCgSupportedLang.TS:
+                result = "const " + argValueName + ": " + argTypeShortName;
                 break;
             default:
                 result = argTypeShortName + " " + argValueName;

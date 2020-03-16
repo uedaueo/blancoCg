@@ -95,6 +95,14 @@ public class BlancoCgMethod {
     private BlancoCgReturn fReturn;
 
     /**
+     * このメソッドの戻り値にnullを許容するかどうか。（kotlin, typescript用）
+     *
+     * フィールド: [notnull]。
+     * デフォルト: [false]。
+     */
+    private boolean fNotnull = false;
+
+    /**
      * このメソッドが発生しうる例外の一覧です。
      *
      * フィールド: [throwList]。
@@ -393,6 +401,29 @@ public class BlancoCgMethod {
     }
 
     /**
+     * フィールド [notnull] の値を設定します。
+     *
+     * フィールドの説明: [このメソッドの戻り値にnullを許容するかどうか。（kotlin, typescript用）]。
+     *
+     * @param argNotnull フィールド[notnull]に設定する値。
+     */
+    public void setNotnull(final boolean argNotnull) {
+        fNotnull = argNotnull;
+    }
+
+    /**
+     * フィールド [notnull] の値を取得します。
+     *
+     * フィールドの説明: [このメソッドの戻り値にnullを許容するかどうか。（kotlin, typescript用）]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[notnull]から取得した値。
+     */
+    public boolean getNotnull() {
+        return fNotnull;
+    }
+
+    /**
      * フィールド [throwList] の値を設定します。
      *
      * フィールドの説明: [このメソッドが発生しうる例外の一覧です。]。
@@ -554,6 +585,7 @@ public class BlancoCgMethod {
         buf.append(",staticInitializer=" + fStaticInitializer);
         buf.append(",parameterList=" + fParameterList);
         buf.append(",return=" + fReturn);
+        buf.append(",notnull=" + fNotnull);
         buf.append(",throwList=" + fThrowList);
         buf.append(",annotationList=" + fAnnotationList);
         buf.append(",localVariableList=" + fLocalVariableList);
@@ -623,6 +655,9 @@ public class BlancoCgMethod {
         // Name: fReturn
         // Type: blanco.cg.valueobject.BlancoCgReturn
         // フィールド[fReturn]はサポート外の型[blanco.cg.valueobject.BlancoCgReturn]です。
+        // Name: fNotnull
+        // Type: boolean
+        target.fNotnull = this.fNotnull;
         // Name: fThrowList
         // Type: java.util.List
         if (this.fThrowList != null) {

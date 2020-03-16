@@ -29,6 +29,13 @@ public class BlancoCgSourceFile {
     private String fPackage;
 
     /**
+     * このファイルが所属する名前空間です。名前空間は本来的にはファイルに所属するものではありませんが、便宜上、ファイル単位での定義とします。
+     *
+     * フィールド: [namespace]。
+     */
+    private String fNamespace;
+
+    /**
      * このファイルの文字エンコーディングです。
      *
      * フィールド: [encoding]。
@@ -42,6 +49,14 @@ public class BlancoCgSourceFile {
      * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
      */
     private List<java.lang.String> fImportList = new java.util.ArrayList<java.lang.String>();
+
+    /**
+     * このファイルの先頭に書かれるコードのリストです。TypeScriptのimportなどに使用します。
+     *
+     * フィールド: [headerList]。
+     * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
+     */
+    private List<java.lang.String> fHeaderList = new java.util.ArrayList<java.lang.String>();
 
     /**
      * このファイルに含まれる列挙体のリストです。
@@ -152,6 +167,28 @@ public class BlancoCgSourceFile {
     }
 
     /**
+     * フィールド [namespace] の値を設定します。
+     *
+     * フィールドの説明: [このファイルが所属する名前空間です。名前空間は本来的にはファイルに所属するものではありませんが、便宜上、ファイル単位での定義とします。]。
+     *
+     * @param argNamespace フィールド[namespace]に設定する値。
+     */
+    public void setNamespace(final String argNamespace) {
+        fNamespace = argNamespace;
+    }
+
+    /**
+     * フィールド [namespace] の値を取得します。
+     *
+     * フィールドの説明: [このファイルが所属する名前空間です。名前空間は本来的にはファイルに所属するものではありませんが、便宜上、ファイル単位での定義とします。]。
+     *
+     * @return フィールド[namespace]から取得した値。
+     */
+    public String getNamespace() {
+        return fNamespace;
+    }
+
+    /**
      * フィールド [encoding] の値を設定します。
      *
      * フィールドの説明: [このファイルの文字エンコーディングです。]。
@@ -194,6 +231,29 @@ public class BlancoCgSourceFile {
      */
     public List<java.lang.String> getImportList() {
         return fImportList;
+    }
+
+    /**
+     * フィールド [headerList] の値を設定します。
+     *
+     * フィールドの説明: [このファイルの先頭に書かれるコードのリストです。TypeScriptのimportなどに使用します。]。
+     *
+     * @param argHeaderList フィールド[headerList]に設定する値。
+     */
+    public void setHeaderList(final List<java.lang.String> argHeaderList) {
+        fHeaderList = argHeaderList;
+    }
+
+    /**
+     * フィールド [headerList] の値を取得します。
+     *
+     * フィールドの説明: [このファイルの先頭に書かれるコードのリストです。TypeScriptのimportなどに使用します。]。
+     * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
+     *
+     * @return フィールド[headerList]から取得した値。
+     */
+    public List<java.lang.String> getHeaderList() {
+        return fHeaderList;
     }
 
     /**
@@ -330,8 +390,10 @@ public class BlancoCgSourceFile {
         buf.append("name=" + fName);
         buf.append(",description=" + fDescription);
         buf.append(",package=" + fPackage);
+        buf.append(",namespace=" + fNamespace);
         buf.append(",encoding=" + fEncoding);
         buf.append(",importList=" + fImportList);
+        buf.append(",headerList=" + fHeaderList);
         buf.append(",enumList=" + fEnumList);
         buf.append(",interfaceList=" + fInterfaceList);
         buf.append(",classList=" + fClassList);
@@ -368,6 +430,9 @@ public class BlancoCgSourceFile {
         // Name: fPackage
         // Type: java.lang.String
         target.fPackage = this.fPackage;
+        // Name: fNamespace
+        // Type: java.lang.String
+        target.fNamespace = this.fNamespace;
         // Name: fEncoding
         // Type: java.lang.String
         target.fEncoding = this.fEncoding;
@@ -380,6 +445,17 @@ public class BlancoCgSourceFile {
                 java.lang.String loopTarget = null;
                 loopTarget = loopSource;
                 target.fImportList.add(loopTarget);
+            }
+        }
+        // Name: fHeaderList
+        // Type: java.util.List
+        if (this.fHeaderList != null) {
+            final java.util.Iterator<java.lang.String> iterator = this.fHeaderList.iterator();
+            for (; iterator.hasNext();) {
+                java.lang.String loopSource = iterator.next();
+                java.lang.String loopTarget = null;
+                loopTarget = loopSource;
+                target.fHeaderList.add(loopTarget);
             }
         }
         // Name: fEnumList

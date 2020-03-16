@@ -36,6 +36,7 @@ import blanco.cg.transformer.php.BlancoCgPhpSourceTransformer;
 import blanco.cg.transformer.python.BlancoCgPythonSourceTransformer;
 import blanco.cg.transformer.ruby.BlancoCgRubySourceTransformer;
 import blanco.cg.transformer.swift.BlancoCgSwiftSourceTransformer;
+import blanco.cg.transformer.ts.BlancoCgTsSourceTransformer;
 import blanco.cg.transformer.vb.BlancoCgVbSourceTransformer;
 
 /**
@@ -77,6 +78,10 @@ public class BlancoCgTransformerFactory {
             return BlancoCgTransformerFactory.getCpp11SourceTransformer();
         case BlancoCgSupportedLang.SWIFT:
             return BlancoCgTransformerFactory.getSwiftSourceTransformer();
+        case BlancoCgSupportedLang.KOTLIN:
+            return BlancoCgTransformerFactory.getKotlinSourceTransformer();
+        case BlancoCgSupportedLang.TS:
+            return BlancoCgTransformerFactory.getTsSourceTransformer();
         default:
             throw new IllegalArgumentException(
                     "BlancoCgTransformerFactory.getSourceTransformer: 対応しないプログラミング言語("
@@ -183,5 +188,14 @@ public class BlancoCgTransformerFactory {
      */
     public static BlancoCgTransformer getKotlinSourceTransformer() {
         return new BlancoCgKotlinSourceTransformer();
+    }
+
+    /**
+     * TypeScript ソースコードを生成するトランスフォーマーを取得します。
+     *
+     * @return TypeScript 言語ソースコードを生成するトランスフォーマー。
+     */
+    public static BlancoCgTransformer getTsSourceTransformer() {
+        return new BlancoCgTsSourceTransformer();
     }
 }
