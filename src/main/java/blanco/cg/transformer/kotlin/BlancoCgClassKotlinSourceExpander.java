@@ -27,6 +27,7 @@ package blanco.cg.transformer.kotlin;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
@@ -175,7 +176,9 @@ class BlancoCgClassKotlinSourceExpander {
         for (blanco.cg.valueobject.BlancoCgField arg : constructorArgs) {
             final BlancoCgType type = arg.getType();
             // import文に型を追加
-            argSourceFile.getImportList().add(type.getName());
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
+                argSourceFile.getImportList().add(type.getName());
+            }
 
             if (count != 0) {
                 argBuf.append(",");
@@ -230,7 +233,9 @@ class BlancoCgClassKotlinSourceExpander {
             final BlancoCgType type = cgClass.getExtendClassList().get(index);
 
             // import文に型を追加。
-            argSourceFile.getImportList().add(type.getName());
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
+                argSourceFile.getImportList().add(type.getName());
+            }
 
             if (index == 0) {
                 argBuf.append(" : "
@@ -266,7 +271,9 @@ class BlancoCgClassKotlinSourceExpander {
                     index);
 
             // import文に型を追加。
-            argSourceFile.getImportList().add(type.getName());
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
+                argSourceFile.getImportList().add(type.getName());
+            }
 
             if (index == 0 && !expanded) {
                 argBuf.append(" : ");

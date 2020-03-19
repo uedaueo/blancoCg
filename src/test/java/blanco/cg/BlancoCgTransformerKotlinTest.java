@@ -134,6 +134,13 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgField3.setAnnotationList(annotations);
         cgField3.setDefault("\"static and final member!\"");
 
+        final BlancoCgField cgField4 = cgFactory.createField("myField4", "org.Hoge", "staticフィールドの試験です。");
+        cgClass.getFieldList().add(cgField4);
+        cgField4.setAccess("public");
+        cgField4.setStatic(true);
+        cgField4.setFinal(true);
+        cgField4.setConst(true);
+
         // static initializer のテスト
         {
             // メソッドを生成します。

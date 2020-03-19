@@ -29,6 +29,7 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgException;
 import blanco.cg.valueobject.BlancoCgLangDoc;
 import blanco.cg.valueobject.BlancoCgMethod;
@@ -120,7 +121,9 @@ class BlancoCgMethodKotlinSourceExpander {
 
         for (BlancoCgParameter cgParameter : cgMethod.getParameterList()) {
             // import文に型を追加。
-            argSourceFile.getImportList().add(cgParameter.getType().getName());
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, cgParameter.getType().getName())) {
+                argSourceFile.getImportList().add(cgParameter.getType().getName());
+            }
 
             // 言語ドキュメントにパラメータを追加。
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
@@ -128,8 +131,10 @@ class BlancoCgMethodKotlinSourceExpander {
 
         if (cgMethod.getReturn() != null) {
             // import文に型を追加。
-            argSourceFile.getImportList().add(
-                    cgMethod.getReturn().getType().getName());
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, cgMethod.getReturn().getType().getName())) {
+                argSourceFile.getImportList().add(
+                        cgMethod.getReturn().getType().getName());
+            }
 
             // 言語ドキュメントにreturnを追加。
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
@@ -138,7 +143,9 @@ class BlancoCgMethodKotlinSourceExpander {
         // 例外についてLangDoc構造体に展開
         for (BlancoCgException cgException : cgMethod.getThrowList()) {
             // import文に型を追加。
-            argSourceFile.getImportList().add(cgException.getType().getName());
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, cgException.getType().getName())) {
+                argSourceFile.getImportList().add(cgException.getType().getName());
+            }
 
             // 言語ドキュメントに例外を追加。
             cgMethod.getLangDoc().getThrowList().add(cgException);

@@ -160,4 +160,33 @@ public class BlancoCgSourceUtil {
         return writer.toString();
     }
 
+    /**
+     * クラス名が正式形かどうかを判定します。
+     *
+     * @param className
+     * @return
+     */
+    public static boolean isCanonicalClassName(final int targetLang, final String className) {
+        boolean result = false;
+
+        if (className == null) {
+            return result;
+        }
+
+        switch (targetLang) {
+            case BlancoCgSupportedLang.JAVA:
+            case BlancoCgSupportedLang.KOTLIN:
+                final int findLastDot = className.lastIndexOf('.');
+                if (findLastDot > 0) {
+                    result = true;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "BlancoCgSourceUtil.isCanonicalClassName にサポートされない言語("
+                                + targetLang + ")が引数として与えられました。");
+        }
+
+        return result;
+    }
 }

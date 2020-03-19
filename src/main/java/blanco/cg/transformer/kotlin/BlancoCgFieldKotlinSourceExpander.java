@@ -29,6 +29,7 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgField;
 import blanco.cg.valueobject.BlancoCgLangDoc;
 import blanco.cg.valueobject.BlancoCgSourceFile;
@@ -107,7 +108,9 @@ class BlancoCgFieldKotlinSourceExpander {
         }
 
         // import文に型を追加。
-        argSourceFile.getImportList().add(cgField.getType().getName());
+        if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, cgField.getType().getName())) {
+            argSourceFile.getImportList().add(cgField.getType().getName());
+        }
 
         // フィールド生成の本体部分を展開します。
         if (cgField.getConst()) {

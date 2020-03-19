@@ -26,6 +26,8 @@ package blanco.cg.transformer.kotlin;
 
 import java.util.List;
 
+import blanco.cg.BlancoCgSupportedLang;
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
@@ -126,7 +128,9 @@ class BlancoCgInterfaceKotlinSourceExpander {
             final BlancoCgType type = cgClass.getExtendClassList().get(index);
 
             // import文に型を追加。
-            argSourceFile.getImportList().add(type.getName());
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
+                argSourceFile.getImportList().add(type.getName());
+            }
 
             if (index == 0) {
                 argBuf.append(" : "
