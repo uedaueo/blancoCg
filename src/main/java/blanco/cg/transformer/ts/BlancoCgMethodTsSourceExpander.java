@@ -193,12 +193,12 @@ class BlancoCgMethodTsSourceExpander {
 
             /*
              * TypeScript では複数の型が指定できるが、現時点では対応しない。
-             * Nullable に対しては、null | undefined の両方を許容する。
+             * Nullable に対しては、undefined を追加する。
              * by tueda, 2020/03/15
              */
             if (!cgParameter.getNotnull()) {
                 // nullable
-                buf.append(" | null | undefined");
+                buf.append(" | undefined");
             }
 
             // デフォルト値の指定がある場合にはこれを展開します。
@@ -218,12 +218,12 @@ class BlancoCgMethodTsSourceExpander {
                         .getReturn().getType()));
                 /*
                  * TypeScript では複数の型が指定できるが、現時点では対応しない。
-                 * Nullable に対しては、null | undefined の両方を許容する。
+                 * Nullable に対しては、undefined を追加する。
                  * by tueda, 2020/03/15
                  */
                 if (!cgMethod.getNotnull()) {
                     // nullable
-                    buf.append(" | null | undefined");
+                    buf.append(" | undefined");
                 }
             } else {
                 /*

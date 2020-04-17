@@ -148,6 +148,49 @@ public class BlancoCgTransformerTsTest extends TestCase {
         // メソッドの内容を追加します。
         cgSetterMethod2.getLineList().add("this._myField2 = myField");
 
+        //--- Generic のテスト ---
+        // フィールドを生成します。
+        final BlancoCgField cgField3 = cgFactory.createField("_myGeneric",
+                "Array", "Genericsフィールドの試験です。");
+        cgClass.getFieldList().add(cgField3);
+        cgField3.getType().setGenerics("string");
+        cgField3.setFinal(false);
+        cgField3.setAccess("private");
+        cgField3.setNotnull(true);
+        cgField3.setDefault("[\"generics!\"]");
+
+        // Getter メソッドを生成します。
+        final BlancoCgMethod cgGetterMethod3 = cgFactory.createMethod("myGeneric",
+                "Getterメソッドの試験です。");
+        cgClass.getMethodList().add(cgGetterMethod3);
+        // TypeScript では get アクセサを用います。
+        cgGetterMethod3.setAccess("get");
+
+        // 戻り値を設定します。
+        cgGetterMethod3.setReturn(cgFactory.createReturn("Array", "値を戻します。"));
+        cgGetterMethod3.getReturn().getType().setGenerics("string");
+        cgGetterMethod3.setNotnull(true);
+
+        // メソッドの内容を追加します。
+        cgGetterMethod3.getLineList().add("return this._myGeneric");
+
+        // Setter メソッドの試験です。
+        final BlancoCgMethod cgSetterMethod3 = cgFactory.createMethod("myGeneric",
+                "Setterメソッドの試験です。");
+        cgClass.getMethodList().add(cgSetterMethod3);
+        cgSetterMethod3.setAccess("set");
+
+        // パラメータを追加します。
+        BlancoCgParameter param3 = cgFactory.createParameter("myGeneric", "Array",
+                "文字列引数。");
+        param3.getType().setGenerics("string");
+        param3.setNotnull(true);
+
+        cgSetterMethod3.getParameterList().add(param3);
+
+        // メソッドの内容を追加します。
+        cgSetterMethod3.getLineList().add("this._myGeneric = myGeneric");
+
         final BlancoCgTransformer cgTransformerTs = BlancoCgTransformerFactory
                 .getTsSourceTransformer();
         cgTransformerTs.transform(cgSourceFile, new File("./tmp/blanco"));
