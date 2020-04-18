@@ -65,6 +65,8 @@ public class BlancoCgTsSourceTransformer extends
         final List<String> sourceLines = new BlancoCgSourceFileTsSourceExpander()
                 .transformSourceFile(argSourceFile);
 
+        // ソースコードのタブ数を設定します。
+        this.setTabs(argSourceFile.getTabs());
         // ソースコードを整形します。
         formatSource(sourceLines);
 

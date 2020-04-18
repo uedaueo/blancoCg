@@ -36,6 +36,8 @@ public class BlancoCgTransformerTsTest extends TestCase {
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
                 "myprog", "テスト用のクラス");
         cgSourceFile.setEncoding("UTF-8");
+        // TypeScript では 2 タブが一般的です
+        cgSourceFile.setTabs(2);
         // 通常のimportの試験。これらはすべて無視されます。
         cgSourceFile.getImportList().add("java.text.NumberFormat");
         // 同じパッケージのインポート試験。
@@ -208,6 +210,8 @@ public class BlancoCgTransformerTsTest extends TestCase {
         final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
                 "テスト用のインタフェース");
         cgSourceFile.getImportList().add("java.text.NumberFormat");
+        // 2 タブに設定します。
+        cgSourceFile.setTabs(2);
 
         // クラスを生成します。
         final BlancoCgInterface cgInterface = cgOf.createInterface(

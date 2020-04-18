@@ -48,6 +48,19 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
     private static final boolean IS_DEBUG = false;
 
     /**
+     * タブ数
+     */
+    private int tabs = 4;
+
+    public int getTabs() {
+        return tabs;
+    }
+
+    public void setTabs(int tabs) {
+        this.tabs = tabs;
+    }
+
+    /**
      * ソースファイル・バリューオブジェクトをJavaソースコードに変換して出力先ディレクトリに出力します。
      *
      * このAPIではパッケージ構造をディレクトリ構造として考慮します。
@@ -244,10 +257,15 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                     roundIndented--;
                 }
 
+                StringBuffer indentWidth = new StringBuffer();
+                // インデント幅を決めます。デフォルトは 4 タブです。
+                for (int width = 0; width < this.tabs; width++) {
+                    indentWidth.append(" ");
+                }
+
                 // インデントを実施します。
                 for (int indexIndent = 0; indexIndent < sourceIndent; indexIndent++) {
-                    // 4タブで字下げします。
-                    strLine = "    " + strLine;
+                    strLine = indentWidth.toString() + strLine;
                 }
 
                 if (isBeginIndent) {

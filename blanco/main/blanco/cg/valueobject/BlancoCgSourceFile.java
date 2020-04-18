@@ -43,6 +43,14 @@ public class BlancoCgSourceFile {
     private String fEncoding;
 
     /**
+     * タブをwhite spaceいくつで置き換えるか、という値です。
+     *
+     * フィールド: [tabs]。
+     * デフォルト: [4]。
+     */
+    private int fTabs = 4;
+
+    /**
      * このファイルが参照する他のパッケージのリストです。java.lang.Stringのリスト。
      *
      * フィールド: [importList]。
@@ -208,6 +216,29 @@ public class BlancoCgSourceFile {
      */
     public String getEncoding() {
         return fEncoding;
+    }
+
+    /**
+     * フィールド [tabs] の値を設定します。
+     *
+     * フィールドの説明: [タブをwhite spaceいくつで置き換えるか、という値です。]。
+     *
+     * @param argTabs フィールド[tabs]に設定する値。
+     */
+    public void setTabs(final int argTabs) {
+        fTabs = argTabs;
+    }
+
+    /**
+     * フィールド [tabs] の値を取得します。
+     *
+     * フィールドの説明: [タブをwhite spaceいくつで置き換えるか、という値です。]。
+     * デフォルト: [4]。
+     *
+     * @return フィールド[tabs]から取得した値。
+     */
+    public int getTabs() {
+        return fTabs;
     }
 
     /**
@@ -392,6 +423,7 @@ public class BlancoCgSourceFile {
         buf.append(",package=" + fPackage);
         buf.append(",namespace=" + fNamespace);
         buf.append(",encoding=" + fEncoding);
+        buf.append(",tabs=" + fTabs);
         buf.append(",importList=" + fImportList);
         buf.append(",headerList=" + fHeaderList);
         buf.append(",enumList=" + fEnumList);
@@ -436,6 +468,9 @@ public class BlancoCgSourceFile {
         // Name: fEncoding
         // Type: java.lang.String
         target.fEncoding = this.fEncoding;
+        // Name: fTabs
+        // Type: int
+        target.fTabs = this.fTabs;
         // Name: fImportList
         // Type: java.util.List
         if (this.fImportList != null) {
