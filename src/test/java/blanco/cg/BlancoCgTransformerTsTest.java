@@ -15,6 +15,8 @@ import blanco.cg.valueobject.*;
 import junit.framework.TestCase;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TypeScript言語用の生成試験。
@@ -54,6 +56,12 @@ public class BlancoCgTransformerTsTest extends TestCase {
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("myprog.MyInterface"));
+
+        // Plain Text を生成します。
+        List<String> plainTextList = new ArrayList<>();
+        plainTextList.add("[i: string]: any;");
+        plainTextList.add("[j: number]: any;");
+        cgClass.setPlainTextList(plainTextList);
 
         // 列挙体（TypeScript言語の生成では列挙体は当面無視します）
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
@@ -219,6 +227,12 @@ public class BlancoCgTransformerTsTest extends TestCase {
         cgSourceFile.getInterfaceList().add(cgInterface);
         cgInterface.getLangDoc().getTagList().add(
                 cgOf.createLangDocTag("author", null, "blanco Framework"));
+
+        // Plain Text を生成します。
+        List<String> plainTextList = new ArrayList<>();
+        plainTextList.add("[i: string]: any;");
+        plainTextList.add("[j: number]: any;");
+        cgInterface.setPlainTextList(plainTextList);
 
         // フィールドを生成します。
         final BlancoCgField cgField = cgOf.createField("myField",

@@ -95,6 +95,9 @@ class BlancoCgInterfaceTsSourceExpander {
 
         argSourceLines.add(buf.toString());
 
+        // ここで PlainText を展開
+        expandPlainText(cgInterface, argSourceLines);
+
         // ここでフィールドを展開。
         expandFieldList(cgInterface, argSourceFile, argSourceLines);
 
@@ -102,6 +105,25 @@ class BlancoCgInterfaceTsSourceExpander {
         expandMethodList(cgInterface, argSourceFile, argSourceLines);
 
         argSourceLines.add("}");
+    }
+
+    /**
+     * Plain Text を展開します。
+     *
+     * @param cgInterface
+     * @param argSourceLines
+     */
+    private void expandPlainText(
+            final BlancoCgInterface cgInterface,
+            final List<String> argSourceLines) {
+        List<String> plainTextList = cgInterface.getPlainTextList();
+
+        // 有無を言わさず改行を入れます
+        argSourceLines.add("");
+
+        for (String planText : plainTextList) {
+            argSourceLines.add(planText);
+        }
     }
 
     /**

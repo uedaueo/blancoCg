@@ -101,6 +101,9 @@ class BlancoCgClassTsSourceExpander {
         // 行を確定して書き出しを実施。
         argSourceLines.add(buf.toString());
 
+        // ここで PlainText を展開
+        expandPlainText(cgClass, argSourceLines);
+
         // 列挙型は当面、自動生成の対象外とします。(tueda)
 
         // ここでフィールドを展開。
@@ -111,6 +114,25 @@ class BlancoCgClassTsSourceExpander {
 
         // クラスのブロックの終了。
         argSourceLines.add("}");
+    }
+
+    /**
+     * Plain Text を展開します。
+     *
+     * @param cgClass
+     * @param argSourceLines
+     */
+    private void expandPlainText(
+            final BlancoCgClass cgClass,
+            final List<String> argSourceLines) {
+        List<String> plainTextList = cgClass.getPlainTextList();
+
+        // 有無を言わさず改行を入れます
+        argSourceLines.add("");
+
+        for (String planText : plainTextList) {
+            argSourceLines.add(planText);
+        }
     }
 
     /**

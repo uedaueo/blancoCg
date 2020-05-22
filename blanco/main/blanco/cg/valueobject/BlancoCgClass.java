@@ -129,6 +129,14 @@ public class BlancoCgClass {
     private List<blanco.cg.valueobject.BlancoCgField> fConstructorArgList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgField>();
 
     /**
+     * クラスのフィールド中に自由に記述できるテキストです。フィールド領域の先頭に、一度だけ記述できます。
+     *
+     * フィールド: [plainTextList]。
+     * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
+     */
+    private List<java.lang.String> fPlainTextList = new java.util.ArrayList<java.lang.String>();
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [このクラスの名前です。パッケージ名を除くクラス名を指定する点に注意してください。]。
@@ -474,6 +482,29 @@ public class BlancoCgClass {
     }
 
     /**
+     * フィールド [plainTextList] の値を設定します。
+     *
+     * フィールドの説明: [クラスのフィールド中に自由に記述できるテキストです。フィールド領域の先頭に、一度だけ記述できます。]。
+     *
+     * @param argPlainTextList フィールド[plainTextList]に設定する値。
+     */
+    public void setPlainTextList(final List<java.lang.String> argPlainTextList) {
+        fPlainTextList = argPlainTextList;
+    }
+
+    /**
+     * フィールド [plainTextList] の値を取得します。
+     *
+     * フィールドの説明: [クラスのフィールド中に自由に記述できるテキストです。フィールド領域の先頭に、一度だけ記述できます。]。
+     * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
+     *
+     * @return フィールド[plainTextList]から取得した値。
+     */
+    public List<java.lang.String> getPlainTextList() {
+        return fPlainTextList;
+    }
+
+    /**
      * このバリューオブジェクトの文字列表現を取得します。
      *
      * <P>使用上の注意</P>
@@ -503,6 +534,7 @@ public class BlancoCgClass {
         buf.append(",methodList=" + fMethodList);
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",constructorArgList=" + fConstructorArgList);
+        buf.append(",plainTextList=" + fPlainTextList);
         buf.append("]");
         return buf.toString();
     }
@@ -634,6 +666,17 @@ public class BlancoCgClass {
                 blanco.cg.valueobject.BlancoCgField loopTarget = null;
                 // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgField]です。
                 target.fConstructorArgList.add(loopTarget);
+            }
+        }
+        // Name: fPlainTextList
+        // Type: java.util.List
+        if (this.fPlainTextList != null) {
+            final java.util.Iterator<java.lang.String> iterator = this.fPlainTextList.iterator();
+            for (; iterator.hasNext();) {
+                java.lang.String loopSource = iterator.next();
+                java.lang.String loopTarget = null;
+                loopTarget = loopSource;
+                target.fPlainTextList.add(loopTarget);
             }
         }
     }
