@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -35,7 +35,7 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
  * プログラミング言語の種類をまたがる抽象的なトランスフォーマーです。
- * 
+ *
  * @author IGA Tosiki
  */
 abstract class AbstractBlancoCgTransformer implements BlancoCgTransformer {
@@ -46,16 +46,16 @@ abstract class AbstractBlancoCgTransformer implements BlancoCgTransformer {
 
     /**
      * ソースファイルの拡張子を取得します。
-     * 
+     *
      * @return 拡張子。
      */
     protected abstract String getSourceFileExt();
 
     /**
      * ファイル名をクラス名またはインタフェース名から導出します。
-     * 
+     *
      * このメソッドは、まだファイル名が確定していない場合にのみ呼び出します。
-     * 
+     *
      * @param argSourceFile
      *            ソースファイルオブジェクト。
      */
@@ -95,9 +95,9 @@ abstract class AbstractBlancoCgTransformer implements BlancoCgTransformer {
 
     /**
      * ソースコードをライターへ出力します。
-     * 
+     *
      * java.lang.Stringのリストをライターへと出力します。
-     * 
+     *
      * @param argSourceLines
      *            ソースコード行リスト。
      * @param writer
@@ -109,6 +109,21 @@ abstract class AbstractBlancoCgTransformer implements BlancoCgTransformer {
             final BufferedWriter writer) throws IOException {
         boolean isPastLineBlank = false;
         boolean isPastBlockStart = false;
+        String lineSeparator = System.getProperty("line.separator");
+        /*
+         * for debugging
+         */
+        String lineSeparatorMark = "other, use system default.";
+        if ("\n".equals(lineSeparator)) {
+            lineSeparatorMark = "LF";
+        } else if ("\r\n".equals(lineSeparator)) {
+            lineSeparatorMark = "CRLF";
+        } else if ("\r".equals(lineSeparator)) {
+            lineSeparatorMark = "CR";
+        } else {
+            lineSeparator = System.lineSeparator();
+        }
+        System.out.println(CMDLINE_PREFIX + "lineSeparator = " + lineSeparatorMark);
         for (int index = 0; index < argSourceLines.size(); index++) {
             final String line = argSourceLines.get(index);
 
@@ -138,7 +153,8 @@ abstract class AbstractBlancoCgTransformer implements BlancoCgTransformer {
 
             // 行を 1行 出力します。
             writer.write(line);
-            writer.newLine();
+//            writer.newLine();
+            writer.write(lineSeparator);
         }
     }
 }
