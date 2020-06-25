@@ -75,11 +75,17 @@ class BlancoCgClassTsSourceExpander {
              * blanco では 1 ファイルに 1 クラスを想定していること、
              * class には名前をつけることを前提としているので、
              * export default は使用しないこととします。
-             *
              * by tueda, 2020/03/11
+             *
+             * 追記：vue component では default が必須なので、
+             * default と指定された場合はには export default を
+             * 使用する事にします。
+             * by tueda, 2020/06/17
              */
             if ("public".equals(cgClass.getAccess())) {
                 buf.append("export ");
+            } else if ("default".equals(cgClass.getAccess())) {
+                buf.append("export default ");
             }
         }
         if (cgClass.getAbstract()) {
