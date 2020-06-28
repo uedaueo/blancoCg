@@ -29,8 +29,11 @@ import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.*;
+import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +71,7 @@ class BlancoCgClassKotlinSourceExpander {
                 .getLangDoc(), argSourceLines);
 
         // アノテーションを展開。
-        expandAnnotationList(cgClass, argSourceLines);
+        BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgClass.getAnnotationList(), argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
@@ -115,38 +118,6 @@ class BlancoCgClassKotlinSourceExpander {
     }
 
     /**
-     * アノテーションを展開します。
-     *
-     * @param cgClass
-     *            クラス。
-     * @param argSourceLines
-     *            ソースコード。
-     */
-    private void expandAnnotationList(final BlancoCgClass cgClass,
-            final List<java.lang.String> argSourceLines) {
-        for (String strAnnotation : cgClass.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
-            argSourceLines.add("@" + strAnnotation);
-        }
-    }
-
-    /**
-     * アノテーションを展開します。
-     *
-     * @param cgField
-     *            フィールド。
-     * @param argSourceLines
-     *            ソースコード。
-     */
-    private void expandAnnotationList(final BlancoCgField cgField, final List<java.lang.String> argSourceLines) {
-        for (String strAnnotation : cgField.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
-            // constractor 引数へのアノテーションはすべて改行する方針とします
-            argSourceLines.add("    @" + strAnnotation);
-        }
-    }
-
-    /**
      * kotlin のプライマリコンストラクタを展開します。
      *
      * @param cgClass
@@ -187,7 +158,7 @@ class BlancoCgClassKotlinSourceExpander {
             }
 
             // アノテーションを展開。
-            expandAnnotationList(arg, argSourceLines);
+            BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, arg.getAnnotationList(), argSourceLines);
 
             // 変数が変更可能か不可かを設定します。
             // コンストラクタ引数なので、通常はvalで良いようには思います, tueda

@@ -25,7 +25,12 @@
 package blanco.cg.util;
 
 import blanco.cg.BlancoCgSupportedLang;
+import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * blancoCgの行に関するユーティリティです。
@@ -532,5 +537,62 @@ public class BlancoCgLineUtil {
     public static final String getReturn(final int argTargetLang,
             final String argExpr) {
         return BlancoCgStatementUtil.getReturn(argTargetLang, argExpr);
+    }
+
+
+    /**
+     * Annotation を展開します。
+     *
+     * @param argTargetLang
+     * @param argAnnotationList
+     * @param argSourceLines
+     */
+    public static void expandAnnotationList(
+            final int argTargetLang,
+            final List<String> argAnnotationList,
+            final List<java.lang.String> argSourceLines
+    ) {
+        switch (argTargetLang) {
+            case BlancoCgSupportedLang.KOTLIN:
+            case BlancoCgSupportedLang.TS:
+                expandKotlinAnnotationList(argAnnotationList, argSourceLines);
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
+                                + ")が与えられました。");
+        }
+    }
+
+    /**
+     * KotlinStyle の Annotation を展開します。
+     * 恐らく、Java や Typescript も同じロジックで展開できるはずです。
+     *
+     * @param argAnnotationList
+     * @param argSourceLines
+     */
+    private static void expandKotlinAnnotationList(
+            final List<String> argAnnotationList,
+            final List<java.lang.String> argSourceLines
+    ) {
+        for (String strAnnotation : argAnnotationList) {
+            // annotation 内での改行を個別に設定します
+            String [] ann = BlancoNameUtil.splitString(strAnnotation, '\n');
+            List<String> annList = new ArrayList<>(Arrays.asList(ann));
+            int i = 0;
+            String LF = System.getProperty("line.separator", "\n");
+            String myLine = annList.get(0);
+            for (String annLine : annList) {
+                if (i == 0) {
+                    annLine = "@" + annLine;
+                } else {
+                    argSourceLines.add(myLine + LF);
+                }
+                myLine = annLine;
+                i++;
+            }
+            // Java言語のAnnotationは @ から記述します。
+            argSourceLines.add(myLine);
+        }
     }
 }

@@ -25,6 +25,8 @@
  */
 package blanco.cg.transformer.kotlin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
@@ -33,6 +35,7 @@ import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgField;
 import blanco.cg.valueobject.BlancoCgLangDoc;
 import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
@@ -85,7 +88,7 @@ class BlancoCgFieldKotlinSourceExpander {
         new BlancoCgLangDocKotlinSourceExpander().transformLangDoc(cgField.getLangDoc(), argSourceLines);
 
         // アノテーションを展開。
-        expandAnnotationList(cgField, argSourceLines);
+        BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgField.getAnnotationList(), argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
@@ -145,21 +148,6 @@ class BlancoCgFieldKotlinSourceExpander {
         argSourceLines.add(buf.toString());
         if (bufGetter.length() > 0) {
             argSourceLines.add(bufGetter.toString());
-        }
-    }
-
-    /**
-     * アノテーションを展開します。
-     *
-     * @param cgField
-     *            フィールド。
-     * @param argSourceLines
-     *            ソースコード。
-     */
-    private void expandAnnotationList(final BlancoCgField cgField, final List<java.lang.String> argSourceLines) {
-        for (String strAnnotation : cgField.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
-            argSourceLines.add("@" + strAnnotation);
         }
     }
 }

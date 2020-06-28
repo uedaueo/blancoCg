@@ -25,6 +25,7 @@
 package blanco.cg.transformer.kotlin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
@@ -86,7 +87,7 @@ class BlancoCgMethodKotlinSourceExpander {
                 .getLangDoc(), argSourceLines);
 
         // アノテーションを展開。
-        expandAnnotationList(cgMethod, argSourceLines);
+        BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgMethod.getAnnotationList(), argSourceLines);
 
         // メソッドの本体部分を展開。
         expandMethodBody(cgMethod, argSourceLines, argIsInterface);
@@ -268,23 +269,6 @@ class BlancoCgMethodKotlinSourceExpander {
 
             // メソッドブロックの終了。
             argSourceLines.add("}");
-        }
-    }
-
-    /**
-     * アノテーションを展開します。
-     *
-     * @param cgMethod
-     *            メソッド。
-     * @param argSourceLines
-     *            ソースコード。
-     */
-    private void expandAnnotationList(final BlancoCgMethod cgMethod,
-            final List<java.lang.String> argSourceLines) {
-
-        for (String strAnnotation : cgMethod.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
-            argSourceLines.add("@" + strAnnotation);
         }
     }
 

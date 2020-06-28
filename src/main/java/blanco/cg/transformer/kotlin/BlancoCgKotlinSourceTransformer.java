@@ -30,6 +30,7 @@ import java.util.List;
 
 import blanco.cg.transformer.AbstractBlancoCgJavaStyleTransformer;
 import blanco.cg.valueobject.BlancoCgSourceFile;
+import com.facebook.ktfmt.FormatterKt;
 
 /**
  * blancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーのエントリポイントです。
@@ -73,6 +74,24 @@ public class BlancoCgKotlinSourceTransformer extends
 
         // 念のためフラッシュを実施。
         argWriter.flush();
+    }
+
+    @Override
+    protected void formatSource(final List<java.lang.String> argSourceLines) {
+        String LF = System.getProperty("line.separator", "\n");
+        String strSourceLines = String.join(LF, argSourceLines);
+        String strFormatted = "";
+        try {
+            strFormatted = FormatterKt.format(strSourceLines);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        String [] arrayFormattedLines = strFormatted.split(LF);
+        argSourceLines.clear();
+        for (int i = 0; i < arrayFormattedLines.length; i++) {
+            argSourceLines.add(arrayFormattedLines[i]);
+        }
     }
 
     /**

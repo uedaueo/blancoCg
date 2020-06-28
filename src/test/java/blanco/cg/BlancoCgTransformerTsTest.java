@@ -54,6 +54,7 @@ public class BlancoCgTransformerTsTest extends TestCase {
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
+        cgClass.setAccess("default");
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("myprog.MyInterface"));
 

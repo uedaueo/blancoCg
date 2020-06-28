@@ -55,6 +55,10 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                 cgFactory.createType("java.lang.Runnable"));
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("myprog.MyInterface"));
+        // クラスのコンストラクタ
+        List<String> classAnnotationList = new ArrayList<>();
+        classAnnotationList.add("hoge(\n\"fuga: boge\"\n)");
+        cgClass.setAnnotationList(classAnnotationList);
 
         // プライマリコンストラクタのテストです
         BlancoCgField constParam = new BlancoCgField();
@@ -74,6 +78,10 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         constParam.setName("second");
         constParam.setConst(true);
         constType.setName("kotlin.Number");
+        // プライマリコンストラクタのアノテーションテスト
+        List<String> primaryConstAnnotationList = new ArrayList<>();
+        primaryConstAnnotationList.add("hoge(\n\"fuga: boge\"\n)");
+        constParam.setAnnotationList(primaryConstAnnotationList);
 
         // プライマリコンストラクタのテストです
         constParam = new BlancoCgField();
@@ -116,12 +124,14 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgClass.getFieldList().add(cgField);
         cgField.setFinal(true);
         cgField.setDefault("Date()");
+        cgField.setAccess("public");
 
-        final BlancoCgField cgField2 = cgFactory.createField("myField2",
-                "java.util.Date", "日付フィールドの試験v2です。");
-        cgClass.getFieldList().add(cgField2);
-        cgField2.getType().setArray(true);
-        cgField2.getType().setArrayDimension(2);
+//        final BlancoCgField cgField2 = cgFactory.createField("myField2",
+//                "java.util.Date", "日付フィールドの試験v2です。");
+//        cgClass.getFieldList().add(cgField2);
+//        cgField2.getType().setArray(true);
+//        cgField2.getType().setArrayDimension(2);
+//        cgField2.setAccess("public");
 
         final BlancoCgField cgField3 = cgFactory.createField("myField3", "String", "staticフィールドの試験です。");
         cgClass.getFieldList().add(cgField3);
@@ -173,7 +183,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
 
         // アノテーションの追加。
         cgMethod.getAnnotationList().add(
-                "Copyright(value=\"blanco Framework\")");
+                "Copyright(\nvalue=\"blanco Framework\"\n)");
         cgMethod.setOverride(true);
 
         // メソッドの内容を追加します。

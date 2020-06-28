@@ -24,11 +24,15 @@
  */
 package blanco.cg.transformer.kotlin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
+import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.*;
+import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
@@ -67,7 +71,7 @@ class BlancoCgInterfaceKotlinSourceExpander {
                 .getLangDoc(), argSourceLines);
 
         // アノテーションを展開。
-        expandAnnotationList(cgInterface, argSourceLines);
+        BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgInterface.getAnnotationList(), argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
@@ -96,22 +100,6 @@ class BlancoCgInterfaceKotlinSourceExpander {
         expandMethodList(cgInterface, argSourceFile, argSourceLines);
 
         argSourceLines.add("}");
-    }
-
-    /**
-     * アノテーションを展開します。
-     *
-     * @param cgInterface
-     *            インタフェース。
-     * @param argSourceLines
-     *            ソースコード。
-     */
-    private void expandAnnotationList(final BlancoCgInterface cgInterface,
-            final List<java.lang.String> argSourceLines) {
-        for (String strAnnotation : cgInterface.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
-            argSourceLines.add("@" + strAnnotation);
-        }
     }
 
     /**
