@@ -360,4 +360,52 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                 .getKotlinSourceTransformer();
         cgTransformerKotlin.transform(cgSourceFile, new File("./tmp/blanco"));
     }
+
+    /**
+     * Generics なクラスのテストです。
+     * @throws Exception
+     */
+    public void testTransformercGenerics() throws Exception {
+        final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
+                .getInstance();
+
+        // ソースファイルを生成します。
+        final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
+                "myprog", "テスト用のクラス");
+        cgSourceFile.setEncoding("UTF-8");
+        cgSourceFile.getImportList().add("java.text.NumberFormat");
+        // 同じパッケージのインポート試験。
+        cgSourceFile.getImportList().add("myprog.MyClass");
+
+        // クラスを生成します。
+        final BlancoCgClass cgClass = cgFactory.createClass("MyClassGenerics",
+                "このクラスは、テストのためのクラスです。");
+        cgSourceFile.getClassList().add(cgClass);
+        cgClass.getLangDoc().getTagList().add(
+                cgFactory.createLangDocTag("author", null, "blanco Framework"));
+        cgClass.getExtendClassList().add(
+                cgFactory.createType("myprog.MyClass"));
+        cgClass.getImplementInterfaceList().add(
+                cgFactory.createType("myprog.MyInterface"));
+        cgClass.setFinal(true);
+        cgClass.setGenerics("T");
+
+        // フィールドを生成します。
+        final BlancoCgField cgField = cgFactory.createField("myField",
+                "java.util.Date", "日付フィールドの試験です。");
+        cgClass.getConstructorArgList().add(cgField);
+        cgField.setDefault("Date()");
+        cgField.setAccess("public");
+        cgField.setFinal(true);
+
+        final BlancoCgField cgField2 = cgFactory.createField("myField2", "T", "Genericsの私見です");
+        cgClass.getFieldList().add(cgField2);
+        cgField2.setNotnull(false);
+        cgField2.setAccess("public");
+        cgField2.setFinal(false);
+
+        final BlancoCgTransformer cgTransformerKotlin = BlancoCgTransformerFactory
+                .getKotlinSourceTransformer();
+        cgTransformerKotlin.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
 }

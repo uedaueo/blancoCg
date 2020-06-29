@@ -90,6 +90,11 @@ class BlancoCgClassKotlinSourceExpander {
         }
         buf.append("class " + cgClass.getName());
 
+        // クラスのGenericを展開
+        if (cgClass.getGenerics() != null && cgClass.getGenerics().length() > 0) {
+            buf.append("<" + cgClass.getGenerics() + ">");
+        }
+
         // primary constructor を展開
         /*
          * kotlin ではプライマリコンストラクタは class 定義の一部として記述されます。
@@ -102,8 +107,15 @@ class BlancoCgClassKotlinSourceExpander {
         // 親インタフェースを展開。
         expandImplementInterfaceList(cgClass, argSourceFile, buf, expanded);
 
-        // クラスのブロックの開始。
-        buf.append(" {");
+        boolean hasFields = false;
+        if (cgClass.getMethodList().size() > 0 ||
+                cgClass.getEnumList().size() > 0 ||
+                cgClass.getFieldList().size() > 0
+        ) {
+            // クラスのブロックの開始。
+            buf.append(" {");
+            hasFields = true;
+        }
 
         // 行を確定して書き出しを実施。
         argSourceLines.add(buf.toString());
@@ -113,8 +125,10 @@ class BlancoCgClassKotlinSourceExpander {
         // ここでフィールドとメソッドを展開。
         expandFieldAndMethodList(cgClass, argSourceFile, argSourceLines);
 
-        // クラスのブロックの終了。
-        argSourceLines.add("}");
+        if (hasFields) {
+            // クラスのブロックの終了。
+            argSourceLines.add("}");
+        }
     }
 
     /**
