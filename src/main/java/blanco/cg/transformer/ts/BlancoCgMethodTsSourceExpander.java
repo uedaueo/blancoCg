@@ -157,6 +157,13 @@ class BlancoCgMethodTsSourceExpander {
         boolean isSetter = false;
         final StringBuffer buf = new StringBuffer();
 
+        if (cgMethod.getAbstract() && argIsInterface == false) {
+            // ※インタフェースの場合には abstractは付与しません。
+            buf.append("abstract ");
+        }
+        if (cgMethod.getStatic()) {
+            buf.append("static ");
+        }
         if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
             // TypeScript ではデフォルトでpublicとなります。
             if (!cgMethod.getAccess().equals("public")) {
@@ -165,11 +172,6 @@ class BlancoCgMethodTsSourceExpander {
                     isSetter = true;
                 }
             }
-        }
-
-        if (cgMethod.getAbstract() && argIsInterface == false) {
-            // ※インタフェースの場合には abstractは付与しません。
-            buf.append("abstract ");
         }
 
         buf.append(cgMethod.getName() + "(");

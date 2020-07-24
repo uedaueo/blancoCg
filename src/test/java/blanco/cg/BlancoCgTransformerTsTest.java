@@ -87,6 +87,7 @@ public class BlancoCgTransformerTsTest extends TestCase {
         cgClass.getMethodList().add(cgGetterMethod);
         // TypeScript では get アクセサを用います。
         cgGetterMethod.setAccess("get");
+        cgGetterMethod.setStatic(true);
 
         // 戻り値を設定します。
         cgGetterMethod.setReturn(cgFactory.createReturn("string", "値を戻します。"));
