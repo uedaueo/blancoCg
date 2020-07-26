@@ -158,8 +158,8 @@ class BlancoCgClassKotlinSourceExpander {
         argBuf.delete(0, argBuf.length());
 
         int count = 0;
-        for (blanco.cg.valueobject.BlancoCgField arg : constructorArgs) {
-            final BlancoCgType type = arg.getType();
+        for (blanco.cg.valueobject.BlancoCgField constField : constructorArgs) {
+            final BlancoCgType type = constField.getType();
             // import文に型を追加
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
                 argSourceFile.getImportList().add(type.getName());
@@ -171,25 +171,37 @@ class BlancoCgClassKotlinSourceExpander {
                 argBuf.delete(0, argBuf.length());
             }
 
+            // 最初にフィールド情報をLangDocに展開。
+            if (constField.getLangDoc() == null) {
+                // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+                constField.setLangDoc(new BlancoCgLangDoc());
+            }
+            if (constField.getLangDoc().getTitle() == null) {
+                constField.getLangDoc().setTitle(constField.getDescription());
+            }
+
+            // 次に LangDocをソースコード形式に展開。
+            new BlancoCgLangDocKotlinSourceExpander().transformLangDoc(constField.getLangDoc(), argSourceLines);
+
             // アノテーションを展開。
-            BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, arg.getAnnotationList(), argSourceLines);
+            BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, constField.getAnnotationList(), argSourceLines);
 
             // 変数が変更可能か不可かを設定します。
             // コンストラクタ引数なので、通常はvalで良いようには思います, tueda
-            if (arg.getConst()) {
+            if (constField.getConst()) {
                 argBuf.append("    val ");
             } else {
                 argBuf.append("    var ");
             }
-            argBuf.append(arg.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
-            if (!arg.getNotnull()) {
+            argBuf.append(constField.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+            if (!constField.getNotnull()) {
                 // nullable
                 argBuf.append("?");
             }
 
             // デフォルト値の指定がある場合にはこれを展開します。
-            if (BlancoStringUtil.null2Blank(arg.getDefault()).length() > 0) {
-                argBuf.append(" = " + arg.getDefault());
+            if (BlancoStringUtil.null2Blank(constField.getDefault()).length() > 0) {
+                argBuf.append(" = " + constField.getDefault());
             }
             count++;
         }
