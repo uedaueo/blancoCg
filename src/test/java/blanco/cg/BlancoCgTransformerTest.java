@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2006 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -10,6 +10,8 @@
 package blanco.cg;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 import blanco.cg.transformer.BlancoCgTransformerFactory;
@@ -22,13 +24,13 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
  * Java言語用の生成試験。
- * 
+ *
  * @author IGA Tosiki
  */
 public class BlancoCgTransformerTest extends TestCase {
     /**
      * クラスの展開試験。
-     * 
+     *
      * @throws Exception
      */
     public void testTransformer() throws Exception {
@@ -53,6 +55,17 @@ public class BlancoCgTransformerTest extends TestCase {
                 cgFactory.createType("java.lang.Thread"));
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("java.lang.Runnable"));
+
+        // Plain Text を生成します。
+        List<String> plainTextList = new ArrayList<>();
+        plainTextList.add("protected Map<String, String> mymap = new HashMap<String, String>() {");
+        plainTextList.add("{");
+        plainTextList.add("put(\"hoge\", \"fuga\");");
+        plainTextList.add("put(\"hoge\", \"fuga\");");
+        plainTextList.add("put(\"hoge\", \"fuga\");");
+        plainTextList.add("}");
+        plainTextList.add("};");
+        cgClass.setPlainTextList(plainTextList);
 
         // 列挙体
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
@@ -121,7 +134,7 @@ public class BlancoCgTransformerTest extends TestCase {
 
     /**
      * インタフェースの展開試験。
-     * 
+     *
      * @throws Exception
      */
     public void testTransformerInterface() throws Exception {

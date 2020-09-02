@@ -4,7 +4,7 @@
     <groupId>blanco.cg</groupId>
     <artifactId>blanco-cg</artifactId>
     <packaging>jar</packaging>
-    <version>2.2.12</version>
+    <version>2.2.13</version>
 
     <name>blanco-cg</name>
     <description>blancoCg is a simple code generator library. blancoCg supports Java/C#/JavaScript/VB.NET/PHP/Ruby/Python/Delphi/Swift/C++11/Kotlin.</description>
@@ -262,7 +262,7 @@
                             <target>
                                 <taskdef name="blancovalueobject" classname="blanco.valueobject.task.BlancoValueObjectTask" classpathref="maven.runtime.classpath">
                                 </taskdef>
-                                <blancovalueobject metadir="meta/program" encoding="${project.build.sourceEncoding}" sheetType="php"/>
+                                <blancovalueobject metadir="meta/program" encoding="${project.build.sourceEncoding}" />
                                 <!--								<blancovalueobject metadir="meta/objects" encoding="${project.build.sourceEncoding}" sheetType="php" targetdir="sample" targetStyle="maven" verbose="true" />-->
                             </target>
                         </configuration>

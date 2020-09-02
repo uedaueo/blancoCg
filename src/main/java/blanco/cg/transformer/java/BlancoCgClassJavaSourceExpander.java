@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -37,16 +37,16 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgClassをソースコードへと展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgClassJavaSourceExpander {
 
     /**
      * ここでClassを展開します。
-     * 
+     *
      * @param cgClass
      *            処理対象となるクラス。
      * @param argSourceLines
@@ -96,6 +96,9 @@ class BlancoCgClassJavaSourceExpander {
         // 行を確定して書き出しを実施。
         argSourceLines.add(buf.toString());
 
+        // ここで PlainText を展開
+        expandPlainText(cgClass, argSourceLines);
+
         // ここで列挙体を展開。
         expandEnumList(cgClass, argSourceFile, argSourceLines);
 
@@ -111,7 +114,7 @@ class BlancoCgClassJavaSourceExpander {
 
     /**
      * アノテーションを展開します。
-     * 
+     *
      * @param cgClass
      *            クラス。
      * @param argSourceLines
@@ -127,10 +130,10 @@ class BlancoCgClassJavaSourceExpander {
 
     /**
      * 親クラスを展開します。
-     * 
+     *
      * ※BlancoCgInterface展開の際に、このメソッドを共通処理として呼び出してはなりません。
      * その共通化は、かえって理解を妨げると判断しています。
-     * 
+     *
      * @param cgClass
      *            クラスのバリューオブジェクト。
      * @param argBuf
@@ -155,7 +158,7 @@ class BlancoCgClassJavaSourceExpander {
 
     /**
      * 親インタフェースを展開します。
-     * 
+     *
      * @param cgClass
      *            処理中のクラス。
      * @param argBuf
@@ -181,7 +184,7 @@ class BlancoCgClassJavaSourceExpander {
 
     /**
      * クラスに含まれる各々の列挙体を展開します。
-     * 
+     *
      * @param cgClass
      *            処理中のクラス。
      * @param argSourceFile
@@ -204,10 +207,10 @@ class BlancoCgClassJavaSourceExpander {
 
     /**
      * クラスに含まれる各々のフィールドを展開します。
-     * 
+     *
      * TODO 定数宣言を優先して展開し、その後変数宣言を展開するなどの工夫が必要です。<br>
      * 現在は 登録順でソースコード展開します。
-     * 
+     *
      * @param cgClass
      *            処理中のクラス。
      * @param argSourceFile
@@ -233,7 +236,7 @@ class BlancoCgClassJavaSourceExpander {
 
     /**
      * クラスに含まれる各々のメソッドを展開します。
-     * 
+     *
      * @param cgClass
      *            処理中のクラス。
      * @param argSourceFile
@@ -253,4 +256,24 @@ class BlancoCgClassJavaSourceExpander {
                     argSourceFile, argSourceLines, false);
         }
     }
+
+    /**
+     * Plain Text を展開します。
+     *
+     * @param cgClass
+     * @param argSourceLines
+     */
+    private void expandPlainText(
+            final BlancoCgClass cgClass,
+            final List<String> argSourceLines) {
+        List<String> plainTextList = cgClass.getPlainTextList();
+
+        // 有無を言わさず改行を入れます
+        argSourceLines.add("");
+
+        for (String planText : plainTextList) {
+            argSourceLines.add(planText);
+        }
+    }
+
 }
