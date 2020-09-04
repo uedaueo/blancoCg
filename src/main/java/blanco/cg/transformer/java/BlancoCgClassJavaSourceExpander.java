@@ -84,6 +84,11 @@ class BlancoCgClassJavaSourceExpander {
         }
         buf.append("class " + cgClass.getName());
 
+        // クラスのGenericを展開
+        if (cgClass.getGenerics() != null && cgClass.getGenerics().length() > 0) {
+            buf.append("<" + cgClass.getGenerics() + ">");
+        }
+
         // 親クラスを展開。
         expandExtendClassList(cgClass, argSourceFile, buf);
 

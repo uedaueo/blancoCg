@@ -56,6 +56,9 @@ public class BlancoCgTransformerTest extends TestCase {
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("java.lang.Runnable"));
 
+        // クラスのGenericsを生成します
+        cgClass.setGenerics("T");
+
         // Plain Text を生成します。
         List<String> plainTextList = new ArrayList<>();
         plainTextList.add("protected Map<String, String> mymap = new HashMap<String, String>() {");
