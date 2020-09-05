@@ -117,6 +117,9 @@ public class BlancoCgTransformerTest extends TestCase {
         // 戻り値を設定します。
         cgMethod.setReturn(cgFactory.createReturn("boolean", "成功ならtrue。"));
 
+        // 仮想パラメータを定義します。
+        cgMethod.setVirtualParameterDefinition("<T>");
+
         cgMethod.getThrowList().add(
                 cgFactory.createException("java.io.IOException",
                         "入出力例外が発生した場合。"));

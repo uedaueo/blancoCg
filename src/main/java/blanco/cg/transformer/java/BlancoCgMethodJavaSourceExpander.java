@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -39,9 +39,9 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgMethodをソースコードに展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgMethodJavaSourceExpander {
@@ -52,7 +52,7 @@ class BlancoCgMethodJavaSourceExpander {
 
     /**
      * ここでメソッドを展開します。
-     * 
+     *
      * @param cgMethod
      *            処理対象となるメソッド。
      * @param argSourceFile
@@ -93,7 +93,7 @@ class BlancoCgMethodJavaSourceExpander {
 
     /**
      * ソースコード展開に先立ち、必要な情報の収集を行います。
-     * 
+     *
      * @param cgMethod
      *            メソッドオブジェクト。
      * @param argSourceFile
@@ -147,7 +147,7 @@ class BlancoCgMethodJavaSourceExpander {
 
     /**
      * メソッドの本体部分を展開します。
-     * 
+     *
      * @param cgMethod
      *            メソッドオブジェクト。
      * @param argSourceLines
@@ -193,6 +193,10 @@ class BlancoCgMethodJavaSourceExpander {
             // static initializer の場合には、戻り値は存在しません。
             // このため、ここでは何も出力しません。
         } else {
+            if (cgMethod.getVirtualParameterDefinition() != null && cgMethod.getVirtualParameterDefinition().length() > 0) {
+                // < > は入っている前提
+                buf.append(cgMethod.getVirtualParameterDefinition() + " ");
+            }
             if (cgMethod.getReturn() != null
                     && cgMethod.getReturn().getType() != null) {
                 buf.append(BlancoCgTypeJavaSourceExpander.toTypeString(cgMethod
@@ -264,7 +268,7 @@ class BlancoCgMethodJavaSourceExpander {
 
     /**
      * 例外スローを展開します。
-     * 
+     *
      * @param cgMethod
      *            メソッド。
      * @param buf
@@ -289,7 +293,7 @@ class BlancoCgMethodJavaSourceExpander {
 
     /**
      * アノテーションを展開します。
-     * 
+     *
      * @param cgMethod
      *            メソッド。
      * @param argSourceLines
@@ -310,7 +314,7 @@ class BlancoCgMethodJavaSourceExpander {
 
     /**
      * パラメータの非null制約の展開。
-     * 
+     *
      * @param cgMethod
      *            メソッド。
      * @param argSourceLines
@@ -341,7 +345,7 @@ class BlancoCgMethodJavaSourceExpander {
 
     /**
      * 行を展開します。
-     * 
+     *
      * @param cgMethod
      *            メソッド情報。
      * @param argSourceLines

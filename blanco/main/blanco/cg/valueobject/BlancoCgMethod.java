@@ -142,6 +142,13 @@ public class BlancoCgMethod {
     private String fSuperclassInvocation;
 
     /**
+     * メソッド内で使用する仮想パラメータ（generics）の定義を付与します。&lt;&gt;は省略します。
+     *
+     * フィールド: [virtualParameterDefinition]。
+     */
+    private String fVirtualParameterDefinition;
+
+    /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。
      *
      * フィールド: [langDoc]。
@@ -538,6 +545,28 @@ public class BlancoCgMethod {
     }
 
     /**
+     * フィールド [virtualParameterDefinition] の値を設定します。
+     *
+     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の定義を付与します。<>は省略します。]。
+     *
+     * @param argVirtualParameterDefinition フィールド[virtualParameterDefinition]に設定する値。
+     */
+    public void setVirtualParameterDefinition(final String argVirtualParameterDefinition) {
+        fVirtualParameterDefinition = argVirtualParameterDefinition;
+    }
+
+    /**
+     * フィールド [virtualParameterDefinition] の値を取得します。
+     *
+     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の定義を付与します。<>は省略します。]。
+     *
+     * @return フィールド[virtualParameterDefinition]から取得した値。
+     */
+    public String getVirtualParameterDefinition() {
+        return fVirtualParameterDefinition;
+    }
+
+    /**
      * フィールド [langDoc] の値を設定します。
      *
      * フィールドの説明: [言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。]。
@@ -591,6 +620,7 @@ public class BlancoCgMethod {
         buf.append(",localVariableList=" + fLocalVariableList);
         buf.append(",lineList=" + fLineList);
         buf.append(",superclassInvocation=" + fSuperclassInvocation);
+        buf.append(",virtualParameterDefinition=" + fVirtualParameterDefinition);
         buf.append(",langDoc=" + fLangDoc);
         buf.append("]");
         return buf.toString();
@@ -705,6 +735,9 @@ public class BlancoCgMethod {
         // Name: fSuperclassInvocation
         // Type: java.lang.String
         target.fSuperclassInvocation = this.fSuperclassInvocation;
+        // Name: fVirtualParameterDefinition
+        // Type: java.lang.String
+        target.fVirtualParameterDefinition = this.fVirtualParameterDefinition;
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。
