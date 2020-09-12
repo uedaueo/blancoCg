@@ -45,6 +45,13 @@ public class BlancoCgType {
     private int fArrayDimension = 1;
 
     /**
+     * (kotlin)この型が継承されるときにコンストラクタ引数が必要であればここに記述します。
+     *
+     * フィールド: [constructorArgs]。
+     */
+    private String fConstructorArgs;
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [この型の名前です。java.lang.Stringなどパッケージ名付きで指定します。[]は含むことは出来ません。配列を表す場合には arrayフィールドを利用します。]。
@@ -157,6 +164,28 @@ public class BlancoCgType {
     }
 
     /**
+     * フィールド [constructorArgs] の値を設定します。
+     *
+     * フィールドの説明: [(kotlin)この型が継承されるときにコンストラクタ引数が必要であればここに記述します。]。
+     *
+     * @param argConstructorArgs フィールド[constructorArgs]に設定する値。
+     */
+    public void setConstructorArgs(final String argConstructorArgs) {
+        fConstructorArgs = argConstructorArgs;
+    }
+
+    /**
+     * フィールド [constructorArgs] の値を取得します。
+     *
+     * フィールドの説明: [(kotlin)この型が継承されるときにコンストラクタ引数が必要であればここに記述します。]。
+     *
+     * @return フィールド[constructorArgs]から取得した値。
+     */
+    public String getConstructorArgs() {
+        return fConstructorArgs;
+    }
+
+    /**
      * このバリューオブジェクトの文字列表現を取得します。
      *
      * <P>使用上の注意</P>
@@ -176,6 +205,7 @@ public class BlancoCgType {
         buf.append(",generics=" + fGenerics);
         buf.append(",array=" + fArray);
         buf.append(",arrayDimension=" + fArrayDimension);
+        buf.append(",constructorArgs=" + fConstructorArgs);
         buf.append("]");
         return buf.toString();
     }
@@ -213,5 +243,8 @@ public class BlancoCgType {
         // Name: fArrayDimension
         // Type: int
         target.fArrayDimension = this.fArrayDimension;
+        // Name: fConstructorArgs
+        // Type: java.lang.String
+        target.fConstructorArgs = this.fConstructorArgs;
     }
 }

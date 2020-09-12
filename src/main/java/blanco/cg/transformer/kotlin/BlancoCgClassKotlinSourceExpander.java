@@ -228,6 +228,7 @@ class BlancoCgClassKotlinSourceExpander {
         boolean expanded = false;
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
             final BlancoCgType type = cgClass.getExtendClassList().get(index);
+            final String constractorArg = type.getConstructorArgs();
 
             // import文に型を追加。
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
@@ -236,7 +237,7 @@ class BlancoCgClassKotlinSourceExpander {
 
             if (index == 0) {
                 argBuf.append(" : "
-                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + "()");
+                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + "(" + (constractorArg == null ? "" : constractorArg) + ")");
             } else {
                 throw new IllegalArgumentException("Kotlin 言語では継承は一回しか実施できません。");
             }

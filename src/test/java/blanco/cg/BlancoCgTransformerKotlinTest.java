@@ -219,8 +219,9 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
-        cgClass.getExtendClassList().add(
-                cgFactory.createType("myprog.MyClass"));
+        BlancoCgType extendsStr = cgFactory.createType("myprog.MyClass");
+        extendsStr.setConstructorArgs("hoge");
+        cgClass.getExtendClassList().add(extendsStr);
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("myprog.MyInterface"));
         cgClass.setFinal(true);
@@ -238,13 +239,13 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         final BlancoCgField cgField = cgFactory.createField("myField",
                 "java.util.Date", "日付フィールドの試験です。");
         cgClass.getFieldList().add(cgField);
-        cgField.setDefault("new Date()");
+        cgField.setDefault("Date()");
 
-        final BlancoCgField cgField2 = cgFactory.createField("myField2",
-                "java.util.Date", "日付フィールドの試験v2です。");
-        cgClass.getFieldList().add(cgField2);
-        cgField2.getType().setArray(true);
-        cgField2.getType().setArrayDimension(2);
+//        final BlancoCgField cgField2 = cgFactory.createField("myField2",
+//                "java.util.Date", "日付フィールドの試験v2です。");
+//        cgClass.getFieldList().add(cgField2);
+//        cgField2.getType().setArray(true);
+//        cgField2.getType().setArrayDimension(1);
 
         // static initializer のテスト
         {
@@ -316,7 +317,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         final BlancoCgField cgField = cgOf.createField("myField",
                 "java.util.Date", "日付フィールドの試験です。");
         cgInterface.getFieldList().add(cgField);
-        cgField.setDefault("new Date()");
+        cgField.setDefault("Date()");
 
         // メソッドを生成します。
         final BlancoCgMethod cgMethod = cgOf.createMethod("myMethod",
