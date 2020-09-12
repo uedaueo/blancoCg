@@ -21,6 +21,14 @@ public class BlancoCgReturn {
     private BlancoCgType fType;
 
     /**
+     * 戻り値がnullであることを許容します。現時点ではkotlinでのみ使用されます。
+     *
+     * フィールド: [nullable]。
+     * デフォルト: [false]。
+     */
+    private Boolean fNullable = false;
+
+    /**
      * フィールド [description] の値を設定します。
      *
      * フィールドの説明: [この戻り値の説明です。]。
@@ -65,6 +73,29 @@ public class BlancoCgReturn {
     }
 
     /**
+     * フィールド [nullable] の値を設定します。
+     *
+     * フィールドの説明: [戻り値がnullであることを許容します。現時点ではkotlinでのみ使用されます。]。
+     *
+     * @param argNullable フィールド[nullable]に設定する値。
+     */
+    public void setNullable(final Boolean argNullable) {
+        fNullable = argNullable;
+    }
+
+    /**
+     * フィールド [nullable] の値を取得します。
+     *
+     * フィールドの説明: [戻り値がnullであることを許容します。現時点ではkotlinでのみ使用されます。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[nullable]から取得した値。
+     */
+    public Boolean getNullable() {
+        return fNullable;
+    }
+
+    /**
      * このバリューオブジェクトの文字列表現を取得します。
      *
      * <P>使用上の注意</P>
@@ -81,6 +112,7 @@ public class BlancoCgReturn {
         buf.append("blanco.cg.valueobject.BlancoCgReturn[");
         buf.append("description=" + fDescription);
         buf.append(",type=" + fType);
+        buf.append(",nullable=" + fNullable);
         buf.append("]");
         return buf.toString();
     }
@@ -109,5 +141,8 @@ public class BlancoCgReturn {
         // Name: fType
         // Type: blanco.cg.valueobject.BlancoCgType
         // フィールド[fType]はサポート外の型[blanco.cg.valueobject.BlancoCgType]です。
+        // Name: fNullable
+        // Type: java.lang.Boolean
+        target.fNullable = this.fNullable;
     }
 }

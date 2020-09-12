@@ -234,6 +234,9 @@ class BlancoCgMethodKotlinSourceExpander {
                         && cgMethod.getReturn().getType() != null) {
                     buf.append(" : " + BlancoCgTypeKotlinSourceExpander.toTypeString(cgMethod
                             .getReturn().getType()));
+                    if (cgMethod.getReturn().getNullable()) {
+                        buf.append("?");
+                    };
                 }
             }
         } else {

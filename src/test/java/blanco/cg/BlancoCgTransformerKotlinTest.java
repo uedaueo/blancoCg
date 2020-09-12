@@ -272,6 +272,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                                 "日付引数。"));
         // 戻り値を設定します。
         cgMethod.setReturn(cgFactory.createReturn("boolean", "成功ならtrue。"));
+//        cgMethod.getReturn().setNullable(true);
 
         cgMethod.getThrowList().add(
                 cgFactory.createException("java.io.IOException",
