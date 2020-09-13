@@ -210,6 +210,16 @@ class BlancoCgMethodKotlinSourceExpander {
                     buf.append(", ");
                 }
 
+                /*
+                 * パラメータのアノテーションに対応します。
+                 */
+                List<String> paramAnn = new ArrayList<>();
+                BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgParameter.getAnnotationList(), paramAnn);
+                String LF = System.getProperty("line.separator", "\n");
+                for (String ann : paramAnn) {
+                    buf.append(ann + LF);
+                }
+
                 buf.append(cgParameter.getName() + " : ");
 
                 buf.append(BlancoCgTypeKotlinSourceExpander
@@ -251,8 +261,15 @@ class BlancoCgMethodKotlinSourceExpander {
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
-            // メソッドブロックの開始。
-            buf.append(" {");
+            // method 本体が無い場合は {} をつけない
+            boolean hasBody = false;
+            if (BlancoStringUtil.null2Blank(cgMethod.getSuperclassInvocation()).length() > 0 ||
+                    cgMethod.getLineList().size() > 0
+            ) {
+                // メソッドブロックの開始。
+                buf.append(" {");
+                hasBody = true;
+            }
 
             // ここでいったん、行を確定。
             argSourceLines.add(buf.toString());
@@ -270,8 +287,10 @@ class BlancoCgMethodKotlinSourceExpander {
             // 行を展開します。
             expandLineList(cgMethod, argSourceLines);
 
-            // メソッドブロックの終了。
-            argSourceLines.add("}");
+            if (hasBody) {
+                // メソッドブロックの終了。
+                argSourceLines.add("}");
+            }
         }
     }
 

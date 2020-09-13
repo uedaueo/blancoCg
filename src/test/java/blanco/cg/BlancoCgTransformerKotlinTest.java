@@ -263,9 +263,11 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgClass.getMethodList().add(cgMethod);
 
         // パラメータを追加します。
-        cgMethod.getParameterList().add(
-                cgFactory.createParameter("argString", "java.lang.String",
-                        "文字列引数。"));
+        BlancoCgParameter param01 = cgFactory.createParameter("argString", "java.lang.String",
+                "文字列引数。");
+        cgMethod.getParameterList().add(param01);
+        param01.getAnnotationList().add("Body");
+        param01.getAnnotationList().add("NotNull");
         cgMethod.getParameterList()
                 .add(
                         cgFactory.createParameter("argDate", "java.util.Date",

@@ -591,7 +591,6 @@ public class BlancoCgLineUtil {
                 myLine = annLine;
                 i++;
             }
-            // Java言語のAnnotationは @ から記述します。
             argSourceLines.add(myLine);
         }
     }
