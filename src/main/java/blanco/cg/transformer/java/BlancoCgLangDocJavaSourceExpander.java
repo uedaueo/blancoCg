@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -28,19 +28,16 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgSourceUtil;
-import blanco.cg.valueobject.BlancoCgException;
-import blanco.cg.valueobject.BlancoCgLangDoc;
-import blanco.cg.valueobject.BlancoCgLangDocTag;
-import blanco.cg.valueobject.BlancoCgParameter;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgLangDoc(言語ドキュメント)をソースコードに展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。<br>
  * クラス、メソッド、フィールドなど、各種言語ドキュメントを展開する共通処理です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgLangDocJavaSourceExpander {
@@ -51,7 +48,7 @@ class BlancoCgLangDocJavaSourceExpander {
 
     /**
      * 言語ドキュメント情報を元にソースコードを展開します。
-     * 
+     *
      * @param langDoc
      *            言語ドキュメント情報。
      * @param argSourceLines
@@ -69,9 +66,9 @@ class BlancoCgLangDocJavaSourceExpander {
 
     /**
      * 言語ドキュメントのうち、本体部分を展開します。
-     * 
+     *
      * このメソッドはソースファイルのファイルヘッダー展開からも利用されています。
-     * 
+     *
      * @param langDoc
      * @param argSourceLines
      */
@@ -157,6 +154,25 @@ class BlancoCgLangDocJavaSourceExpander {
                 bufParameter.append(" "
                         + BlancoCgSourceUtil.escapeStringAsLangDoc(TARGET_LANG,
                                 cgParameter.getDescription()));
+            }
+            argSourceLines.add(bufParameter.toString());
+        }
+
+        // Expand virtual parameters
+        for (BlancoCgVirtualParameter cgVirtualParameter : langDoc.getVirtualParameterList()) {
+            // insert empty line
+            if (isLangDocTagStarted == false) {
+                isLangDocTagStarted = true;
+                argSourceLines.add("*");
+            }
+
+            final StringBuffer bufParameter = new StringBuffer();
+            bufParameter.append("* @param <" + cgVirtualParameter.getType().getName() + "> ");
+            if (BlancoStringUtil.null2Blank(cgVirtualParameter.getDescription())
+                    .length() > 0) {
+                bufParameter.append(" "
+                        + BlancoCgSourceUtil.escapeStringAsLangDoc(TARGET_LANG,
+                        cgVirtualParameter.getDescription()));
             }
             argSourceLines.add(bufParameter.toString());
         }

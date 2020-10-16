@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -24,39 +24,26 @@
  */
 package blanco.cg;
 
-import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgEnum;
-import blanco.cg.valueobject.BlancoCgEnumElement;
-import blanco.cg.valueobject.BlancoCgException;
-import blanco.cg.valueobject.BlancoCgField;
-import blanco.cg.valueobject.BlancoCgInterface;
-import blanco.cg.valueobject.BlancoCgLangDoc;
-import blanco.cg.valueobject.BlancoCgLangDocTag;
-import blanco.cg.valueobject.BlancoCgLocalVariable;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgParameter;
-import blanco.cg.valueobject.BlancoCgReturn;
-import blanco.cg.valueobject.BlancoCgSourceFile;
-import blanco.cg.valueobject.BlancoCgType;
+import blanco.cg.valueobject.*;
 
 /**
  * blancoCgのバリューオブジェクトを作成するためのファクトリクラスです。
- * 
+ *
  * このクラスはプログラミング言語を超えて利用されます。<br>
  * blancoCgのバリューオブジェクトは、このファクトリクラスを経由して生成することが推奨されます。 <br>
  * とはいえ個別にバリューオブジェクトを生成することは禁止していません。
- * 
+ *
  * ※このクラスは 非finalとします。利用者がこのクラスを継承して拡張することを想定します。
- * 
+ *
  * 以前 createLine というメソッドがありましたが、廃止されました。
- * 
+ *
  * @author IGA Tosiki
  */
 public class BlancoCgObjectFactory {
 
     /**
      * オブジェクトファクトリのコンストラクタ。
-     * 
+     *
      * private化して、ファクトリを通じてしか新規作成できないようにしています。
      */
     private BlancoCgObjectFactory() {
@@ -64,7 +51,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * BlancoCgオブジェクトファクトリのインスタンスを取得します。
-     * 
+     *
      * @return BlancoCgオブジェクトファクトリのインスタンス。
      */
     public static BlancoCgObjectFactory getInstance() {
@@ -73,10 +60,10 @@ public class BlancoCgObjectFactory {
 
     /**
      * ソースファイルインスタンスを生成します。
-     * 
+     *
      * ファイル名は明示的に指定していないという点に注意して呼び出してください。<br>
      * ソースファイル名はクラス名から導出されます。
-     * 
+     *
      * @param argPackageName
      *            パッケージ名。このパッケージ名から自動生成時のディレクトリ構造が決定されます。
      * @param argDescription
@@ -97,9 +84,9 @@ public class BlancoCgObjectFactory {
 
     /**
      * 型インスタンスを生成します。
-     * 
+     *
      * 配列フラグやジェネリクス指定については、生成後のオブジェクトにセットしてください。
-     * 
+     *
      * @param argTypeName
      *            型名。パッケージ名を含んだクラス名・インタフェース名を指定する点に注意してください。
      * @return 型インスタンス。
@@ -118,7 +105,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * クラスインスタンスを生成します。
-     * 
+     *
      * @param argClassName
      *            クラス名。パッケージ名を除くクラス名を指定する点に注意してください。パッケージ名はソースファイルインスタンスを参照した上で導出されます
      *            。
@@ -140,7 +127,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * インタフェースインスタンスを生成します。
-     * 
+     *
      * @param argInterfaceName
      *            インタフェース名。パッケージ名を除くインタフェース名を指定する点に注意してください。
      *            パッケージ名はソースファイルインスタンスを参照した上で導出されます。
@@ -162,7 +149,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * フィールドインスタンスを生成します。
-     * 
+     *
      * @param argName
      *            フィールドの変数名。
      * @param argTypeNameWithPackage
@@ -188,7 +175,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * メソッドインスタンスを生成します。
-     * 
+     *
      * @param methodName
      *            メソッド名。
      * @param argDescription
@@ -209,7 +196,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * パラメータインスタンスを生成します。
-     * 
+     *
      * @param argName
      *            パラメータの引数名。
      * @param argFullTypeName
@@ -225,7 +212,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * パラメータインスタンスを生成します。
-     * 
+     *
      * @param argName
      *            パラメータの引数名。
      * @param argFullTypeName
@@ -253,8 +240,33 @@ public class BlancoCgObjectFactory {
     }
 
     /**
+     * create instance of virtual parameter (generic)
+     *
+     * @param argName
+     *            name of virtual parameter
+     * @param argFullTypeName
+     *            full qualified type name
+     * @param argDescription
+     *            description
+     * @return instance of virtual parameter
+     */
+    public BlancoCgVirtualParameter createVirtualParameter(
+            final String argName,
+            final String argFullTypeName,
+            final String argDescription
+    ) {
+        final BlancoCgVirtualParameter cgParameter = new BlancoCgVirtualParameter();
+        cgParameter.setName(argName);
+        cgParameter.setDescription(argDescription);
+        // create type object and set informations.
+        cgParameter.setType(createType(argFullTypeName));
+
+        return cgParameter;
+    }
+
+    /**
      * ローカル変数定義インスタンスを生成します。
-     * 
+     *
      */
     public BlancoCgLocalVariable createLocalVariable(final String argName,
             final String argType) {
@@ -271,7 +283,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * Returnインスタンスを生成します。
-     * 
+     *
      * @param argFullTypeName
      *            フル型名。
      * @param argDescription
@@ -293,7 +305,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * 例外インスタンスを生成します。
-     * 
+     *
      * @param argFullTypeName
      *            フル型名。
      * @param argDescription
@@ -315,7 +327,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * 列挙体インスタンスを生成します。
-     * 
+     *
      * @param argEnumName
      *            列挙体の名前。
      * @param argDescription
@@ -336,7 +348,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * 列挙体の要素のインスタンスを生成します。
-     * 
+     *
      * @param argEnumElementName
      *            列挙体の要素の名前。
      * @param argDescription
@@ -354,7 +366,7 @@ public class BlancoCgObjectFactory {
 
     /**
      * 言語ドキュメントのタグを生成します。
-     * 
+     *
      * @param argName
      *            タグの名前。
      * @param argKey

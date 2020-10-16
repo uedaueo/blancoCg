@@ -142,11 +142,19 @@ public class BlancoCgMethod {
     private String fSuperclassInvocation;
 
     /**
-     * メソッド内で使用する仮想パラメータ（generics）の定義を付与します。&lt;&gt;は省略します。
+     * メソッド内で使用する仮想パラメータ（generics）の定義を付与します。&lt;&gt;をつけて指定すること。こちらで指定した場合は LangDoc に記述されません。
      *
      * フィールド: [virtualParameterDefinition]。
      */
     private String fVirtualParameterDefinition;
+
+    /**
+     * メソッド内で使用する仮想パラメータ（generics）の一覧です。&lt;&gt;はつけないこと。
+     *
+     * フィールド: [virtualParameterList]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgVirtualParameter&gt;()]。
+     */
+    private List<blanco.cg.valueobject.BlancoCgVirtualParameter> fVirtualParameterList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgVirtualParameter>();
 
     /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。
@@ -547,7 +555,7 @@ public class BlancoCgMethod {
     /**
      * フィールド [virtualParameterDefinition] の値を設定します。
      *
-     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の定義を付与します。<>は省略します。]。
+     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の定義を付与します。<>をつけて指定すること。こちらで指定した場合は LangDoc に記述されません。]。
      *
      * @param argVirtualParameterDefinition フィールド[virtualParameterDefinition]に設定する値。
      */
@@ -558,12 +566,35 @@ public class BlancoCgMethod {
     /**
      * フィールド [virtualParameterDefinition] の値を取得します。
      *
-     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の定義を付与します。<>は省略します。]。
+     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の定義を付与します。<>をつけて指定すること。こちらで指定した場合は LangDoc に記述されません。]。
      *
      * @return フィールド[virtualParameterDefinition]から取得した値。
      */
     public String getVirtualParameterDefinition() {
         return fVirtualParameterDefinition;
+    }
+
+    /**
+     * フィールド [virtualParameterList] の値を設定します。
+     *
+     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の一覧です。<>はつけないこと。]。
+     *
+     * @param argVirtualParameterList フィールド[virtualParameterList]に設定する値。
+     */
+    public void setVirtualParameterList(final List<blanco.cg.valueobject.BlancoCgVirtualParameter> argVirtualParameterList) {
+        fVirtualParameterList = argVirtualParameterList;
+    }
+
+    /**
+     * フィールド [virtualParameterList] の値を取得します。
+     *
+     * フィールドの説明: [メソッド内で使用する仮想パラメータ（generics）の一覧です。<>はつけないこと。]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgVirtualParameter&gt;()]。
+     *
+     * @return フィールド[virtualParameterList]から取得した値。
+     */
+    public List<blanco.cg.valueobject.BlancoCgVirtualParameter> getVirtualParameterList() {
+        return fVirtualParameterList;
     }
 
     /**
@@ -621,6 +652,7 @@ public class BlancoCgMethod {
         buf.append(",lineList=" + fLineList);
         buf.append(",superclassInvocation=" + fSuperclassInvocation);
         buf.append(",virtualParameterDefinition=" + fVirtualParameterDefinition);
+        buf.append(",virtualParameterList=" + fVirtualParameterList);
         buf.append(",langDoc=" + fLangDoc);
         buf.append("]");
         return buf.toString();
@@ -738,6 +770,17 @@ public class BlancoCgMethod {
         // Name: fVirtualParameterDefinition
         // Type: java.lang.String
         target.fVirtualParameterDefinition = this.fVirtualParameterDefinition;
+        // Name: fVirtualParameterList
+        // Type: java.util.List
+        if (this.fVirtualParameterList != null) {
+            final java.util.Iterator<blanco.cg.valueobject.BlancoCgVirtualParameter> iterator = this.fVirtualParameterList.iterator();
+            for (; iterator.hasNext();) {
+                blanco.cg.valueobject.BlancoCgVirtualParameter loopSource = iterator.next();
+                blanco.cg.valueobject.BlancoCgVirtualParameter loopTarget = null;
+                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgVirtualParameter]です。
+                target.fVirtualParameterList.add(loopTarget);
+            }
+        }
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。

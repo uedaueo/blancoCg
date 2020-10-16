@@ -29,11 +29,7 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
-import blanco.cg.valueobject.BlancoCgException;
-import blanco.cg.valueobject.BlancoCgLangDoc;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgParameter;
-import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
@@ -126,6 +122,11 @@ class BlancoCgMethodJavaSourceExpander {
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
+        // add virtual parameter (generic) to langDoc.
+        if (cgMethod.getVirtualParameterList() != null && cgMethod.getVirtualParameterList().size() > 0) {
+            cgMethod.getLangDoc().getVirtualParameterList().addAll(cgMethod.getVirtualParameterList());
+        }
+
         if (cgMethod.getReturn() != null) {
             // import文に型を追加。
             argSourceFile.getImportList().add(
@@ -193,7 +194,19 @@ class BlancoCgMethodJavaSourceExpander {
             // static initializer の場合には、戻り値は存在しません。
             // このため、ここでは何も出力しません。
         } else {
-            if (cgMethod.getVirtualParameterDefinition() != null && cgMethod.getVirtualParameterDefinition().length() > 0) {
+            if (cgMethod.getVirtualParameterList() != null && cgMethod.getVirtualParameterList().size() > 0 ) {
+                // <> は入っていない前提
+                buf.append("<");
+                int count = 0;
+                for (BlancoCgVirtualParameter vparm : cgMethod.getVirtualParameterList()) {
+                    if (count > 0) {
+                        buf.append(", ");
+                    }
+                    buf.append(vparm.getType().getName());
+                    count++;
+                }
+                buf.append("> ");
+            } else if (cgMethod.getVirtualParameterDefinition() != null && cgMethod.getVirtualParameterDefinition().length() > 0) {
                 // < > は入っている前提
                 buf.append(cgMethod.getVirtualParameterDefinition() + " ");
             }

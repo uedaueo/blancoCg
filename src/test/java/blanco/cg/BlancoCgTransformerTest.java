@@ -13,14 +13,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import blanco.cg.valueobject.*;
 import junit.framework.TestCase;
 import blanco.cg.transformer.BlancoCgTransformerFactory;
-import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgEnum;
-import blanco.cg.valueobject.BlancoCgField;
-import blanco.cg.valueobject.BlancoCgInterface;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
  * Java言語用の生成試験。
@@ -40,7 +35,7 @@ public class BlancoCgTransformerTest extends TestCase {
         // ソースファイルを生成します。
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
                 "myprog", "テスト用のクラス");
-        cgSourceFile.setEncoding("Windows-31J");
+        cgSourceFile.setEncoding("UTF-8");
         cgSourceFile.getImportList().add("java.text.NumberFormat");
         // 同じパッケージのインポート試験。
         cgSourceFile.getImportList().add("myprog.MyClass2");
@@ -118,7 +113,11 @@ public class BlancoCgTransformerTest extends TestCase {
         cgMethod.setReturn(cgFactory.createReturn("boolean", "成功ならtrue。"));
 
         // 仮想パラメータを定義します。
-        cgMethod.setVirtualParameterDefinition("<T>");
+//        cgMethod.setVirtualParameterDefinition("<T>");
+        BlancoCgVirtualParameter vparam = cgFactory.createVirtualParameter("typeT", "T", "総称型Tの仮想パラメータです。");
+        cgMethod.getVirtualParameterList().add(vparam);
+        vparam = cgFactory.createVirtualParameter("typeS", "S", "総称型Sの仮想パラメータです。");
+        cgMethod.getVirtualParameterList().add(vparam);
 
         cgMethod.getThrowList().add(
                 cgFactory.createException("java.io.IOException",
