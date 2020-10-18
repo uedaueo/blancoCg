@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -29,17 +29,15 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
-import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgEnum;
-import blanco.cg.valueobject.BlancoCgInterface;
-import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.util.BlancoCgSourceUtil;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgSourceFileをソースコードに展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgSourceFileJavaSourceExpander {
@@ -56,14 +54,14 @@ class BlancoCgSourceFileJavaSourceExpander {
     /**
      * 中間的に利用するソースコードをあらわすList。java.lang.Stringがリストに格納されます。(BlancoCgLineではありません。
      * )
-     * 
+     *
      * ここでは整形前ソースコードが中間的にたくわえられます。
      */
     private List<java.lang.String> fSourceLines = null;
 
     /**
      * SourceFileから整形前ソースコードリストを生成します。
-     * 
+     *
      * @param argSourceFile
      *            ソースコードをあらわすバリューオブジェクト。
      * @return ソースコードに展開後のリスト。
@@ -137,7 +135,7 @@ class BlancoCgSourceFileJavaSourceExpander {
             // 当初デフォルトコメントを出力していましたがこれは廃止しました。
             return;
         }
-        
+
         fSourceLines.add("/*");
         if (BlancoStringUtil.null2Blank(fCgSourceFile.getDescription()).length() > 0) {
             fSourceLines.add("* " + fCgSourceFile.getDescription());
@@ -148,5 +146,27 @@ class BlancoCgSourceFileJavaSourceExpander {
                 fCgSourceFile.getLangDoc(), fSourceLines);
 
         fSourceLines.add("*/");
+    }
+
+
+    /**
+     * Add import statement for fully qualified class name.
+     *
+     * @param argCgType
+     * @param argSourceFile
+     * @author tueda
+     */
+    public static void typeToImport(
+            final BlancoCgType argCgType,
+            final BlancoCgSourceFile argSourceFile
+    ) {
+        if (argCgType != null) {
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.JAVA, argCgType.getName())) {
+                argSourceFile.getImportList().add(argCgType.getName());
+            }
+            for (BlancoCgType nextCgType : argCgType.getGenericsTree()) {
+                typeToImport(nextCgType, argSourceFile);
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -24,15 +24,19 @@
  */
 package blanco.cg.transformer.java;
 
+import blanco.cg.BlancoCgObjectFactory;
+import blanco.cg.BlancoCgSupportedLang;
+import blanco.cg.util.BlancoCgSourceUtil;
+import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgTypeをソースコードに展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgTypeJavaSourceExpander {
@@ -44,37 +48,22 @@ class BlancoCgTypeJavaSourceExpander {
 
     /**
      * blancoCg型を、具体的な文字列へと変換します。
-     * 
+     *
      * 配列を表す[]やジェネリクスも展開します。<br>
      * TODO 複数パッケージ間での同一クラス名(例:java.util.Dateとjava.sql.Dateなど)は考慮していません。
      * 複数パッケージの同一クラス名を一つのソースファイル内で利用する為の諸機能は未提供です。
-     * 
+     *
      * @param argType
      *            blancoCg上の型。
      * @return プログラミング言語における型を示す文字列。
      */
     public static String toTypeString(final BlancoCgType argType) {
-        final StringBuffer buf = new StringBuffer();
-        buf.append(BlancoNameUtil.trimJavaPackage(argType.getName()));
-
-        // 配列を展開します。
-        if (argType.getArray()) {
-            for (int dimension = 0; dimension < argType.getArrayDimension(); dimension++) {
-                buf.append("[]");
-            }
-        }
-
-        // ジェネリクスを展開します。
-        if (BlancoStringUtil.null2Blank(argType.getGenerics()).length() > 0) {
-            buf.append(argType.getGenerics());
-        }
-
-        return buf.toString();
+        return BlancoCgSourceUtil.extendTypeWithGenerics(argType);
     }
 
     /**
      * 与えられた文字列がプログラミング言語の予約語であるかどうかをチェックします。
-     * 
+     *
      * @param argCheck
      *            チェックしたい文字列。
      * @return プログラミング言語の予約語に該当したかどうか。

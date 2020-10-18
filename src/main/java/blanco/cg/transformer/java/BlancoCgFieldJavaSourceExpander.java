@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -28,16 +28,18 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgField;
 import blanco.cg.valueobject.BlancoCgLangDoc;
 import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgFieldをソースコードへと展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgFieldJavaSourceExpander {
@@ -48,7 +50,7 @@ class BlancoCgFieldJavaSourceExpander {
 
     /**
      * ここでフィールドを展開します。
-     * 
+     *
      * @param cgField
      *            処理対象となるフィールド。
      * @param argSourceFile
@@ -102,11 +104,23 @@ class BlancoCgFieldJavaSourceExpander {
             buf.append("final ");
         }
 
+        // Convert generics into genericsListTree.
+        BlancoCgType cgType = BlancoCgSourceUtil.parseTypeWithGenerics(cgField.getType());
+        cgField.setType(cgType);
         // import文に型を追加。
-        argSourceFile.getImportList().add(cgField.getType().getName());
+//        argSourceFile.getImportList().add(cgField.getType().getName());
+        /*
+         * Generics should be imported automatically also.
+         * But for backward compatibility, after multiple
+         * generics tested and then single generics will be
+         * tried then.
+         *
+         * by tueda, 2020/Oct/16
+         */
+        BlancoCgSourceFileJavaSourceExpander.typeToImport(cgType, argSourceFile);
 
         // フィールド生成の本体部分を展開します。
-        buf.append(BlancoCgTypeJavaSourceExpander.toTypeString(cgField.getType()) + " ");
+        buf.append(BlancoCgTypeJavaSourceExpander.toTypeString(cgType) + " ");
         buf.append(cgField.getName());
 
         // デフォルト値の指定がある場合にはこれを展開します。
@@ -119,7 +133,7 @@ class BlancoCgFieldJavaSourceExpander {
 
     /**
      * アノテーションを展開します。
-     * 
+     *
      * @param cgField
      *            フィールド。
      * @param argSourceLines

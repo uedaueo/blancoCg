@@ -85,7 +85,7 @@ public class BlancoCgMethod {
      * フィールド: [parameterList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgParameter&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgParameter> fParameterList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgParameter>();
+    private List<BlancoCgParameter> fParameterList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgParameter>();
 
     /**
      * このメソッドの戻り値です。
@@ -108,7 +108,7 @@ public class BlancoCgMethod {
      * フィールド: [throwList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgException&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgException> fThrowList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgException>();
+    private List<BlancoCgException> fThrowList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgException>();
 
     /**
      * このメソッドに付与されているアノテーションのリストです。
@@ -116,7 +116,7 @@ public class BlancoCgMethod {
      * フィールド: [annotationList]。
      * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
      */
-    private List<java.lang.String> fAnnotationList = new java.util.ArrayList<java.lang.String>();
+    private List<String> fAnnotationList = new java.util.ArrayList<java.lang.String>();
 
     /**
      * このメソッド内で使用するローカル変数のリストです。Delphi言語など、インラインでローカル変数定義ができない言語でのみ使用します。
@@ -124,7 +124,7 @@ public class BlancoCgMethod {
      * フィールド: [localVariableList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgLocalVariable&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgLocalVariable> fLocalVariableList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgLocalVariable>();
+    private List<BlancoCgLocalVariable> fLocalVariableList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgLocalVariable>();
 
     /**
      * このメソッドに含まれる行のリストです。
@@ -132,7 +132,7 @@ public class BlancoCgMethod {
      * フィールド: [lineList]。
      * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
      */
-    private List<java.lang.String> fLineList = new java.util.ArrayList<java.lang.String>();
+    private List<String> fLineList = new java.util.ArrayList<java.lang.String>();
 
     /**
      * コンストラクタの場合には、Java言語だと super(引数)、C#.NETだと base(引数)の文字列全てを指定します。一般メソッドの場合には、Java言語だと super(引数)の文字列全てを指定します。セミコロンは含みません。
@@ -154,7 +154,7 @@ public class BlancoCgMethod {
      * フィールド: [virtualParameterList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgVirtualParameter&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgVirtualParameter> fVirtualParameterList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgVirtualParameter>();
+    private List<BlancoCgVirtualParameter> fVirtualParameterList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgVirtualParameter>();
 
     /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。
@@ -377,7 +377,7 @@ public class BlancoCgMethod {
      *
      * @param argParameterList フィールド[parameterList]に設定する値。
      */
-    public void setParameterList(final List<blanco.cg.valueobject.BlancoCgParameter> argParameterList) {
+    public void setParameterList(final List<BlancoCgParameter> argParameterList) {
         fParameterList = argParameterList;
     }
 
@@ -389,7 +389,7 @@ public class BlancoCgMethod {
      *
      * @return フィールド[parameterList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgParameter> getParameterList() {
+    public List<BlancoCgParameter> getParameterList() {
         return fParameterList;
     }
 
@@ -445,7 +445,7 @@ public class BlancoCgMethod {
      *
      * @param argThrowList フィールド[throwList]に設定する値。
      */
-    public void setThrowList(final List<blanco.cg.valueobject.BlancoCgException> argThrowList) {
+    public void setThrowList(final List<BlancoCgException> argThrowList) {
         fThrowList = argThrowList;
     }
 
@@ -457,7 +457,7 @@ public class BlancoCgMethod {
      *
      * @return フィールド[throwList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgException> getThrowList() {
+    public List<BlancoCgException> getThrowList() {
         return fThrowList;
     }
 
@@ -468,7 +468,7 @@ public class BlancoCgMethod {
      *
      * @param argAnnotationList フィールド[annotationList]に設定する値。
      */
-    public void setAnnotationList(final List<java.lang.String> argAnnotationList) {
+    public void setAnnotationList(final List<String> argAnnotationList) {
         fAnnotationList = argAnnotationList;
     }
 
@@ -480,7 +480,7 @@ public class BlancoCgMethod {
      *
      * @return フィールド[annotationList]から取得した値。
      */
-    public List<java.lang.String> getAnnotationList() {
+    public List<String> getAnnotationList() {
         return fAnnotationList;
     }
 
@@ -491,7 +491,7 @@ public class BlancoCgMethod {
      *
      * @param argLocalVariableList フィールド[localVariableList]に設定する値。
      */
-    public void setLocalVariableList(final List<blanco.cg.valueobject.BlancoCgLocalVariable> argLocalVariableList) {
+    public void setLocalVariableList(final List<BlancoCgLocalVariable> argLocalVariableList) {
         fLocalVariableList = argLocalVariableList;
     }
 
@@ -503,7 +503,7 @@ public class BlancoCgMethod {
      *
      * @return フィールド[localVariableList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgLocalVariable> getLocalVariableList() {
+    public List<BlancoCgLocalVariable> getLocalVariableList() {
         return fLocalVariableList;
     }
 
@@ -514,7 +514,7 @@ public class BlancoCgMethod {
      *
      * @param argLineList フィールド[lineList]に設定する値。
      */
-    public void setLineList(final List<java.lang.String> argLineList) {
+    public void setLineList(final List<String> argLineList) {
         fLineList = argLineList;
     }
 
@@ -526,7 +526,7 @@ public class BlancoCgMethod {
      *
      * @return フィールド[lineList]から取得した値。
      */
-    public List<java.lang.String> getLineList() {
+    public List<String> getLineList() {
         return fLineList;
     }
 
@@ -581,7 +581,7 @@ public class BlancoCgMethod {
      *
      * @param argVirtualParameterList フィールド[virtualParameterList]に設定する値。
      */
-    public void setVirtualParameterList(final List<blanco.cg.valueobject.BlancoCgVirtualParameter> argVirtualParameterList) {
+    public void setVirtualParameterList(final List<BlancoCgVirtualParameter> argVirtualParameterList) {
         fVirtualParameterList = argVirtualParameterList;
     }
 
@@ -593,7 +593,7 @@ public class BlancoCgMethod {
      *
      * @return フィールド[virtualParameterList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgVirtualParameter> getVirtualParameterList() {
+    public List<BlancoCgVirtualParameter> getVirtualParameterList() {
         return fVirtualParameterList;
     }
 
@@ -705,15 +705,7 @@ public class BlancoCgMethod {
         target.fStaticInitializer = this.fStaticInitializer;
         // Name: fParameterList
         // Type: java.util.List
-        if (this.fParameterList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgParameter> iterator = this.fParameterList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgParameter loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgParameter loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgParameter]です。
-                target.fParameterList.add(loopTarget);
-            }
-        }
+        // フィールド[fParameterList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgParameter]です。
         // Name: fReturn
         // Type: blanco.cg.valueobject.BlancoCgReturn
         // フィールド[fReturn]はサポート外の型[blanco.cg.valueobject.BlancoCgReturn]です。
@@ -722,48 +714,16 @@ public class BlancoCgMethod {
         target.fNotnull = this.fNotnull;
         // Name: fThrowList
         // Type: java.util.List
-        if (this.fThrowList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgException> iterator = this.fThrowList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgException loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgException loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgException]です。
-                target.fThrowList.add(loopTarget);
-            }
-        }
+        // フィールド[fThrowList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgException]です。
         // Name: fAnnotationList
         // Type: java.util.List
-        if (this.fAnnotationList != null) {
-            final java.util.Iterator<java.lang.String> iterator = this.fAnnotationList.iterator();
-            for (; iterator.hasNext();) {
-                java.lang.String loopSource = iterator.next();
-                java.lang.String loopTarget = null;
-                loopTarget = loopSource;
-                target.fAnnotationList.add(loopTarget);
-            }
-        }
+        // フィールド[fAnnotationList]はサポート外の型[java.util.Listjava.lang.String]です。
         // Name: fLocalVariableList
         // Type: java.util.List
-        if (this.fLocalVariableList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgLocalVariable> iterator = this.fLocalVariableList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgLocalVariable loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgLocalVariable loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgLocalVariable]です。
-                target.fLocalVariableList.add(loopTarget);
-            }
-        }
+        // フィールド[fLocalVariableList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgLocalVariable]です。
         // Name: fLineList
         // Type: java.util.List
-        if (this.fLineList != null) {
-            final java.util.Iterator<java.lang.String> iterator = this.fLineList.iterator();
-            for (; iterator.hasNext();) {
-                java.lang.String loopSource = iterator.next();
-                java.lang.String loopTarget = null;
-                loopTarget = loopSource;
-                target.fLineList.add(loopTarget);
-            }
-        }
+        // フィールド[fLineList]はサポート外の型[java.util.Listjava.lang.String]です。
         // Name: fSuperclassInvocation
         // Type: java.lang.String
         target.fSuperclassInvocation = this.fSuperclassInvocation;
@@ -772,15 +732,7 @@ public class BlancoCgMethod {
         target.fVirtualParameterDefinition = this.fVirtualParameterDefinition;
         // Name: fVirtualParameterList
         // Type: java.util.List
-        if (this.fVirtualParameterList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgVirtualParameter> iterator = this.fVirtualParameterList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgVirtualParameter loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgVirtualParameter loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgVirtualParameter]です。
-                target.fVirtualParameterList.add(loopTarget);
-            }
-        }
+        // フィールド[fVirtualParameterList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgVirtualParameter]です。
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。

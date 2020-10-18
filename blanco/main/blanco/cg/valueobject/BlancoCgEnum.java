@@ -33,7 +33,7 @@ public class BlancoCgEnum {
      * フィールド: [elementList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgEnumElement&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgEnumElement> fElementList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgEnumElement>();
+    private List<BlancoCgEnumElement> fElementList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgEnumElement>();
 
     /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。なおBlancoCgObjectFactoryを経由してインスタンスを取得した際には、既にオブジェクトはセット済みです。
@@ -115,7 +115,7 @@ public class BlancoCgEnum {
      *
      * @param argElementList フィールド[elementList]に設定する値。
      */
-    public void setElementList(final List<blanco.cg.valueobject.BlancoCgEnumElement> argElementList) {
+    public void setElementList(final List<BlancoCgEnumElement> argElementList) {
         fElementList = argElementList;
     }
 
@@ -127,7 +127,7 @@ public class BlancoCgEnum {
      *
      * @return フィールド[elementList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgEnumElement> getElementList() {
+    public List<BlancoCgEnumElement> getElementList() {
         return fElementList;
     }
 
@@ -206,15 +206,7 @@ public class BlancoCgEnum {
         target.fAccess = this.fAccess;
         // Name: fElementList
         // Type: java.util.List
-        if (this.fElementList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgEnumElement> iterator = this.fElementList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgEnumElement loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgEnumElement loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgEnumElement]です。
-                target.fElementList.add(loopTarget);
-            }
-        }
+        // フィールド[fElementList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgEnumElement]です。
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。

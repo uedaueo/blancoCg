@@ -1,5 +1,7 @@
 package blanco.cg.valueobject;
 
+import java.util.List;
+
 /**
  * 型を表現するためのバリューオブジェクト。既存のクラスを参照する場合に利用されます。
  *
@@ -27,6 +29,22 @@ public class BlancoCgType {
      * フィールド: [generics]。
      */
     private String fGenerics;
+
+    /**
+     * K, Vなど複数のジェネリクスを追加する場合はこちらを使用します。
+     *
+     * フィールド: [genericsList]。
+     * デフォルト: [new java.util.ArrayList&lt;&gt;()]。
+     */
+    private List<String> fGenericsList = new java.util.ArrayList<>();
+
+    /**
+     * v2.4.4 以降で有効なジェネリクスの解析機能を使用するために用います。
+     *
+     * フィールド: [genericsTree]。
+     * デフォルト: [new java.util.ArrayList&lt;&gt;()]。
+     */
+    private List<BlancoCgType> fGenericsTree = new java.util.ArrayList<>();
 
     /**
      * 型が配列なのかどうかを示します。
@@ -118,6 +136,52 @@ public class BlancoCgType {
     }
 
     /**
+     * フィールド [genericsList] の値を設定します。
+     *
+     * フィールドの説明: [K, Vなど複数のジェネリクスを追加する場合はこちらを使用します。]。
+     *
+     * @param argGenericsList フィールド[genericsList]に設定する値。
+     */
+    public void setGenericsList(final List<String> argGenericsList) {
+        fGenericsList = argGenericsList;
+    }
+
+    /**
+     * フィールド [genericsList] の値を取得します。
+     *
+     * フィールドの説明: [K, Vなど複数のジェネリクスを追加する場合はこちらを使用します。]。
+     * デフォルト: [new java.util.ArrayList&lt;&gt;()]。
+     *
+     * @return フィールド[genericsList]から取得した値。
+     */
+    public List<String> getGenericsList() {
+        return fGenericsList;
+    }
+
+    /**
+     * フィールド [genericsTree] の値を設定します。
+     *
+     * フィールドの説明: [v2.4.4 以降で有効なジェネリクスの解析機能を使用するために用います。]。
+     *
+     * @param argGenericsTree フィールド[genericsTree]に設定する値。
+     */
+    public void setGenericsTree(final List<BlancoCgType> argGenericsTree) {
+        fGenericsTree = argGenericsTree;
+    }
+
+    /**
+     * フィールド [genericsTree] の値を取得します。
+     *
+     * フィールドの説明: [v2.4.4 以降で有効なジェネリクスの解析機能を使用するために用います。]。
+     * デフォルト: [new java.util.ArrayList&lt;&gt;()]。
+     *
+     * @return フィールド[genericsTree]から取得した値。
+     */
+    public List<BlancoCgType> getGenericsTree() {
+        return fGenericsTree;
+    }
+
+    /**
      * フィールド [array] の値を設定します。
      *
      * フィールドの説明: [型が配列なのかどうかを示します。]。
@@ -203,6 +267,8 @@ public class BlancoCgType {
         buf.append("name=" + fName);
         buf.append(",description=" + fDescription);
         buf.append(",generics=" + fGenerics);
+        buf.append(",genericsList=" + fGenericsList);
+        buf.append(",genericsTree=" + fGenericsTree);
         buf.append(",array=" + fArray);
         buf.append(",arrayDimension=" + fArrayDimension);
         buf.append(",constructorArgs=" + fConstructorArgs);
@@ -237,6 +303,12 @@ public class BlancoCgType {
         // Name: fGenerics
         // Type: java.lang.String
         target.fGenerics = this.fGenerics;
+        // Name: fGenericsList
+        // Type: java.util.List
+        // フィールド[fGenericsList]はサポート外の型[java.util.Listjava.lang.String]です。
+        // Name: fGenericsTree
+        // Type: java.util.List
+        // フィールド[fGenericsTree]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgType]です。
         // Name: fArray
         // Type: boolean
         target.fArray = this.fArray;

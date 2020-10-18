@@ -37,7 +37,7 @@ public class BlancoCgInterface {
      * フィールド: [extendClassList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgType&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgType> fExtendClassList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgType>();
+    private List<BlancoCgType> fExtendClassList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgType>();
 
     /**
      * このインタフェースのアクセスコントロールを指定します。
@@ -54,7 +54,7 @@ public class BlancoCgInterface {
      * フィールド: [annotationList]。
      * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
      */
-    private List<java.lang.String> fAnnotationList = new java.util.ArrayList<java.lang.String>();
+    private List<String> fAnnotationList = new java.util.ArrayList<java.lang.String>();
 
     /**
      * このインタフェースに含まれるフィールドのリストです。
@@ -62,7 +62,7 @@ public class BlancoCgInterface {
      * フィールド: [fieldList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgField&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgField> fFieldList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgField>();
+    private List<BlancoCgField> fFieldList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgField>();
 
     /**
      * このインタフェースに含まれるメソッドのリストです。
@@ -70,7 +70,7 @@ public class BlancoCgInterface {
      * フィールド: [methodList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgMethod&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgMethod> fMethodList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgMethod>();
+    private List<BlancoCgMethod> fMethodList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgMethod>();
 
     /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。
@@ -85,7 +85,7 @@ public class BlancoCgInterface {
      * フィールド: [plainTextList]。
      * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
      */
-    private List<java.lang.String> fPlainTextList = new java.util.ArrayList<java.lang.String>();
+    private List<String> fPlainTextList = new java.util.ArrayList<java.lang.String>();
 
     /**
      * フィールド [name] の値を設定します。
@@ -161,7 +161,7 @@ public class BlancoCgInterface {
      *
      * @param argExtendClassList フィールド[extendClassList]に設定する値。
      */
-    public void setExtendClassList(final List<blanco.cg.valueobject.BlancoCgType> argExtendClassList) {
+    public void setExtendClassList(final List<BlancoCgType> argExtendClassList) {
         fExtendClassList = argExtendClassList;
     }
 
@@ -174,7 +174,7 @@ public class BlancoCgInterface {
      *
      * @return フィールド[extendClassList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgType> getExtendClassList() {
+    public List<BlancoCgType> getExtendClassList() {
         return fExtendClassList;
     }
 
@@ -210,7 +210,7 @@ public class BlancoCgInterface {
      *
      * @param argAnnotationList フィールド[annotationList]に設定する値。
      */
-    public void setAnnotationList(final List<java.lang.String> argAnnotationList) {
+    public void setAnnotationList(final List<String> argAnnotationList) {
         fAnnotationList = argAnnotationList;
     }
 
@@ -222,7 +222,7 @@ public class BlancoCgInterface {
      *
      * @return フィールド[annotationList]から取得した値。
      */
-    public List<java.lang.String> getAnnotationList() {
+    public List<String> getAnnotationList() {
         return fAnnotationList;
     }
 
@@ -233,7 +233,7 @@ public class BlancoCgInterface {
      *
      * @param argFieldList フィールド[fieldList]に設定する値。
      */
-    public void setFieldList(final List<blanco.cg.valueobject.BlancoCgField> argFieldList) {
+    public void setFieldList(final List<BlancoCgField> argFieldList) {
         fFieldList = argFieldList;
     }
 
@@ -245,7 +245,7 @@ public class BlancoCgInterface {
      *
      * @return フィールド[fieldList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgField> getFieldList() {
+    public List<BlancoCgField> getFieldList() {
         return fFieldList;
     }
 
@@ -256,7 +256,7 @@ public class BlancoCgInterface {
      *
      * @param argMethodList フィールド[methodList]に設定する値。
      */
-    public void setMethodList(final List<blanco.cg.valueobject.BlancoCgMethod> argMethodList) {
+    public void setMethodList(final List<BlancoCgMethod> argMethodList) {
         fMethodList = argMethodList;
     }
 
@@ -268,7 +268,7 @@ public class BlancoCgInterface {
      *
      * @return フィールド[methodList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgMethod> getMethodList() {
+    public List<BlancoCgMethod> getMethodList() {
         return fMethodList;
     }
 
@@ -301,7 +301,7 @@ public class BlancoCgInterface {
      *
      * @param argPlainTextList フィールド[plainTextList]に設定する値。
      */
-    public void setPlainTextList(final List<java.lang.String> argPlainTextList) {
+    public void setPlainTextList(final List<String> argPlainTextList) {
         fPlainTextList = argPlainTextList;
     }
 
@@ -313,7 +313,7 @@ public class BlancoCgInterface {
      *
      * @return フィールド[plainTextList]から取得した値。
      */
-    public List<java.lang.String> getPlainTextList() {
+    public List<String> getPlainTextList() {
         return fPlainTextList;
     }
 
@@ -375,64 +375,24 @@ public class BlancoCgInterface {
         target.fGenerics = this.fGenerics;
         // Name: fExtendClassList
         // Type: java.util.List
-        if (this.fExtendClassList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgType> iterator = this.fExtendClassList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgType loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgType loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgType]です。
-                target.fExtendClassList.add(loopTarget);
-            }
-        }
+        // フィールド[fExtendClassList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgType]です。
         // Name: fAccess
         // Type: java.lang.String
         target.fAccess = this.fAccess;
         // Name: fAnnotationList
         // Type: java.util.List
-        if (this.fAnnotationList != null) {
-            final java.util.Iterator<java.lang.String> iterator = this.fAnnotationList.iterator();
-            for (; iterator.hasNext();) {
-                java.lang.String loopSource = iterator.next();
-                java.lang.String loopTarget = null;
-                loopTarget = loopSource;
-                target.fAnnotationList.add(loopTarget);
-            }
-        }
+        // フィールド[fAnnotationList]はサポート外の型[java.util.Listjava.lang.String]です。
         // Name: fFieldList
         // Type: java.util.List
-        if (this.fFieldList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgField> iterator = this.fFieldList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgField loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgField loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgField]です。
-                target.fFieldList.add(loopTarget);
-            }
-        }
+        // フィールド[fFieldList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgField]です。
         // Name: fMethodList
         // Type: java.util.List
-        if (this.fMethodList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgMethod> iterator = this.fMethodList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgMethod loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgMethod loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgMethod]です。
-                target.fMethodList.add(loopTarget);
-            }
-        }
+        // フィールド[fMethodList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgMethod]です。
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。
         // Name: fPlainTextList
         // Type: java.util.List
-        if (this.fPlainTextList != null) {
-            final java.util.Iterator<java.lang.String> iterator = this.fPlainTextList.iterator();
-            for (; iterator.hasNext();) {
-                java.lang.String loopSource = iterator.next();
-                java.lang.String loopTarget = null;
-                loopTarget = loopSource;
-                target.fPlainTextList.add(loopTarget);
-            }
-        }
+        // フィールド[fPlainTextList]はサポート外の型[java.util.Listjava.lang.String]です。
     }
 }

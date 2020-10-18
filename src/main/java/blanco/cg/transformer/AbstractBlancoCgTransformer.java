@@ -123,7 +123,7 @@ abstract class AbstractBlancoCgTransformer implements BlancoCgTransformer {
         } else {
             lineSeparator = System.lineSeparator();
         }
-        System.out.println(CMDLINE_PREFIX + "lineSeparator = " + lineSeparatorMark);
+//        System.out.println(CMDLINE_PREFIX + "lineSeparator = " + lineSeparatorMark);
         for (int index = 0; index < argSourceLines.size(); index++) {
             final String line = argSourceLines.get(index);
 

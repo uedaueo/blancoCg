@@ -56,7 +56,7 @@ public class BlancoCgSourceFile {
      * フィールド: [importList]。
      * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
      */
-    private List<java.lang.String> fImportList = new java.util.ArrayList<java.lang.String>();
+    private List<String> fImportList = new java.util.ArrayList<java.lang.String>();
 
     /**
      * このファイルの先頭に書かれるコードのリストです。TypeScriptのimportなどに使用します。
@@ -64,7 +64,7 @@ public class BlancoCgSourceFile {
      * フィールド: [headerList]。
      * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
      */
-    private List<java.lang.String> fHeaderList = new java.util.ArrayList<java.lang.String>();
+    private List<String> fHeaderList = new java.util.ArrayList<java.lang.String>();
 
     /**
      * このファイルに含まれる列挙体のリストです。
@@ -72,7 +72,7 @@ public class BlancoCgSourceFile {
      * フィールド: [enumList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgEnum&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgEnum> fEnumList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgEnum>();
+    private List<BlancoCgEnum> fEnumList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgEnum>();
 
     /**
      * このファイルに含まれるインタフェースのリストです。
@@ -80,7 +80,7 @@ public class BlancoCgSourceFile {
      * フィールド: [interfaceList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgInterface&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgInterface> fInterfaceList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgInterface>();
+    private List<BlancoCgInterface> fInterfaceList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgInterface>();
 
     /**
      * このファイルに含まれるクラスのリストです。
@@ -88,7 +88,7 @@ public class BlancoCgSourceFile {
      * フィールド: [classList]。
      * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgClass&gt;()]。
      */
-    private List<blanco.cg.valueobject.BlancoCgClass> fClassList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgClass>();
+    private List<BlancoCgClass> fClassList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgClass>();
 
     /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。
@@ -248,7 +248,7 @@ public class BlancoCgSourceFile {
      *
      * @param argImportList フィールド[importList]に設定する値。
      */
-    public void setImportList(final List<java.lang.String> argImportList) {
+    public void setImportList(final List<String> argImportList) {
         fImportList = argImportList;
     }
 
@@ -260,7 +260,7 @@ public class BlancoCgSourceFile {
      *
      * @return フィールド[importList]から取得した値。
      */
-    public List<java.lang.String> getImportList() {
+    public List<String> getImportList() {
         return fImportList;
     }
 
@@ -271,7 +271,7 @@ public class BlancoCgSourceFile {
      *
      * @param argHeaderList フィールド[headerList]に設定する値。
      */
-    public void setHeaderList(final List<java.lang.String> argHeaderList) {
+    public void setHeaderList(final List<String> argHeaderList) {
         fHeaderList = argHeaderList;
     }
 
@@ -283,7 +283,7 @@ public class BlancoCgSourceFile {
      *
      * @return フィールド[headerList]から取得した値。
      */
-    public List<java.lang.String> getHeaderList() {
+    public List<String> getHeaderList() {
         return fHeaderList;
     }
 
@@ -294,7 +294,7 @@ public class BlancoCgSourceFile {
      *
      * @param argEnumList フィールド[enumList]に設定する値。
      */
-    public void setEnumList(final List<blanco.cg.valueobject.BlancoCgEnum> argEnumList) {
+    public void setEnumList(final List<BlancoCgEnum> argEnumList) {
         fEnumList = argEnumList;
     }
 
@@ -306,7 +306,7 @@ public class BlancoCgSourceFile {
      *
      * @return フィールド[enumList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgEnum> getEnumList() {
+    public List<BlancoCgEnum> getEnumList() {
         return fEnumList;
     }
 
@@ -317,7 +317,7 @@ public class BlancoCgSourceFile {
      *
      * @param argInterfaceList フィールド[interfaceList]に設定する値。
      */
-    public void setInterfaceList(final List<blanco.cg.valueobject.BlancoCgInterface> argInterfaceList) {
+    public void setInterfaceList(final List<BlancoCgInterface> argInterfaceList) {
         fInterfaceList = argInterfaceList;
     }
 
@@ -329,7 +329,7 @@ public class BlancoCgSourceFile {
      *
      * @return フィールド[interfaceList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgInterface> getInterfaceList() {
+    public List<BlancoCgInterface> getInterfaceList() {
         return fInterfaceList;
     }
 
@@ -340,7 +340,7 @@ public class BlancoCgSourceFile {
      *
      * @param argClassList フィールド[classList]に設定する値。
      */
-    public void setClassList(final List<blanco.cg.valueobject.BlancoCgClass> argClassList) {
+    public void setClassList(final List<BlancoCgClass> argClassList) {
         fClassList = argClassList;
     }
 
@@ -352,7 +352,7 @@ public class BlancoCgSourceFile {
      *
      * @return フィールド[classList]から取得した値。
      */
-    public List<blanco.cg.valueobject.BlancoCgClass> getClassList() {
+    public List<BlancoCgClass> getClassList() {
         return fClassList;
     }
 
@@ -473,59 +473,19 @@ public class BlancoCgSourceFile {
         target.fTabs = this.fTabs;
         // Name: fImportList
         // Type: java.util.List
-        if (this.fImportList != null) {
-            final java.util.Iterator<java.lang.String> iterator = this.fImportList.iterator();
-            for (; iterator.hasNext();) {
-                java.lang.String loopSource = iterator.next();
-                java.lang.String loopTarget = null;
-                loopTarget = loopSource;
-                target.fImportList.add(loopTarget);
-            }
-        }
+        // フィールド[fImportList]はサポート外の型[java.util.Listjava.lang.String]です。
         // Name: fHeaderList
         // Type: java.util.List
-        if (this.fHeaderList != null) {
-            final java.util.Iterator<java.lang.String> iterator = this.fHeaderList.iterator();
-            for (; iterator.hasNext();) {
-                java.lang.String loopSource = iterator.next();
-                java.lang.String loopTarget = null;
-                loopTarget = loopSource;
-                target.fHeaderList.add(loopTarget);
-            }
-        }
+        // フィールド[fHeaderList]はサポート外の型[java.util.Listjava.lang.String]です。
         // Name: fEnumList
         // Type: java.util.List
-        if (this.fEnumList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgEnum> iterator = this.fEnumList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgEnum loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgEnum loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgEnum]です。
-                target.fEnumList.add(loopTarget);
-            }
-        }
+        // フィールド[fEnumList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgEnum]です。
         // Name: fInterfaceList
         // Type: java.util.List
-        if (this.fInterfaceList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgInterface> iterator = this.fInterfaceList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgInterface loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgInterface loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgInterface]です。
-                target.fInterfaceList.add(loopTarget);
-            }
-        }
+        // フィールド[fInterfaceList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgInterface]です。
         // Name: fClassList
         // Type: java.util.List
-        if (this.fClassList != null) {
-            final java.util.Iterator<blanco.cg.valueobject.BlancoCgClass> iterator = this.fClassList.iterator();
-            for (; iterator.hasNext();) {
-                blanco.cg.valueobject.BlancoCgClass loopSource = iterator.next();
-                blanco.cg.valueobject.BlancoCgClass loopTarget = null;
-                // フィールド[generics]はサポート外の型[blanco.cg.valueobject.BlancoCgClass]です。
-                target.fClassList.add(loopTarget);
-            }
-        }
+        // フィールド[fClassList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgClass]です。
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。

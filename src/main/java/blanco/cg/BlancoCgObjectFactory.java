@@ -24,6 +24,7 @@
  */
 package blanco.cg;
 
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.*;
 
 /**
@@ -93,12 +94,12 @@ public class BlancoCgObjectFactory {
      */
     public BlancoCgType createType(final String argTypeName) {
         final BlancoCgType cgType = new BlancoCgType();
-        cgType.setName(getTypeNameWithoutGenerics(argTypeName));
+        cgType.setName(BlancoCgSourceUtil.getTypeNameWithoutGenerics(argTypeName));
 
         // Descriptionについては、ファクトリからの生成時にはセットしません。
 
         // ジェネリクスがあるばあいには、それを格納
-        cgType.setGenerics(getGenericsFromFullName(argTypeName));
+        cgType.setGenerics(BlancoCgSourceUtil.getGenericsFromFullName(argTypeName));
 
         return cgType;
     }
@@ -384,21 +385,4 @@ public class BlancoCgObjectFactory {
 
         return cgTag;
     }
-
-    private String getTypeNameWithoutGenerics(final String argFullType) {
-        int find = argFullType.indexOf('<');
-        if (find > 0) {
-            return argFullType.substring(0, find);
-        }
-        return argFullType;
-    }
-
-    private String getGenericsFromFullName(final String argFullType) {
-        int find = argFullType.indexOf('<');
-        if (find > 0) {
-            return argFullType.substring(find);
-        }
-        return null;
-    }
-
 }

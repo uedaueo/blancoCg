@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -26,6 +26,7 @@ package blanco.cg.transformer.java;
 
 import java.util.List;
 
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgField;
 import blanco.cg.valueobject.BlancoCgInterface;
 import blanco.cg.valueobject.BlancoCgLangDoc;
@@ -36,16 +37,16 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgInterfaceをソースコードに展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgInterfaceJavaSourceExpander {
 
     /**
      * ここでinterfaceを展開します。
-     * 
+     *
      * @param cgInterface
      *            処理対象となるインタフェース。
      * @param argSourceLines
@@ -81,7 +82,7 @@ class BlancoCgInterfaceJavaSourceExpander {
         buf.append("interface " + cgInterface.getName());
 
         // ここで親クラスを展開。
-        expandExtendClassList(cgInterface, buf);
+        expandExtendClassList(cgInterface, buf, argSourceFile);
 
         // ※ポイント: 親インタフェース展開は interfaceには存在しません。
 
@@ -100,7 +101,7 @@ class BlancoCgInterfaceJavaSourceExpander {
 
     /**
      * アノテーションを展開します。
-     * 
+     *
      * @param cgInterface
      *            インタフェース。
      * @param argSourceLines
@@ -116,14 +117,18 @@ class BlancoCgInterfaceJavaSourceExpander {
 
     /**
      * 親クラスを展開します。
-     * 
+     *
      * @param cgClass
      * @param buf
      */
     private void expandExtendClassList(final BlancoCgInterface cgClass,
-            final StringBuffer buf) {
+            final StringBuffer buf, final BlancoCgSourceFile argSourceFile) {
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
-            final BlancoCgType type = cgClass.getExtendClassList().get(index);
+            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getExtendClassList().get(index));
+            cgClass.getExtendClassList().set(index, type);
+
+            // add imports
+            BlancoCgSourceFileJavaSourceExpander.typeToImport(type, argSourceFile);
 
             if (index == 0) {
                 buf.append(" extends "
@@ -136,7 +141,7 @@ class BlancoCgInterfaceJavaSourceExpander {
 
     /**
      * 含まれる各々のフィールドを展開します。
-     * 
+     *
      * @param cgInterface
      * @param argSourceFile
      * @param argSourceLines
@@ -158,7 +163,7 @@ class BlancoCgInterfaceJavaSourceExpander {
 
     /**
      * 含まれる各々のメソッドを展開します。
-     * 
+     *
      * @param cgInterface
      * @param argSourceFile
      * @param argSourceLines

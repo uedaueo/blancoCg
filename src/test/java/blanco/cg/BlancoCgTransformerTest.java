@@ -86,6 +86,16 @@ public class BlancoCgTransformerTest extends TestCase {
         cgField2.getType().setArray(true);
         cgField2.getType().setArrayDimension(2);
 
+        // フィールドのgenerics のテスト
+        final BlancoCgField cgField3 = cgFactory.createField("myField3",
+                "java.util.Map<java.lang.String, blanco.test.BlancoList<blanco.test.BlancoMap<S,T>>>", "フィールドのGenerics試験です。");
+        cgClass.getFieldList().add(cgField3);
+
+        final BlancoCgField cgField4 = cgFactory.createField("myField3",
+                "java.util.Map", "フィールドのGenerics試験です。");
+        cgClass.getFieldList().add(cgField4);
+        cgField4.getType().setGenerics("java.lang.String, blanco.test.BlancoList<blanco.test.BlancoMap<S,T>>");
+
         // static initializer のテスト
         {
             // メソッドを生成します。
@@ -131,6 +141,18 @@ public class BlancoCgTransformerTest extends TestCase {
         // メソッドの内容を追加します。
         cgMethod.getLineList().add("// 代入の試験です。");
         cgMethod.getLineList().add("int a = 0;");
+
+        // Generics テストその２
+        final BlancoCgMethod cgMethod2 = cgFactory.createMethod("myMethod2",
+                "ジェネリクスの試験です。");
+        cgClass.getMethodList().add(cgMethod2);
+
+        // パラメータを追加します。
+        BlancoCgParameter cgParameter = cgFactory.createParameter("argMap", "java.util.Map", "K,Vマップ型");
+        cgMethod2.getParameterList().add(cgParameter);
+        cgParameter.getType().setGenerics(
+                "blanco.cg.test.BlancoKey, blanco.cg.test.BlancoMap<java.lang.String, blanco.cg.BlancoDummy<S, T>>"
+        );
 
         final BlancoCgTransformer cgTransformerJava = BlancoCgTransformerFactory
                 .getJavaSourceTransformer();

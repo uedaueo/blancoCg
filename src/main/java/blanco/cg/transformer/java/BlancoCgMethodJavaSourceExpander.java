@@ -29,6 +29,7 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
@@ -115,8 +116,12 @@ class BlancoCgMethodJavaSourceExpander {
         }
 
         for (BlancoCgParameter cgParameter : cgMethod.getParameterList()) {
+            // generics があればそれを genericsListTree に変換
+            BlancoCgType cgType = BlancoCgSourceUtil.parseTypeWithGenerics(cgParameter.getType());
+            cgParameter.setType(cgType);
+
             // import文に型を追加。
-            argSourceFile.getImportList().add(cgParameter.getType().getName());
+            BlancoCgSourceFileJavaSourceExpander.typeToImport(cgType, argSourceFile);
 
             // 言語ドキュメントにパラメータを追加。
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
@@ -128,9 +133,11 @@ class BlancoCgMethodJavaSourceExpander {
         }
 
         if (cgMethod.getReturn() != null) {
+            BlancoCgType cgType = BlancoCgSourceUtil.parseTypeWithGenerics(cgMethod.getReturn().getType());
+            cgMethod.getReturn().setType(cgType);
+
             // import文に型を追加。
-            argSourceFile.getImportList().add(
-                    cgMethod.getReturn().getType().getName());
+            BlancoCgSourceFileJavaSourceExpander.typeToImport(cgMethod.getReturn().getType(), argSourceFile);
 
             // 言語ドキュメントにreturnを追加。
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
@@ -158,7 +165,8 @@ class BlancoCgMethodJavaSourceExpander {
      */
     private void expandMethodBody(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines,
-            final boolean argIsInterface) {
+            final boolean argIsInterface
+    ) {
         final StringBuffer buf = new StringBuffer();
 
         if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
@@ -210,6 +218,7 @@ class BlancoCgMethodJavaSourceExpander {
                 // < > は入っている前提
                 buf.append(cgMethod.getVirtualParameterDefinition() + " ");
             }
+
             if (cgMethod.getReturn() != null
                     && cgMethod.getReturn().getType() != null) {
                 buf.append(BlancoCgTypeJavaSourceExpander.toTypeString(cgMethod

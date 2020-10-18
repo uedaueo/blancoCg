@@ -26,6 +26,7 @@ package blanco.cg.transformer.java;
 
 import java.util.List;
 
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgEnum;
 import blanco.cg.valueobject.BlancoCgField;
@@ -147,10 +148,11 @@ class BlancoCgClassJavaSourceExpander {
     private void expandExtendClassList(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
-            final BlancoCgType type = cgClass.getExtendClassList().get(index);
+            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getExtendClassList().get(index));
+            cgClass.getExtendClassList().set(index, type);
 
             // import文に型を追加。
-            argSourceFile.getImportList().add(type.getName());
+            BlancoCgSourceFileJavaSourceExpander.typeToImport(type, argSourceFile);
 
             if (index == 0) {
                 argBuf.append(" extends "
@@ -172,11 +174,11 @@ class BlancoCgClassJavaSourceExpander {
     private void expandImplementInterfaceList(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
         for (int index = 0; index < cgClass.getImplementInterfaceList().size(); index++) {
-            final BlancoCgType type = cgClass.getImplementInterfaceList().get(
-                    index);
+            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getImplementInterfaceList().get(index));
+            cgClass.getImplementInterfaceList().set(index, type);
 
             // import文に型を追加。
-            argSourceFile.getImportList().add(type.getName());
+            BlancoCgSourceFileJavaSourceExpander.typeToImport(type, argSourceFile);
 
             if (index == 0) {
                 argBuf.append(" implements ");
