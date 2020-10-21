@@ -229,6 +229,10 @@ class BlancoCgClassKotlinSourceExpander {
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
             final BlancoCgType type = cgClass.getExtendClassList().get(index);
             final String constractorArg = type.getConstructorArgs();
+            String generics = "";
+            if (BlancoStringUtil.null2Blank(type.getGenerics()).length() > 0) {
+                generics = "<" + type.getGenerics() + ">";
+            }
 
             // import文に型を追加。
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {

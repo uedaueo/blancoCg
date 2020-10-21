@@ -219,8 +219,10 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
+        cgClass.setGenerics("S");
         BlancoCgType extendsStr = cgFactory.createType("myprog.MyClass");
         extendsStr.setConstructorArgs("hoge");
+        extendsStr.setGenerics("S");
         cgClass.getExtendClassList().add(extendsStr);
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("myprog.MyInterface"));
