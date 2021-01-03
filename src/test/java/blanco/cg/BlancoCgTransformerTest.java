@@ -209,4 +209,56 @@ public class BlancoCgTransformerTest extends TestCase {
                 .getJavaSourceTransformer();
         cgTransformerJava.transform(cgSourceFile, new File("./tmp/blanco"));
     }
+
+    /**
+     * 独自アノテーション定義の展開試験。
+     *
+     * @throws Exception
+     */
+    public void testTransformerAnnotationInterface() throws Exception {
+        final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
+
+        // ソースファイルを生成します。
+        final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
+                "テスト用のインタフェース");
+        cgSourceFile.getImportList().add("java.text.NumberFormat");
+
+        // クラスを生成します。
+        final BlancoCgInterface cgInterface = cgOf.createInterface(
+                "MyAnnotation", "このインタフェースは、アノテーション定義のためのインタフェースです。");
+        cgInterface.setDefineAnnotation(true);
+        cgSourceFile.getInterfaceList().add(cgInterface);
+        cgInterface.getLangDoc().getTagList().add(
+                cgOf.createLangDocTag("author", null, "blanco Framework"));
+        cgInterface.getExtendClassList().add(
+                cgOf.createType("java.lang.Thread"));
+
+        // フィールドを生成します。
+        final BlancoCgField cgField = cgOf.createField("myField",
+                "java.util.Date", "日付フィールドの試験です。");
+        cgInterface.getFieldList().add(cgField);
+        cgField.setDefault("new Date()");
+
+        // メソッドを生成します。
+        final BlancoCgMethod cgMethod = cgOf.createMethod("myMethod",
+                "メソッドの試験です。");
+        cgInterface.getMethodList().add(cgMethod);
+
+        // パラメータを追加します。
+        cgMethod.getParameterList()
+                .add(
+                        cgOf.createParameter("argString", "java.lang.String",
+                                "文字列引数。"));
+        cgMethod.getParameterList().add(
+                cgOf.createParameter("argDate", "java.util.Date", "日付引数。"));
+        // 戻り値を設定します。
+        cgMethod.setReturn(cgOf.createReturn("boolean", "成功ならtrue。"));
+
+        cgMethod.getThrowList().add(
+                cgOf.createException("java.io.IOException", "入出力例外が発生した場合。"));
+
+        final BlancoCgTransformer cgTransformerJava = BlancoCgTransformerFactory
+                .getJavaSourceTransformer();
+        cgTransformerJava.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
 }

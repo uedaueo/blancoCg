@@ -79,7 +79,11 @@ class BlancoCgInterfaceJavaSourceExpander {
             buf.append(cgInterface.getAccess() + " ");
         }
         // staticやfinalは展開しません。
-        buf.append("interface " + cgInterface.getName());
+        if (cgInterface.getDefineAnnotation()) {
+            buf.append("@interface " + cgInterface.getName());
+        } else {
+            buf.append("interface " + cgInterface.getName());
+        }
 
         // ここで親クラスを展開。
         expandExtendClassList(cgInterface, buf, argSourceFile);

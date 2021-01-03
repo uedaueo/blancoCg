@@ -88,6 +88,14 @@ public class BlancoCgInterface {
     private List<String> fPlainTextList = new java.util.ArrayList<java.lang.String>();
 
     /**
+     * 独自アノテーションを定義するためのインタフェースの場合はtrueを設定してください。
+     *
+     * フィールド: [defineAnnotation]。
+     * デフォルト: [false]。
+     */
+    private Boolean fDefineAnnotation = false;
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [このインタフェースの名前です。]。
@@ -318,6 +326,29 @@ public class BlancoCgInterface {
     }
 
     /**
+     * フィールド [defineAnnotation] の値を設定します。
+     *
+     * フィールドの説明: [独自アノテーションを定義するためのインタフェースの場合はtrueを設定してください。]。
+     *
+     * @param argDefineAnnotation フィールド[defineAnnotation]に設定する値。
+     */
+    public void setDefineAnnotation(final Boolean argDefineAnnotation) {
+        fDefineAnnotation = argDefineAnnotation;
+    }
+
+    /**
+     * フィールド [defineAnnotation] の値を取得します。
+     *
+     * フィールドの説明: [独自アノテーションを定義するためのインタフェースの場合はtrueを設定してください。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[defineAnnotation]から取得した値。
+     */
+    public Boolean getDefineAnnotation() {
+        return fDefineAnnotation;
+    }
+
+    /**
      * このバリューオブジェクトの文字列表現を取得します。
      *
      * <P>使用上の注意</P>
@@ -342,6 +373,7 @@ public class BlancoCgInterface {
         buf.append(",methodList=" + fMethodList);
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",plainTextList=" + fPlainTextList);
+        buf.append(",defineAnnotation=" + fDefineAnnotation);
         buf.append("]");
         return buf.toString();
     }
@@ -394,5 +426,8 @@ public class BlancoCgInterface {
         // Name: fPlainTextList
         // Type: java.util.List
         // フィールド[fPlainTextList]はサポート外の型[java.util.Listjava.lang.String]です。
+        // Name: fDefineAnnotation
+        // Type: java.lang.Boolean
+        target.fDefineAnnotation = this.fDefineAnnotation;
     }
 }
