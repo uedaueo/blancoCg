@@ -1,7 +1,7 @@
 /*
  * blanco Framework
  * Copyright (C) 2004-2017 IGA Tosiki
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -37,9 +37,9 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * BlancoCgEnumをソースコードへと展開します。
- * 
+ *
  * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
- * 
+ *
  * @author IGA Tosiki
  */
 class BlancoCgEnumJavaSourceExpander {
@@ -50,15 +50,13 @@ class BlancoCgEnumJavaSourceExpander {
 
     /**
      * ここで列挙体を展開します。
-     * 
+     *
      * @param cgEnum
      *            処理対象となる列挙体。
      * @param argSourceFile
      *            ソースファイル。
      * @param argSourceLines
      *            出力先行リスト。
-     * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
      */
     public void transformEnum(final BlancoCgEnum cgEnum,
             final BlancoCgSourceFile argSourceFile,
@@ -93,21 +91,34 @@ class BlancoCgEnumJavaSourceExpander {
         buf.append("enum " + cgEnum.getName());
 
         // 要素を展開します。
-        buf.append("{");
+        buf.append(" {");
+        // 行を確定して書き出しを実施。
+        argSourceLines.add(buf.toString());
+        buf.setLength(0);
+
         boolean isFirstElement = true;
         for (BlancoCgEnumElement element : cgEnum.getElementList()) {
             if (isFirstElement) {
                 isFirstElement = false;
             } else {
                 buf.append(", ");
+                // 行を確定して書き出しを実施。
+                argSourceLines.add(buf.toString());
+                buf.setLength(0);
+            }
+            if (BlancoStringUtil.null2Blank(element.getDescription()).length() > 0) {
+                buf.append(" /** "
+                        + BlancoCgSourceUtil.escapeStringAsLangDoc(TARGET_LANG,
+                        element.getDescription()) + " */");
+                // 行を確定して書き出しを実施。
+                argSourceLines.add(buf.toString());
+                buf.setLength(0);
             }
             buf.append(element.getName());
-            if (BlancoStringUtil.null2Blank(element.getDescription()).length() > 0) {
-                buf.append(" /* "
-                        + BlancoCgSourceUtil.escapeStringAsLangDoc(TARGET_LANG,
-                                element.getDescription()) + " */");
-            }
         }
+        // 行を確定して書き出しを実施。
+        argSourceLines.add(buf.toString());
+        buf.setLength(0);
         buf.append("}");
 
         buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
