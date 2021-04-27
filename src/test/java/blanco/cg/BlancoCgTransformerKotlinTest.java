@@ -77,6 +77,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         constParam.setType(constType);
         constParam.setName("second");
         constParam.setConst(true);
+        constParam.setOverride(true);
         constType.setName("kotlin.Number");
         // プライマリコンストラクタのアノテーションテスト
         List<String> primaryConstAnnotationList = new ArrayList<>();

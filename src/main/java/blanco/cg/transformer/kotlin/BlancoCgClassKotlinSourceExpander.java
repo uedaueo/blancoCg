@@ -186,12 +186,24 @@ class BlancoCgClassKotlinSourceExpander {
             // アノテーションを展開。
             BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, constField.getAnnotationList(), argSourceLines);
 
+            // kotlin ではデフォルトでfinalとなります。
+            // ただし override が指定されている場合は final と明示しなければなりません。
+            argBuf.append("    ");
+            if (constField.getOverride()) {
+                if (constField.getFinal()) {
+                    argBuf.append("final ");
+                }
+                argBuf.append("override "); // override はデフォルトで open です。
+            } else if (!constField.getFinal()) {
+                argBuf.append("open ");
+            }
+
             // 変数が変更可能か不可かを設定します。
             // コンストラクタ引数なので、通常はvalで良いようには思います, tueda
             if (constField.getConst()) {
-                argBuf.append("    val ");
+                argBuf.append("val ");
             } else {
-                argBuf.append("    var ");
+                argBuf.append("var ");
             }
             argBuf.append(constField.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
             if (!constField.getNotnull()) {
