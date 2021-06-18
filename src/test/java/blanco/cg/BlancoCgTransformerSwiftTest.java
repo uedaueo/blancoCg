@@ -22,13 +22,13 @@ import blanco.cg.valueobject.BlancoCgMethod;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
- * Swift言語用の生成試験。
+ * Generation test for Swift.
  * 
  * @author IGA Tosiki
  */
 public class BlancoCgTransformerSwiftTest extends TestCase {
     /**
-     * Swiftの試験。
+     * The test for Swift.
      * 
      * @throws Exception
      */
@@ -36,14 +36,14 @@ public class BlancoCgTransformerSwiftTest extends TestCase {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
-                "Myprog", "テスト用のクラス");
+                "Myprog", "Class for testing");
 //        cgSourceFile.getImportList().add("Foundation");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgClass cgClass = cgFactory.createClass("MyClass",
-                "このクラスは、テストのためのクラスです。");
+                "This class is for testing.");
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
@@ -55,55 +55,55 @@ public class BlancoCgTransformerSwiftTest extends TestCase {
                 cgFactory.createType("Foundation.WebException2"));
 
 if(false){
-        // 列挙体
+        // Enumeration
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
-                "列挙体の試験。");
+                "Testing enumerated type.");
         cgClass.getEnumList().add(cgEnum);
         final BlancoCgEnumElement cgEnumElementFirst = cgFactory
                 .createEnumElement("Red", "あか");
         cgEnumElementFirst.setDefault("1");
         cgEnum.getElementList().add(cgEnumElementFirst);
         cgEnum.getElementList().add(
-                cgFactory.createEnumElement("Yerrow", "きいろ"));
+                cgFactory.createEnumElement("Yellow", "きいろ"));
         cgEnum.getElementList().add(cgFactory.createEnumElement("Blue", "あお"));
 }
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgFactory.createField("myField",
-                "Foundation.Date", "日付フィールドの試験です。");
+                "Foundation.Date", "Testing a date field.");
         cgClass.getFieldList().add(cgField);
         cgField.setDefault("DateTime()");
 
         final BlancoCgField cgField2 = cgFactory.createField("myField2",
-                "Foundation.Integer", "intフィールドの試験です。");
+                "Foundation.Integer", "Testing an int field.");
         cgClass.getFieldList().add(cgField2);
 
-        // メソッドを生成します。
+        // Generates a method.
         final BlancoCgMethod cgMethod = cgFactory.createMethod("MyMethod",
-                "メソッドの試験です。");
+                "Testing method.");
         cgClass.getMethodList().add(cgMethod);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgMethod.getParameterList().add(
                 cgFactory.createParameter("argString", "Foundation.String",
-                        "文字列引数。"));
+                        "String argument."));
         cgMethod.getParameterList()
                 .add(
                         cgFactory.createParameter("argDate", "Foundation.DateTime",
-                                "日付引数。"));
-        // 戻り値を設定します。
-        cgMethod.setReturn(cgFactory.createReturn("Foundation.Boolean", "成功ならtrue。"));
+                                "Date argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgFactory.createReturn("Foundation.Boolean", "True if success."));
 
         cgMethod.getThrowList().add(
                 cgFactory.createException("Foundation.IOException",
-                        "入出力例外が発生した場合。"));
+                        "If an I/O exception occurs."));
 
-        // アノテーションの追加。
+        // Adds an annotation.
  // TODO      cgMethod.getAnnotationList().add(
  //               "Copyright(value=\"blanco Framework\")");
 
-        // メソッドの内容を追加します。
-        cgMethod.getLineList().add("// 代入の試験です。");
+        // Adds the contents of the method.
+        cgMethod.getLineList().add("// Testing assignment.");
         cgMethod.getLineList().add("let a = 0;");
 
         final BlancoCgTransformer cgTransformerSwift = BlancoCgTransformerFactory
@@ -112,49 +112,49 @@ if(false){
     }
 
     /**
-     * インタフェースの展開試験。
+     * Interface expansion test.
      * 
      * @throws Exception
      */
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("Myprog",
-                "テスト用のインタフェース");
+                "Interface for testing");
         cgSourceFile.getImportList().add("Myprog.Class2");
         cgSourceFile.getImportList().add("Myprog2.ClassOther");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgInterface cgInterface = cgOf.createInterface(
-                "MyInterface", "このインタフェースは、テストのためのインタフェースです。");
+                "MyInterface", "This interface is for testing.");
         cgSourceFile.getInterfaceList().add(cgInterface);
         cgInterface.getLangDoc().getTagList().add(
                 cgOf.createLangDocTag("author", null, "blanco Framework"));
         cgInterface.getExtendClassList().add(
                 cgOf.createType("System.IO.IOException"));
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgOf.createField("myField",
-                "System.DateTime", "日付フィールドの試験です。");
+                "System.DateTime", "Testing a date field.");
         cgInterface.getFieldList().add(cgField);
         cgField.setDefault("new DateTime()");
 
-        // メソッドを生成します。
+        // Generates a method.
         final BlancoCgMethod cgMethod = cgOf.createMethod("MyMethod",
-                "メソッドの試験です。");
+                "Testing method.");
         cgInterface.getMethodList().add(cgMethod);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgMethod.getParameterList().add(
-                cgOf.createParameter("argString", "System.String", "文字列引数。"));
+                cgOf.createParameter("argString", "System.String", "String argument."));
         cgMethod.getParameterList().add(
-                cgOf.createParameter("argDate", "System.DateTime", "日付引数。"));
-        // 戻り値を設定します。
-        cgMethod.setReturn(cgOf.createReturn("bool", "成功ならtrue。"));
+                cgOf.createParameter("argDate", "System.DateTime", "Date argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgOf.createReturn("bool", "True if success."));
 
         cgMethod.getThrowList().add(
-                cgOf.createException("System.IO.IOException", "入出力例外が発生した場合。"));
+                cgOf.createException("System.IO.IOException", "If an I/O exception occurs."));
 
         final BlancoCgTransformer cgTransformerSwift = BlancoCgTransformerFactory
                 .getSwiftSourceTransformer();

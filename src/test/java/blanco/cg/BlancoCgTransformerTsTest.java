@@ -19,14 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TypeScript言語用の生成試験。
+ * Generation test for TypeScript.
  *
  * @author IGA Tosiki
  * @author tueda
  */
 public class BlancoCgTransformerTsTest extends TestCase {
     /**
-     * export なvalueobjectクラスの展開試験。
+     * Expansion test of export valueobject class.
      *
      * @throws Exception
      */
@@ -34,23 +34,23 @@ public class BlancoCgTransformerTsTest extends TestCase {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
-                "myprog", "テスト用のクラス");
+                "myprog", "Class for testing");
         cgSourceFile.setEncoding("UTF-8");
-        // TypeScript では 2 タブが一般的です
+        // Two tabs are common in TypeScript.
         cgSourceFile.setTabs(2);
-        // 通常のimportの試験。これらはすべて無視されます。
+        // Normal import test. These will all be ignored.
         cgSourceFile.getImportList().add("java.text.NumberFormat");
-        // 同じパッケージのインポート試験。
+        // Import test of the same package.
         cgSourceFile.getImportList().add("myprog.MyClass2");
 
-        // TypeScript 風の import 文を生成します。
+        // Generates a TypeScript-style import statement.
         cgSourceFile.getHeaderList().add("import {MyInterface} from \"./MyInterface\"");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgClass cgClass = cgFactory.createClass("MyClass",
-                "このクラスは、テストのためのクラスです。");
+                "This class is for testing.");
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
@@ -58,112 +58,112 @@ public class BlancoCgTransformerTsTest extends TestCase {
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("myprog.MyInterface"));
 
-        // Plain Text を生成します。
+        // Generates Plain Text.
         List<String> plainTextList = new ArrayList<>();
         plainTextList.add("[i: string]: any;");
         plainTextList.add("[j: number]: any;");
         cgClass.setPlainTextList(plainTextList);
 
-        // 列挙体（TypeScript言語の生成では列挙体は当面無視します）
+        // Enumeration (enums are ignored for the time being in the generation of TypeScript).
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
-                "列挙体の試験。");
+                "Testing enumerated type.");
         cgClass.getEnumList().add(cgEnum);
         cgEnum.getElementList().add(cgFactory.createEnumElement("Red", "あか"));
         cgEnum.getElementList().add(
-                cgFactory.createEnumElement("Yerrow", "きいろ"));
+                cgFactory.createEnumElement("Yellow", "きいろ"));
         cgEnum.getElementList().add(cgFactory.createEnumElement("Blue", "あお"));
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgFactory.createField("_myField",
-                "string", "文字列フィールドの試験です。");
+                "string", "Testing a string field.");
         cgClass.getFieldList().add(cgField);
         cgField.setFinal(false);
         cgField.setAccess("private");
         cgField.setDefault("\"hoge\"");
 
-        // Getter メソッドを生成します。
+        // Generates a Getter method.
         final BlancoCgMethod cgGetterMethod = cgFactory.createMethod("myField",
-                "Getterメソッドの試験です。");
+                "Testing a Getter method.");
         cgClass.getMethodList().add(cgGetterMethod);
-        // TypeScript では get アクセサを用います。
+        // TypeScript uses the "get" accessor.
         cgGetterMethod.setAccess("get");
         cgGetterMethod.setStatic(true);
 
-        // 戻り値を設定します。
-        cgGetterMethod.setReturn(cgFactory.createReturn("string", "値を戻します。"));
+        // Sets the return value.
+        cgGetterMethod.setReturn(cgFactory.createReturn("string", "Returns the value."));
 
-        // アノテーションの追加。
+        // Adds an annotation.
         cgGetterMethod.getAnnotationList().add(
                 "Copyright(value=\"blanco Framework\")");
-        // override は無視されます。
+        // override will be ignored.
         cgGetterMethod.setOverride(true);
 
-        // メソッドの内容を追加します。
+        // Adds the contents of the method.
         cgGetterMethod.getLineList().add("return this._myField");
 
-        // Setter メソッドの試験です。
+        // Generates a Setter method.
         final BlancoCgMethod cgSetterMethod = cgFactory.createMethod("myField",
-                "Setterメソッドの試験です。");
+                "Testing a Setter method.");
         cgClass.getMethodList().add(cgSetterMethod);
         cgSetterMethod.setAccess("set");
 
-        // パラメータを追加します。
+        // Adds a parameter.
         cgSetterMethod.getParameterList().add(
                 cgFactory.createParameter("myField", "string",
-                        "文字列引数。"));
+                        "String argument."));
 
-        // メソッドの内容を追加します。
+        // Adds the contents of the method.
         cgSetterMethod.getLineList().add("this._myField = myField");
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField2 = cgFactory.createField("_myField2",
-                "string", "文字列フィールドの試験2です。");
+                "string", "This is test2 for a string field.");
         cgClass.getFieldList().add(cgField2);
         cgField2.setFinal(false);
         cgField2.setAccess("private");
         cgField2.setNotnull(true);
         cgField2.setDefault("\"fuga\"");
 
-        // Getter メソッドを生成します。
+        // Generates a Getter method.
         final BlancoCgMethod cgGetterMethod2 = cgFactory.createMethod("myField2",
-                "Getterメソッドの試験です。");
+                "Testing a Getter method.");
         cgClass.getMethodList().add(cgGetterMethod2);
-        // TypeScript では get アクセサを用います。
+        // TypeScript uses the "get" accessor.
         cgGetterMethod2.setAccess("get");
 
-        // 戻り値を設定します。
-        cgGetterMethod2.setReturn(cgFactory.createReturn("string", "値を戻します。"));
+        // Sets the return value.
+        cgGetterMethod2.setReturn(cgFactory.createReturn("string", "Returns the value."));
         cgGetterMethod2.setNotnull(true);
 
-        // アノテーションの追加。
+        // Adds an annotation.
         cgGetterMethod2.getAnnotationList().add(
                 "Copyright(value=\"blanco Framework\")");
-        // override は無視されます。
+        // override will be ignored.
         cgGetterMethod2.setOverride(true);
 
-        // メソッドの内容を追加します。
+        // Adds the contents of the method.
         cgGetterMethod2.getLineList().add("return this._myField2");
 
-        // Setter メソッドの試験です。
+        // Generates a Setter method.
         final BlancoCgMethod cgSetterMethod2 = cgFactory.createMethod("myField2",
-                "Setterメソッドの試験です。");
+                "Testing a Setter method.");
         cgClass.getMethodList().add(cgSetterMethod2);
         cgSetterMethod2.setAccess("set");
 
-        // パラメータを追加します。
+        // Adds a parameter
         BlancoCgParameter param2 = cgFactory.createParameter("myField", "string",
-                "文字列引数。");
+                "String argument.");
         param2.setNotnull(true);
 
         cgSetterMethod2.getParameterList().add(param2);
 
-        // メソッドの内容を追加します。
+        // Adds the contents of the method.
         cgSetterMethod2.getLineList().add("this._myField2 = myField");
 
-        //--- Generic のテスト ---
-        // フィールドを生成します。
+        //--- Testing Generic ---
+        // Generates a field.
         final BlancoCgField cgField3 = cgFactory.createField("_myGeneric",
-                "Array", "Genericsフィールドの試験です。");
+                "Array", "Testing a Generics field.");
         cgClass.getFieldList().add(cgField3);
         cgField3.getType().setGenerics("string");
         cgField3.setFinal(false);
@@ -171,36 +171,36 @@ public class BlancoCgTransformerTsTest extends TestCase {
         cgField3.setNotnull(true);
         cgField3.setDefault("[\"generics!\"]");
 
-        // Getter メソッドを生成します。
+        // Generates a Getter method.
         final BlancoCgMethod cgGetterMethod3 = cgFactory.createMethod("myGeneric",
-                "Getterメソッドの試験です。");
+                "Testing a Getter method.");
         cgClass.getMethodList().add(cgGetterMethod3);
-        // TypeScript では get アクセサを用います。
+        // TypeScript uses the "get" accessor.
         cgGetterMethod3.setAccess("get");
 
-        // 戻り値を設定します。
-        cgGetterMethod3.setReturn(cgFactory.createReturn("Array", "値を戻します。"));
+        // Sets the return value.
+        cgGetterMethod3.setReturn(cgFactory.createReturn("Array", "Returns the value."));
         cgGetterMethod3.getReturn().getType().setGenerics("string");
         cgGetterMethod3.setNotnull(true);
 
-        // メソッドの内容を追加します。
+        // Adds the contents of the method.
         cgGetterMethod3.getLineList().add("return this._myGeneric");
 
-        // Setter メソッドの試験です。
+        // Generates a Setter method.
         final BlancoCgMethod cgSetterMethod3 = cgFactory.createMethod("myGeneric",
-                "Setterメソッドの試験です。");
+                "Testing a Setter method.");
         cgClass.getMethodList().add(cgSetterMethod3);
         cgSetterMethod3.setAccess("set");
 
-        // パラメータを追加します。
+        // Adds a parameter.
         BlancoCgParameter param3 = cgFactory.createParameter("myGeneric", "Array",
-                "文字列引数。");
+                "String argument.");
         param3.getType().setGenerics("string");
         param3.setNotnull(true);
 
         cgSetterMethod3.getParameterList().add(param3);
 
-        // メソッドの内容を追加します。
+        // Adds the contents of the method.
         cgSetterMethod3.getLineList().add("this._myGeneric = myGeneric");
 
         final BlancoCgTransformer cgTransformerTs = BlancoCgTransformerFactory
@@ -209,78 +209,78 @@ public class BlancoCgTransformerTsTest extends TestCase {
     }
 
     /**
-     * インタフェースの展開試験。
+     * Interface expansion test.
      *
      * @throws Exception
      */
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
-                "テスト用のインタフェース");
+                "Interface for testing");
         cgSourceFile.getImportList().add("java.text.NumberFormat");
-        // 2 タブに設定します。
+        // Sets to two tabs.
         cgSourceFile.setTabs(2);
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgInterface cgInterface = cgOf.createInterface(
-                "MyInterface", "このインタフェースは、テストのためのインタフェースです。");
+                "MyInterface", "This interface is for testing.");
         cgSourceFile.getInterfaceList().add(cgInterface);
         cgInterface.getLangDoc().getTagList().add(
                 cgOf.createLangDocTag("author", null, "blanco Framework"));
 
-        // Plain Text を生成します。
+        // Generates Plain Text.
         List<String> plainTextList = new ArrayList<>();
         plainTextList.add("[i: string]: any;");
         plainTextList.add("[j: number]: any;");
         cgInterface.setPlainTextList(plainTextList);
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgOf.createField("myField",
-                "string", "文字列フィールドの試験です。");
+                "string", "Testing a string field.");
         cgInterface.getFieldList().add(cgField);
         cgField.setAccess("public");
 
-        // メソッドを生成します。
+        // Generates methods.
         final BlancoCgMethod cgMethod = cgOf.createMethod("myMethod",
-                "メソッドの試験です。");
+                "Testing method.");
         cgInterface.getMethodList().add(cgMethod);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgMethod.getParameterList()
                 .add(
                         cgOf.createParameter("argString", "string",
-                                "文字列引数。"));
+                                "String argument."));
         cgMethod.getParameterList().add(
-                cgOf.createParameter("argNumber", "number", "数値引数。"));
-        // 戻り値を設定します。
-        cgMethod.setReturn(cgOf.createReturn("boolean", "成功ならtrue。"));
+                cgOf.createParameter("argNumber", "number", "Numeric argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgOf.createReturn("boolean", "True if success."));
 
-        // TypeScript では無視されます。
+        // Ignored in TypeScript.
         cgMethod.getThrowList().add(
-                cgOf.createException("java.io.IOException", "入出力例外が発生した場合。"));
+                cgOf.createException("java.io.IOException", "If an I/O exception occurs."));
 
-        // abstract メソッドを生成します。
+        // Generates an abstract method.
         final BlancoCgMethod cgMethodAbst = cgOf.createMethod("myMethodAbst",
-                "abstract メソッドの試験です。");
+                "Testing an abstract method.");
         cgMethodAbst.setAbstract(true);
 
         cgInterface.getMethodList().add(cgMethodAbst);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgMethodAbst.getParameterList()
                 .add(
                         cgOf.createParameter("argString", "string",
-                                "文字列引数。", false));
+                                "String argument.", false));
         cgMethodAbst.getParameterList().add(
-                cgOf.createParameter("argNumber", "number", "数値引数。", true));
-        // 戻り値を設定します。
-        cgMethodAbst.setReturn(cgOf.createReturn("boolean", "成功ならtrue。"));
+                cgOf.createParameter("argNumber", "number", "Numeric argument.", true));
+        // Sets the return value.
+        cgMethodAbst.setReturn(cgOf.createReturn("boolean", "True if success."));
 
-        // TypeScript では無視されます
+        // Ignored in TypeScript.
         cgMethodAbst.getThrowList().add(
-                cgOf.createException("java.io.IOException", "入出力例外が発生した場合。"));
+                cgOf.createException("java.io.IOException", "If an I/O exception occurs."));
 
         final BlancoCgTransformer cgTransformerTs = BlancoCgTransformerFactory
                 .getTsSourceTransformer();

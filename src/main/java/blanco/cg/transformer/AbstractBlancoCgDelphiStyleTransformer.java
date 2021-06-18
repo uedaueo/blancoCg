@@ -36,61 +36,61 @@ import blanco.commons.util.BlancoFileUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * Delphi スタイルの抽象トランスフォーマーです。
+ * A Delphi-style abstract transformer.
  * 
  * @author YAMAMOTO Koji
  */
 public abstract class AbstractBlancoCgDelphiStyleTransformer extends
         AbstractBlancoCgTransformer {
     /**
-     * デバッグモードで動作させるかどうか。
+     * Whether to run in debug mode.
      */
     private static final boolean IS_DEBUG = true;
 
     /**
-     * ソースファイル・バリューオブジェクトをDelphiソースコードに変換して出力先ディレクトリに出力します。
+     * Converts the source file value object to Delphi source code and outputs it to the destination directory.
      * 
-     * このAPIではパッケージ構造をディレクトリ構造として考慮します。
+     * Considers the package structure as a directory structure in this API.
      * 
      * @param argSourceFile
-     *            ソースファイル・バリューオブジェクト。
+     *            Source file value object.
      * @param outputDirectory
-     *            出力先ルートディレクトリ。
+     *            An output destination root directory.
      */
     public void transform(final BlancoCgSourceFile argSourceFile,
             final File outputDirectory) {
         if (argSourceFile == null) {
-            throw new IllegalArgumentException("ソースファイルにnullが与えられました。処理中断します。");
+            throw new IllegalArgumentException("Source file was given as null. Aborts the process.");
         }
         if (outputDirectory == null) {
             throw new IllegalArgumentException(
-                    "出力先ルートディレクトリにnullが与えられました。処理中断します。");
+                    "An output destination root directory was given as null. Aborts the process.");
         }
 
         if (outputDirectory.exists() == false) {
             if (outputDirectory.mkdirs() == false) {
-                throw new IllegalArgumentException("出力先ルートディレクトリ["
+                throw new IllegalArgumentException("An output destination root directory ["
                         + outputDirectory.getAbsolutePath()
-                        + "]が存在しなかったので作成しようとしましたがディレクトリ作成に失敗しました。処理中断します。");
+                        + "] does not exist, so we tried to create it, but failed. Aborts the process.");
             }
         }
         if (outputDirectory.isDirectory() == false) {
-            throw new IllegalArgumentException("出力先ルートディレクトリにディレクトリではないファイル["
-                    + outputDirectory.getAbsolutePath() + "]が与えられました。処理中断します。");
+            throw new IllegalArgumentException("A file [" + outputDirectory.getAbsolutePath()
+                + "] that is not a directory was given as the output root directory. Aborts the process.");
         }
 
         if (argSourceFile.getName() == null) {
-            // ファイル名が確定していないので、クラス名またはインタフェース名から導出します。
+            // Since the file name has not been determined, derives it from the class or interface name.
             decideFilenameFromClassOrInterfaceName(argSourceFile);
         }
 
         try {
-            // パッケージ名からディレクトリ名へと変換。
+            // Converts a package name to a directory name.
             String strSubdirectory = BlancoStringUtil.replaceAll(
                     BlancoStringUtil.null2Blank(argSourceFile.getPackage()),
                     '.', '/');
             if (strSubdirectory.length() > 0) {
-                // サブディレクトリが存在する場合にのみスラッシュを追加します。
+                // Adds a slash only if subdirectories exist.
                 strSubdirectory = "/" + strSubdirectory;
             }
 
@@ -99,21 +99,20 @@ public abstract class AbstractBlancoCgDelphiStyleTransformer extends
                     + strSubdirectory);
             if (targetPackageDirectory.exists() == false) {
                 if (targetPackageDirectory.mkdirs() == false) {
-                    throw new IllegalArgumentException("出力先のパッケージディレクトリ["
-                            + targetPackageDirectory.getAbsolutePath()
-                            + "]の生成に失敗しました。");
+                    throw new IllegalArgumentException("Failed to generate the output destination package directory ["
+                            + targetPackageDirectory.getAbsolutePath() + "].");
                 }
             }
 
-            // 出力先のファイルを確定します。
+            // Finalizes the output destination file.
             final File fileTarget = new File(targetPackageDirectory
                     .getAbsolutePath()
                     + "/" + argSourceFile.getName() + getSourceFileExt());
 
-            // 実際のソースコード出力処理を行います。
+            // Performs the actual source code output process.
             final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
-            // 自動生成するソースコードのエンコーディング指定機能
+            // Feature to specify encoding for auto-generated source code.
             OutputStreamWriter streamWriter = null;
             if (BlancoStringUtil.null2Blank(argSourceFile.getEncoding())
                     .length() == 0) {
@@ -133,7 +132,7 @@ public abstract class AbstractBlancoCgDelphiStyleTransformer extends
                         .toByteArray(), fileTarget)) {
                 case 0:
                     if (IS_DEBUG) {
-                        // デバッグ時のみスキップを標準出力。
+                        // Outputs "skip" to stdout only when debugging.
                         System.out.println(CMDLINE_PREFIX + "skip  : "
                                 + fileTarget.getAbsolutePath());
                     }
@@ -148,79 +147,78 @@ public abstract class AbstractBlancoCgDelphiStyleTransformer extends
                     break;
                 }
             } finally {
-                // ByteArrayOutputStreamのインスタンスは writerのクローズによって
-                // ストリームチェインの仕組み上 自動的にクローズされます。
+                // An instance of ByteArrayOutputStream is automatically closed when the writer is closed, due to the stream chain mechanism.
 
                 if (writer != null) {
                     writer.close();
                 }
             }
         } catch (IOException ex) {
-            throw new IllegalArgumentException("ソースコードを出力する過程で例外が発生しました。"
+            throw new IllegalArgumentException("An exception occurred in the process of outputting the source code."
                     + ex.toString());
         }
     }
 
     /**
-     * ソースコードのリストを整形します。
+     * Formats the source code list.
      * 
-     * Delphi言語用の整形を行います。
+     * Performs formatting for Delphi.
      * 
-     * なお、この処理のなかで { や } は特別な意味を持っています。行末コメントなどが入ると期待する動作ができません。<br>
-     * TODO 中カッコを文末に付与する、などのフォーマットなどは未実装です。
+     * Note that "{" and "}" have a special meaning in this process. If a comment is added at the end of a line, the expected behavior will not be achieved.<br>
+     * TODO: Formatting, such as adding curly brackets to the end of a statement, is not yet implemented.
      * 
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            A source code line list.
      */
     protected void formatSource(final List<java.lang.String> argSourceLines) {
         int sourceIndent = 0;
 
         for (int index = 0; index < argSourceLines.size(); index++) {
             String strLine = argSourceLines.get(index);
-            // 前後の空白は、あらかじめ除去します。
+            // Spaces before and after are removed beforehand.
             strLine = strLine.trim();
             if (strLine.length() == 0) {
-                // 空行です。
+                // Blank line.
             } else {
                 boolean isBeginIndent = false;
                 boolean isEndIndent = false;
 
-                // まずは開始文字列の判定を行います。
-                // ※開始文字列と終了文字列とは別個に判定する必要があります。
+                // First, it determines the start string.
+                // Note: The start string and the end string must be determined separately.
                 if (strLine.startsWith("if ")) {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                 } else if (strLine.startsWith("for ")) {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                 } else if (strLine.startsWith("while ")) {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                 } else if (strLine.startsWith("begin")) {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                 } else if (strLine.startsWith("end")) {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isEndIndent = true;
                 } else if (strLine.startsWith("else")) {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isEndIndent = true;
                 } else if (strLine.equals("Next")
                         || strLine.startsWith("Next ")) {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isEndIndent = true;
                 } else if (strLine.indexOf("type") == 0
                         || strLine.indexOf("interface") == 0
                         || strLine.indexOf("implementation") == 0) {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isBeginIndent = true;
                     isEndIndent = true;
                 } else if (strLine.indexOf("unit ") >= 0
                         || strLine.indexOf("class(") >= 0
                         || strLine.indexOf("interface ") >= 0
                         || strLine.indexOf("implementation ") >= 0) {
-                    // Endより後で判定しているのがポイントです。
-                    // ブロック開始と見なして字下げを予約します。
+                    // The point is that it is determined later than End.
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                 } else if (strLine.equals("published")
                         || strLine.equals("public")
@@ -229,27 +227,27 @@ public abstract class AbstractBlancoCgDelphiStyleTransformer extends
                     isEndIndent = true;
                 }
 
-                // 途中に挟まるであろうIfを判定します。
+                // Determines the If that will be caught in the middle.
                 if (strLine.indexOf(" if ") >= 0) {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                 }
 
                 if (isEndIndent) {
-                    // フラグ一回につき、インデント一個を反映します。
+                    // Reflects one indent per flag.
                     sourceIndent--;
                 }
 
-                // インデントを実施します。
+                // Performs indentation.
                 for (int indexIndent = 0; indexIndent < sourceIndent; indexIndent++) {
-                    // 4タブで字下げします。
+                    // Indents with 4 tabs.
                     strLine = "    " + strLine;
                 }
                 if (isBeginIndent) {
                     sourceIndent++;
                 }
 
-                // 更新後の行イメージでリストを更新します。
+                // Refreshes the list with the updated line image.
                 argSourceLines.set(index, strLine);
             }
         }

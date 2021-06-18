@@ -33,21 +33,21 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * blancoCgの行に関するユーティリティです。
+ * A utility of blancoCg for lines.
  *
- * このクラスはプログラミング言語を超えて利用されます。
+ * This class is used across programming languages.
  *
  * @author IGA Tosiki
  */
 public class BlancoCgLineUtil {
     /**
-     * １行コメントの開始を表す文字列を取得します。
+     * Gets a string indicating the start of an inline comment.
      *
-     * コメントの開始を表す文字列と、それに続く空白を戻します。
+     * Returns the string, followed by a space.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return コメントの開始を表す文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the start of an inline comment.
      */
     public static final String getSingleLineCommentPrefix(
             final int argTargetLang) {
@@ -68,19 +68,19 @@ public class BlancoCgLineUtil {
             return "# ";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgLineUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgLineUtil: An unsupported programming language (" + argTargetLang
+                            + ") has been given.");
         }
     }
 
     /**
-     * 文字列リテラルを囲む文字列を取得します。
+     * Gets a string enclosing a string literal.
      *
-     * 出力対象のプログラミング言語に応じて、ダブルクオートまたは シングルクオートを戻します。
+     * Returns double-quote or single-quorte, depending on the programming language of the output.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return 文字列リテラルを囲む文字列
+     *            The programming language of the output target.
+     * @return A string enclosing a string literal.
      */
     public static final String getStringLiteralEnclosure(final int argTargetLang) {
         switch (argTargetLang) {
@@ -98,17 +98,17 @@ public class BlancoCgLineUtil {
             return "'";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgLineUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgLineUtil: An unsupported programming language (" + argTargetLang
+                            + ") has been given.");
         }
     }
 
     /**
-     * 文字列を連結するオペレータを取得します。
+     * Gets an operator to concatenate strings.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return 文字列を連結するオペレータ。
+     *            The programming language of the output target.
+     * @return An operator to concatenate strings.
      */
     public static final String getStringConcatenationOperator(
             final int argTargetLang) {
@@ -127,20 +127,21 @@ public class BlancoCgLineUtil {
             return ".";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgLineUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgLineUtil: An unsupported programming language (" + argTargetLang
+                            + ") has been given.");
         }
     }
 
     /**
-     * 変数のプレフィックスを取得します。
+     * Gets a prefix of a variable.
      *
-     * 文法的に変数にプレフィックスが必要な場合、その文字列を戻します。プレフィックスが必要ない言語では、長さ0の文字列を戻します。
-     * PHPの場合、$を戻します。
+     * If a prefix is grammatically required for a variable, it will return that string.
+     * Otherwise, it returns a zero-length string.
+     * In PHP, returns $.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return ローカル変数のプレフィックス
+     *            The programming language of the output target.
+     * @return A prefix of a local variable.
      */
     public static final String getVariablePrefix(final int argTargetLang) {
         switch (argTargetLang) {
@@ -152,19 +153,20 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * 変数宣言を表す文字列を取得します。
+     * Gets a string indicating a variable declaration.
      *
-     * 変数宣言１行を戻します。行の終端を表す文字（Javaの場合、セミコロン）は 含まれません。
+     * Returns one line of variable declaration.
+     * It does not include the character indicating the end of the statement (semicolon in Java).
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argVariableName
-     *            変数名。
+     *            Variable name.
      * @param argTypeShortName
-     *            短い型名。
+     *            Short type name.
      * @param argInitialValue
-     *            初期値。nullまたは長さ0の場合、変数の明示的な初期化は行いません。
-     * @return 変数宣言を表す文字列。
+     *            Initial value; if null or zero length, the variable will not explicitly initialized.
+     * @return A string indicating a variable declaration.
      */
     public static final String getVariableDeclaration(final int argTargetLang,
             final String argVariableName, final String argTypeShortName,
@@ -179,28 +181,28 @@ public class BlancoCgLineUtil {
             result = argTypeShortName + " " + argVariableName;
             break;
         case BlancoCgSupportedLang.JS:
-            // 型名は利用しません。
+            // The type name is not used.
             result = "var " + argVariableName;
             break;
         case BlancoCgSupportedLang.VB:
             result = "Dim " + argVariableName + " As " + argTypeShortName;
             break;
         case BlancoCgSupportedLang.PHP:
-            // 型名は利用しません。
+            // The type name is not used.
             result = BlancoCgLineUtil.getVariablePrefix(argTargetLang)
                     + argVariableName;
             break;
         case BlancoCgSupportedLang.RUBY:
         case BlancoCgSupportedLang.PYTHON:
-            // 型名は利用しません。
+            // The type name is not used.
             result = argVariableName;
             break;
         case BlancoCgSupportedLang.KOTLIN:
-            // ここでは変数のみ生成します。
+            // Generates only variables here.
             result = "var " + argVariableName + " : " + argTypeShortName;
             break;
         case BlancoCgSupportedLang.TS:
-                // ここでは変数のみ生成します。
+                // Generates only variables here.
             result = "let " + argVariableName + ": " + argTypeShortName;
             break;
         }
@@ -212,9 +214,10 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * 諸帰化後の変更ができないタイプの変数宣言を表す文字列を取得します。
+     * Gets a string indicating a variable declaration that cannot be changed after initialization.
      *
-     * 変数宣言１行を戻します。行の終端を表す文字（Javaの場合、セミコロン）は 含まれません。
+     * Returns one line of variable declaration.
+     * It does not include the character indicating the end of the statement (semicolon in Java).
      *
      * @param argTargetLang
      * @param argValueName
@@ -246,19 +249,18 @@ public class BlancoCgLineUtil {
         return result;
     }
 
-    // ここ以降はファサードメソッド。
+    // From here on, the facade method.
 
     /**
-     * if文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "if" statement.
      *
-     * 実際の処理は、{@link BlancoCgStatementUtil#getIfBegin(int, java.lang.String)}
-     * に委譲されます。
+     * The actual processing will be delegated to {@link BlancoCgStatementUtil#getIfBegin(int, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argExpr
-     *            条件式。
-     * @return if文の開始部分を表す文字列
+     *            Conditional expression.
+     * @return A string indicating the start of the "if" statement.
      */
     public static final String getIfBegin(final int argTargetLang,
             final String argExpr) {
@@ -266,34 +268,34 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * if文の終了部分を表す文字列を取得します。
+     * Gets a string indicating the end of the "if" statement.
      *
-     * 実際の処理は、{@link BlancoCgStatementUtil#getIfEnd(int)}に委譲されます。
+     * The actual processing will be delegated to {@link BlancoCgStatementUtil#getIfEnd(int)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return if文の終了部分を表す文字列
+     *            The programming language of the output target.
+     * @return A string indicating the end of the "if" statement.
      */
     public static final String getIfEnd(final int argTargetLang) {
         return BlancoCgStatementUtil.getIfEnd(argTargetLang);
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Java, C#, JavaScript, PHPに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getForBeginJava(int, java.lang.String, java.lang.String, java.lang.String)}
-     * に委譲されます。
+     * Java, C#, JavaScript and PHP are supported. 
+     * The actual processing will be delegated to 
+     * {@link BlancoCgStatementUtil#getForBeginJava(int, java.lang.String, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argExpr1
-     *            初期化処理。
+     *            Initialization.
      * @param argExpr2
-     *            継続条件。
+     *            Condition.
      * @param argExpr3
-     *            ループのつど実施する処理。
-     * @return for文の開始部分を表す文字列
+     *            A statement to be executed at each loop.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginJava(final int argTargetLang,
             final String argExpr1, final String argExpr2, final String argExpr3) {
@@ -302,19 +304,19 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * VB.NETに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}
-     * に委譲されます。
+     * VB.NET is supported.
+     * The actual processing will be delegated to 
+     * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCounter
-     *            表現。「例: i As Integer = 1」
+     *            Loop counter. Example: i As Integer = 1
      * @param argTo
-     *            終了となるしきい値 (条件ではありません)。「例: 10」
-     * @return for文の開始部分を表す文字列。
+     *            End value (not a condition). Example: 10.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginVb(final int argTargetLang,
             final String argCounter, final String argTo) {
@@ -323,21 +325,21 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * VB.NETに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}
-     * に委譲されます。
+     * VB.NET is supported.
+     * The actual processing will be delegated to 
+     * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCounter
-     *            表現。「例: i As Integer = 1」
+     *            Loop counter. Example: i As Integer = 1
      * @param argTo
-     *            終了となるしきい値 (条件ではありません)。「例: 10」
+     *            End value (not a condition). Example: 10.
      * @param argStep
-     *            Stepに利用される値。「例: 2」。nullの場合には Stepは省略されます。
-     * @return for文の開始部分の文字列
+     *            The value to be used for Step. Example: 2. If it is null, Step is omitted.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginVb(final int argTargetLang,
             final String argCounter, final String argTo, final String argStep) {
@@ -346,21 +348,21 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Rubyに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getForBeginRuby(int, java.lang.String, java.lang.String, java.lang.String)}
-     * に委譲されます。
+     * Ruby is supported.
+     * The actual processing will be delegated to
+     * {@link BlancoCgStatementUtil#getForBeginRuby(int, java.lang.String, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCounter
-     *            ループカウンタ。
+     *            Loop counter.
      * @param argFrom
-     *            開始値 (条件ではありません)。「例: 1」
+     *            Start value (not a condition). Example: 1.
      * @param argTo
-     *            終了値 (条件ではありません)。「例: 10」
-     * @return for文の開始部分を表す文字列。
+     *            End value (not a condition). Example: 10.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginRuby(final int argTargetLang,
             final String argCounter, final String argFrom, final String argTo) {
@@ -369,21 +371,21 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Delphiに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getForBeginDelphi(int , java.lang.String,java.lang.String, java.lang.String)}
-     * に委譲されます。
+     * Delphi is supported.
+     * The actual processing will be delegated to
+     * {@link BlancoCgStatementUtil#getForBeginDelphi(int , java.lang.String,java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCounter
-     *            ループカウンタ。
+     *            Loop counter.
      * @param argFrom
-     *            開始値
+     *            Start value of the loop.
      * @param argTo
-     *            終了値
-     * @return for文の開始部分を表す文字列。
+     *            End value of the loop.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginDelphi(final int argTargetLang,
             final String argCounter, final String argFrom, final String argTo) {
@@ -392,19 +394,19 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Pythonに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getForBeginPython(int, java.lang.String, java.lang.String)}
-     * に委譲されます。
+     * Python is supported.
+     * The actual processing will be delegated to
+     * {@link BlancoCgStatementUtil#getForBeginPython(int, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argItem
-     *            ループ対象となるオブジェクトの現在値。
+     *            The current value of the object to be looped.
      * @param argItems
-     *            ループ対象となるオブジェクト。
-     * @return for文の開始部分を表す文字列。
+     *            An object to be looped.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginPython(final int argTargetLang,
             final String argItem, final String argItems) {
@@ -413,19 +415,19 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * eachブロックの開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of "each" block.
      *
-     * Rubyに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getEachBeginRuby(int, java.lang.String, java.lang.String)}
-     * に委譲されます。
+     * Ruby is supported.
+     * The actual processing will be delegated to
+     * {@link BlancoCgStatementUtil#getEachBeginRuby(int, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argObject
-     *            eachメソッドを呼び出す対象となるオブジェクト。
+     *            The object on which to call the "each" method.
      * @param argVariable
-     *            eachメソッドの現在値。
-     * @return eachブロックの開始部分を表す文字列。
+     *            Current value of "each" method.
+     * @return A string indicating the start of "each" block.
      */
     public static final String getEachBeginRuby(final int argTargetLang,
             final String argObject, final String argVariable) {
@@ -434,70 +436,70 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * eachブロックの終了部分を表す文字列を取得します。
+     * Gets a string indicating the end of "each" block.
      *
-     * Rubyに対応しています。 実際の処理は、{@link BlancoCgStatementUtil#getEachEnd(int)}
-     * に委譲されます。
+     * Ruby is supported.
+     * The actual processing will be delegated to {@link BlancoCgStatementUtil#getEachEnd(int)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return eachブロックの終了部分を表す文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the end of "each" block.
      */
     public static final String getEachEnd(final int argTargetLang) {
         return BlancoCgStatementUtil.getEachEnd(argTargetLang);
     }
 
     /**
-     * for文の終了部分を表す文字列を取得します。
+     * Gets a string indicating the end of the "for" statement.
      *
-     * 実際の処理は、{@link BlancoCgStatementUtil#getForEnd(int)}に委譲されます。
+     * The actual processing will be delegated to {@link BlancoCgStatementUtil#getForEnd(int)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return for文の終了部分を表す文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the end of the "for" statement.
      */
     public static final String getForEnd(final int argTargetLang) {
         return BlancoCgStatementUtil.getForEnd(argTargetLang);
     }
 
     /**
-     * for文を抜ける文を表わす文字列を取得します。
+     * Get a string indicating the statement that exits the "for" statement.
      *
-     * 実際の処理は、{@link BlancoCgStatementUtil#getForExit(int)}に委譲されます。
+     * The actual processing will be delegated to {@link BlancoCgStatementUtil#getForExit(int)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return breakまたは Exit Forが戻ります。
+     *            The programming language of the output target.
+     * @return "break" or "Exit For".
      */
     public static final String getForExit(final int argTargetLang) {
         return BlancoCgStatementUtil.getForExit(argTargetLang);
     }
 
     /**
-     * 文の終わりを示す文字を取得します。
+     * Gets a character indicating the end of a statement.
      *
-     * 実際の処理は、{@link BlancoCgStatementUtil#getTerminator(int)}に委譲されます。
+     * The actual processing will be delegated to {@link BlancoCgStatementUtil#getTerminator(int)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return 文の終わりを示す文字。
+     *            The programming language of the output target.
+     * @return A character indicating the end of a statement.
      */
     public static final String getTerminator(final int argTargetLang) {
         return BlancoCgStatementUtil.getTerminator(argTargetLang);
     }
 
     /**
-     * while文の開始部分を表わす文字列を取得します。
+     * Gets a string indicating the start of the "while" statement.
      *
-     * Ruby, Pythonに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getWhileBeginRuby(int, java.lang.String)}
-     * に委譲されます。
+     * Ruby and Python are supported.
+     * The actual processing will be delegated to
+     * {@link BlancoCgStatementUtil#getWhileBeginRuby(int, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCon
-     *            条件式。
-     * @return while文の開始部分を表わす文字列。
+     *            Conditional expression.
+     * @return A string indicating the start of the "while" statement.
      */
     public static final String getWhileBeginRuby(final int argTargetLang,
             final String argCon) {
@@ -505,17 +507,17 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * while文の開始部分を表わす文字列を取得します。
+     * Gets a string indicating the start of the "while" statement.
      *
-     * Delphiに対応しています。 実際の処理は、
-     * {@link BlancoCgStatementUtil#getWhileBeginDelphi(int, java.lang.String)}
-     * に委譲されます。
+     * Delphi is supported.
+     * The actual processing will be delegated to
+     * {@link BlancoCgStatementUtil#getWhileBeginDelphi(int, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCon
-     *            条件式。
-     * @return while文の開始部分を表わす文字列。
+     *            Conditional expression.
+     * @return A string indicating the start of the "while" statement.
      */
     public static final String getWhileBeginDelphi(final int argTargetLang,
             final String argCon) {
@@ -523,16 +525,15 @@ public class BlancoCgLineUtil {
     }
 
     /**
-     * return文を表す文字列を取得します。
+     * Gets a string indicating the "return" statement.
      *
-     * 実際の処理は、{@link BlancoCgStatementUtil#getReturn(int, java.lang.String)}
-     * に委譲されます。
+     * The actual processing will be delegated to {@link BlancoCgStatementUtil#getReturn(int, java.lang.String)}.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argExpr
-     *            returnされる式。
-     * @return return文を表す文字列。
+     *            A statement to be returned.
+     * @return A string indicating the "return" statement.
      */
     public static final String getReturn(final int argTargetLang,
             final String argExpr) {
@@ -541,7 +542,7 @@ public class BlancoCgLineUtil {
 
 
     /**
-     * Annotation を展開します。
+     * Expands Annotation.
      *
      * @param argTargetLang
      * @param argAnnotationList
@@ -559,14 +560,14 @@ public class BlancoCgLineUtil {
                 break;
             default:
                 throw new IllegalArgumentException(
-                        "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                                + ")が与えられました。");
+                        "BlancoCgStatementUtil: An unsupported programming language (" + argTargetLang
+                            + ") has been given.");
         }
     }
 
     /**
-     * KotlinStyle の Annotation を展開します。
-     * 恐らく、Java や Typescript も同じロジックで展開できるはずです。
+     * Expands the Annotation in KotlinStyle.
+     * Perhaps Java and TypeScript can be expanded using the same logic.
      *
      * @param argAnnotationList
      * @param argSourceLines
@@ -576,7 +577,7 @@ public class BlancoCgLineUtil {
             final List<java.lang.String> argSourceLines
     ) {
         for (String strAnnotation : argAnnotationList) {
-            // annotation 内での改行を個別に設定します
+            // Sets line breaks in annotation individually.
             String [] ann = BlancoNameUtil.splitString(strAnnotation, '\n');
             List<String> annList = new ArrayList<>(Arrays.asList(ann));
             int i = 0;

@@ -36,19 +36,19 @@ import blanco.commons.util.BlancoFileUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * Java / C#.NET スタイルの抽象トランスフォーマーです。
+ * A Java/C#.net-style abstract transformer.
  *
  * @author IGA Tosiki
  */
 public abstract class AbstractBlancoCgJavaStyleTransformer extends
         AbstractBlancoCgTransformer {
     /**
-     * デバッグモードで動作させるかどうか。
+     * Whether to run in debug mode.
      */
     private static final boolean IS_DEBUG = false;
 
     /**
-     * タブ数
+     * Number of tabs.
      */
     private int tabs = 4;
 
@@ -61,49 +61,49 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
     }
 
     /**
-     * ソースファイル・バリューオブジェクトをJavaソースコードに変換して出力先ディレクトリに出力します。
+     * Converts the source file value object to Java source code and outputs it to the destination directory.
      *
-     * このAPIではパッケージ構造をディレクトリ構造として考慮します。
+     * Considers the package structure as a directory structure in this API.
      *
      * @param argSourceFile
-     *            ソースファイル・バリューオブジェクト。
+     *            Source file value object.
      * @param outputDirectory
-     *            出力先ルートディレクトリ。
+     *            An output destination root directory.
      */
     public void transform(final BlancoCgSourceFile argSourceFile,
             final File outputDirectory) {
         if (argSourceFile == null) {
-            throw new IllegalArgumentException("ソースファイルにnullが与えられました。処理中断します。");
+            throw new IllegalArgumentException("Source file was given as null. Aborts the process.");
         }
         if (outputDirectory == null) {
             throw new IllegalArgumentException(
-                    "出力先ルートディレクトリにnullが与えられました。処理中断します。");
+                    "An output destination root directory was given as null. Aborts the process.");
         }
 
         if (outputDirectory.exists() == false) {
             if (outputDirectory.mkdirs() == false) {
-                throw new IllegalArgumentException("出力先ルートディレクトリ["
+                throw new IllegalArgumentException("An output destination root directory ["
                         + outputDirectory.getAbsolutePath()
-                        + "]が存在しなかったので作成しようとしましたがディレクトリ作成に失敗しました。処理中断します。");
+                        + "] does not exist, so we tried to create it, but failed. Aborts the process.");
             }
         }
         if (outputDirectory.isDirectory() == false) {
-            throw new IllegalArgumentException("出力先ルートディレクトリにディレクトリではないファイル["
-                    + outputDirectory.getAbsolutePath() + "]が与えられました。処理中断します。");
+            throw new IllegalArgumentException("A file [" + outputDirectory.getAbsolutePath()
+                + "] that is not a directory was given as the output root directory. Aborts the process.");
         }
 
         if (argSourceFile.getName() == null) {
-            // ファイル名が確定していないので、クラス名またはインタフェース名から導出します。
+            // Since the file name has not been determined, derives it from the class or interface name.
             decideFilenameFromClassOrInterfaceName(argSourceFile);
         }
 
         try {
-            // パッケージ名からディレクトリ名へと変換。
+            // Converts a package name to a directory name.
             String strSubdirectory = BlancoStringUtil.replaceAll(
                     BlancoStringUtil.null2Blank(argSourceFile.getPackage()),
                     '.', '/');
             if (strSubdirectory.length() > 0) {
-                // サブディレクトリが存在する場合にのみスラッシュを追加します。
+                // Adds a slash only if subdirectories exist.
                 strSubdirectory = "/" + strSubdirectory;
             }
 
@@ -112,21 +112,20 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                     + strSubdirectory);
             if (targetPackageDirectory.exists() == false) {
                 if (targetPackageDirectory.mkdirs() == false) {
-                    throw new IllegalArgumentException("出力先のパッケージディレクトリ["
-                            + targetPackageDirectory.getAbsolutePath()
-                            + "]の生成に失敗しました。");
+                    throw new IllegalArgumentException("Failed to generate the output destination package directory ["
+                            + targetPackageDirectory.getAbsolutePath() + "].");
                 }
             }
 
-            // 出力先のファイルを確定します。
+            // Finalizes the output destination file.
             final File fileTarget = new File(targetPackageDirectory
                     .getAbsolutePath()
                     + "/" + argSourceFile.getName() + getSourceFileExt());
 
-            // 実際のソースコード出力処理を行います。
+            // Performs the actual source code output process.
             final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
-            // 自動生成するソースコードのエンコーディング指定機能
+            // Feature to specify encoding for auto-generated source code.
             OutputStreamWriter streamWriter = null;
             if (BlancoStringUtil.null2Blank(argSourceFile.getEncoding())
                     .length() == 0) {
@@ -146,7 +145,7 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                         .toByteArray(), fileTarget)) {
                 case 0:
                     if (IS_DEBUG) {
-                        // デバッグ時のみスキップを標準出力。
+                        // Outputs "skip" to stdout only when debugging.
                         System.out.println(CMDLINE_PREFIX + "skip  : "
                                 + fileTarget.getAbsolutePath());
                     }
@@ -161,30 +160,29 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                     break;
                 }
             } finally {
-                // ByteArrayOutputStreamのインスタンスは writerのクローズによって
-                // ストリームチェインの仕組み上 自動的にクローズされます。
+                // An instance of ByteArrayOutputStream is automatically closed when the writer is closed, due to the stream chain mechanism.
 
                 if (writer != null) {
                     writer.close();
                 }
             }
         } catch (IOException ex) {
-            throw new IllegalArgumentException("ソースコードを出力する過程で例外が発生しました。"
+            throw new IllegalArgumentException("An exception occurred in the process of outputting the source code."
                     + ex.toString());
         }
     }
 
     /**
-     * ソースコードのリストを整形します。
+     * Formats the source code list.
      *
-     * Java言語 および C#.NET言語用の整形を行います。
+     * Performs formatting for Java and C#.NET.
      *
-     * 現時点でのソース整形ルーチンは Java/C#.NET共通と考えることができると判断します。<br>
-     * なお、この処理のなかで { や } は特別な意味を持っています。行末コメントなどが入ると期待する動作ができません。<br>
-     * TODO 中カッコを文末に付与する、などのフォーマットなどは未実装です。
+     * We judge that the source shaping routines at the moment can be considered common for Java/C#.NET.<br>
+     * Note that "{" and "}" have a special meaning in this process. If a comment is added at the end of a line, the expected behavior will not be achieved.<br>
+     * TODO: Formatting, such as adding curly brackets to the end of a statement, is not yet implemented.
      *
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            A source code line list.
      */
     protected void formatSource(final List<java.lang.String> argSourceLines) {
         int sourceIndent = 0;
@@ -192,11 +190,11 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
         int roundIndented = 0;
         for (int index = 0; index < argSourceLines.size(); index++) {
             String strLine = argSourceLines.get(index);
-            // 前後の空白は、あらかじめ除去します。
+            // Spaces before and after are removed beforehand.
             strLine = strLine.trim();
 
             if (strLine.length() == 0) {
-                // 空行です。
+                // Blank line.
             } else {
                 boolean isBeginIndent = false;
                 boolean isEndIndent = false;
@@ -205,50 +203,50 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                 final char startChar = strLine.charAt(0);
                 final char endChar = strLine.charAt(strLine.length() - 1);
                 if (startChar == '*') {
-                    // コメント行と見なして一文字字下げします。
+                    // Considers a comment line and indent one character.
                     strLine = " " + strLine;
                 }
 
-                // まずは開始文字列の判定を行います。
-                // ※開始文字列と終了文字列とは別個に判定する必要があります。
-                // ( ) の対応をします。 2020/01/14 by tueda
+                // First, it determines the start string.
+                // Note: The start string and the end string must be determined separately.
+                // Handles "(" and ")". 2020/01/14 by tueda
                 if (startChar == '{') {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                     curlyIndented++;
                 } else if (startChar == '}') {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isEndIndent = true;
                 } else if (startChar == '(') {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginDoubleIndent = true;
                     roundIndented++;
                 } else if (startChar == ')') {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isEndDoubleIndent = true;
                 }
 
-                // 次に終了文字列の判定を行います。
-                // ※開始文字列と終了文字列とは別個に判定する必要があります。
-                // ( ) の対応をします。 2020/01/14 by tueda
+                // Next, it determines the end string.
+                // Note: The start string and the end string must be determined separately.
+                // Handles "(" and ")". 2020/01/14 by tueda
                 if (endChar == '{') {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginIndent = true;
                     curlyIndented++;
                 } else if (endChar == '}') {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isEndIndent = true;
                 } else if (endChar == '(') {
-                    // ブロック開始と見なして字下げを予約します。
+                    // Considers as the start of a block and reserves for indentation.
                     isBeginDoubleIndent = true;
                     roundIndented++;
                 } else if (endChar == ')') {
-                    // ブロック終了と見なして字下げします。
+                    // Considers as the end of a block and indents.
                     isEndDoubleIndent = true;
                 }
 
                 if (isEndIndent && curlyIndented > 0) {
-                    // フラグ一回につき、インデント一個を反映します。
+                    // Reflects one indent per flag.
                     sourceIndent--;
                     curlyIndented--;
                 }
@@ -258,12 +256,12 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                 }
 
                 StringBuffer indentWidth = new StringBuffer();
-                // インデント幅を決めます。デフォルトは 4 タブです。
+                // Determines the indentation width. The default is 4 tabs.
                 for (int width = 0; width < this.tabs; width++) {
                     indentWidth.append(" ");
                 }
 
-                // インデントを実施します。
+                // Performs indentation.
                 for (int indexIndent = 0; indexIndent < sourceIndent; indexIndent++) {
                     strLine = indentWidth.toString() + strLine;
                 }
@@ -275,7 +273,7 @@ public abstract class AbstractBlancoCgJavaStyleTransformer extends
                     sourceIndent += 2;
                 }
 
-                // 更新後の行イメージでリストを更新します。
+                // Refreshes the list with the updated line image.
                 argSourceLines.set(index, strLine);
             }
         }

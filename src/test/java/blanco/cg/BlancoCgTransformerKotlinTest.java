@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Kotlin言語用の生成試験。
+ * Generation test for Kotilin.
  *
  * @author IGA Tosiki
  * @author tueda
  */
 public class BlancoCgTransformerKotlinTest extends TestCase {
     /**
-     * open なクラスの展開試験。
+     * An open class expansion test.
      *
      * @throws Exception
      */
@@ -35,17 +35,17 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
-                "myprog", "テスト用のクラス");
+                "myprog", "Class for testing");
         cgSourceFile.setEncoding("UTF-8");
         cgSourceFile.getImportList().add("java.text.NumberFormat");
-        // 同じパッケージのインポート試験。
+        // Import test of the same package.
         cgSourceFile.getImportList().add("myprog.MyClass2");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgClass cgClass = cgFactory.createClass("MyClass",
-                "このクラスは、テストのためのクラスです。");
+                "This class is for testing.");
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
@@ -55,12 +55,12 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                 cgFactory.createType("java.lang.Runnable"));
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("myprog.MyInterface"));
-        // クラスのコンストラクタ
+        // Constructor of the class
         List<String> classAnnotationList = new ArrayList<>();
         classAnnotationList.add("hoge(\n\"fuga: boge\"\n)");
         cgClass.setAnnotationList(classAnnotationList);
 
-        // プライマリコンストラクタのテストです
+        // Testing the primary constructor.
         BlancoCgField constParam = new BlancoCgField();
         BlancoCgType constType = new BlancoCgType();
         cgClass.getConstructorArgList().add(constParam);
@@ -70,7 +70,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         constParam.setDefault("0");
         constType.setName("Int");
 
-        // プライマリコンストラクタのテストです
+        // Testing the primary constructor.
         constParam = new BlancoCgField();
         constType = new BlancoCgType();
         cgClass.getConstructorArgList().add(constParam);
@@ -79,12 +79,12 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         constParam.setConst(true);
         constParam.setOverride(true);
         constType.setName("kotlin.Number");
-        // プライマリコンストラクタのアノテーションテスト
+        // Annotation test of the primary constructor.
         List<String> primaryConstAnnotationList = new ArrayList<>();
         primaryConstAnnotationList.add("hoge(\n\"fuga: boge\"\n)");
         constParam.setAnnotationList(primaryConstAnnotationList);
 
-        // プライマリコンストラクタのテストです
+        // Testing the primary constructor.
         constParam = new BlancoCgField();
         constType = new BlancoCgType();
         cgClass.getConstructorArgList().add(constParam);
@@ -96,7 +96,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         constParam.setDefault("null");
         constType.setGenerics("java.lang.String");
 
-        // 委譲のテスト
+        // Delegation test
 
         constParam = new BlancoCgField();
         constType = new BlancoCgType();
@@ -110,31 +110,31 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         delegateMap.put("myprog.MyInterface", "fourth");
         delegateMap.put("java.lang.Runnable", "fifth"); // ignored.
 
-        // 列挙体（kotlin言語の生成では列挙体は当面無視します）
+        // Enumeration (enums are ignored for the time being in the generation of kotlin).
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
-                "列挙体の試験。");
+                "Testing enumerated type.");
         cgClass.getEnumList().add(cgEnum);
         cgEnum.getElementList().add(cgFactory.createEnumElement("Red", "あか"));
         cgEnum.getElementList().add(
-                cgFactory.createEnumElement("Yerrow", "きいろ"));
+                cgFactory.createEnumElement("Yellow", "きいろ"));
         cgEnum.getElementList().add(cgFactory.createEnumElement("Blue", "あお"));
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgFactory.createField("myField",
-                "java.util.Date", "日付フィールドの試験です。");
+                "java.util.Date", "Testing a date field.");
         cgClass.getFieldList().add(cgField);
         cgField.setFinal(true);
         cgField.setDefault("Date()");
         cgField.setAccess("public");
 
 //        final BlancoCgField cgField2 = cgFactory.createField("myField2",
-//                "java.util.Date", "日付フィールドの試験v2です。");
+//                "java.util.Date", "Testing a date field v2.");
 //        cgClass.getFieldList().add(cgField2);
 //        cgField2.getType().setArray(true);
 //        cgField2.getType().setArrayDimension(2);
 //        cgField2.setAccess("public");
 
-        final BlancoCgField cgField3 = cgFactory.createField("myField3", "String", "staticフィールドの試験です。");
+        final BlancoCgField cgField3 = cgFactory.createField("myField3", "String", "Testing static fields.");
         cgClass.getFieldList().add(cgField3);
         cgField3.setAccess("public");
         cgField3.setStatic(true);
@@ -145,50 +145,50 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgField3.setAnnotationList(annotations);
         cgField3.setDefault("\"static and final member!\"");
 
-        final BlancoCgField cgField4 = cgFactory.createField("myField4", "org.Hoge", "staticフィールドの試験です。");
+        final BlancoCgField cgField4 = cgFactory.createField("myField4", "org.Hoge", "Testing static fields.");
         cgClass.getFieldList().add(cgField4);
         cgField4.setAccess("public");
         cgField4.setStatic(true);
         cgField4.setFinal(true);
         cgField4.setConst(true);
 
-        // static initializer のテスト
+        // Testing static initializer.
         {
-            // メソッドを生成します。
+            // Generates methods.
             final BlancoCgMethod cgMethod = cgFactory.createMethod("myStatic",
-                    "static initializer の試験です。");
+                    "Testing static initializer.");
             cgClass.getMethodList().add(cgMethod);
             cgMethod.setStaticInitializer(true);
             cgMethod.getLineList().add("println()");
         }
 
-        // メソッドを生成します。
+        // Generates a method.
         final BlancoCgMethod cgMethod = cgFactory.createMethod("myMethod",
-                "メソッドの試験です。");
+                "Testing method.");
         cgClass.getMethodList().add(cgMethod);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgMethod.getParameterList().add(
                 cgFactory.createParameter("argString", "java.lang.String",
-                        "文字列引数。"));
+                        "String argument."));
         cgMethod.getParameterList()
                 .add(
                         cgFactory.createParameter("argDate", "java.util.Date",
-                                "日付引数。"));
-        // 戻り値を設定します。
-        cgMethod.setReturn(cgFactory.createReturn("boolean", "成功ならtrue。"));
+                                "Date argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgFactory.createReturn("boolean", "True if success."));
 
         cgMethod.getThrowList().add(
                 cgFactory.createException("java.io.IOException",
-                        "入出力例外が発生した場合。"));
+                        "If an I/O exception occurs."));
 
-        // アノテーションの追加。
+        // Adds an annotation.
         cgMethod.getAnnotationList().add(
                 "Copyright(\nvalue=\"blanco Framework\"\n)");
         cgMethod.setOverride(true);
 
-        // メソッドの内容を追加します。
-        cgMethod.getLineList().add("// 代入の試験です。");
+        // Adds the contents of the method.
+        cgMethod.getLineList().add("// Testing assignment.");
         cgMethod.getLineList().add("val a : Int = 0");
         cgMethod.getLineList().add("");
         cgMethod.getLineList().add("return true");
@@ -199,24 +199,24 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
     }
 
     /**
-     * final なクラスのテストです。
+     * A test for a class that is final.
      * @throws Exception
      */
     public void testTransformerFinal() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
-                "myprog", "テスト用のクラス");
+                "myprog", "Class for testing");
         cgSourceFile.setEncoding("UTF-8");
         cgSourceFile.getImportList().add("java.text.NumberFormat");
-        // 同じパッケージのインポート試験。
+        // Import test of the same package.
         cgSourceFile.getImportList().add("myprog.MyClass");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgClass cgClass = cgFactory.createClass("MyClassFinal",
-                "このクラスは、テストのためのクラスです。");
+                "This class is for testing.");
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
@@ -229,67 +229,67 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                 cgFactory.createType("myprog.MyInterface"));
         cgClass.setFinal(true);
 
-        // 列挙体。kotlin では列挙体の自動生成には対応しません。
+        // Enumeration. Does not support auto-generation of enumerations in kotlin.
         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
-                "列挙体の試験。");
+                "Testing enumerated type.");
         cgClass.getEnumList().add(cgEnum);
         cgEnum.getElementList().add(cgFactory.createEnumElement("Red", "あか"));
         cgEnum.getElementList().add(
-                cgFactory.createEnumElement("Yerrow", "きいろ"));
+                cgFactory.createEnumElement("Yellow", "きいろ"));
         cgEnum.getElementList().add(cgFactory.createEnumElement("Blue", "あお"));
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgFactory.createField("myField",
-                "java.util.Date", "日付フィールドの試験です。");
+                "java.util.Date", "Testing a date field.");
         cgClass.getFieldList().add(cgField);
         cgField.setDefault("Date()");
 
 //        final BlancoCgField cgField2 = cgFactory.createField("myField2",
-//                "java.util.Date", "日付フィールドの試験v2です。");
+//                "java.util.Date", "Testing a date field v2.");
 //        cgClass.getFieldList().add(cgField2);
 //        cgField2.getType().setArray(true);
 //        cgField2.getType().setArrayDimension(1);
 
-        // static initializer のテスト
+        // Testing static initializer.
         {
-            // メソッドを生成します。
+            // Generates methods.
             final BlancoCgMethod cgMethod = cgFactory.createMethod("myStatic",
-                    "static initializer の試験です。");
+                    "Testing static initializer.");
             cgClass.getMethodList().add(cgMethod);
             cgMethod.setStaticInitializer(true);
             cgMethod.getLineList().add("println()");
         }
 
-        // メソッドを生成します。
+        // Generates a method.
         final BlancoCgMethod cgMethod = cgFactory.createMethod("myMethod",
-                "メソッドの試験です。");
+                "Testing method.");
         cgClass.getMethodList().add(cgMethod);
 
-        // パラメータを追加します。
+        // Adds parameters.
         BlancoCgParameter param01 = cgFactory.createParameter("argString", "java.lang.String",
-                "文字列引数。");
+                "String argument.");
         cgMethod.getParameterList().add(param01);
         param01.getAnnotationList().add("Body");
         param01.getAnnotationList().add("NotNull");
         cgMethod.getParameterList()
                 .add(
                         cgFactory.createParameter("argDate", "java.util.Date",
-                                "日付引数。"));
-        // 戻り値を設定します。
-        cgMethod.setReturn(cgFactory.createReturn("boolean", "成功ならtrue。"));
+                                "Date argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgFactory.createReturn("boolean", "True if success."));
 //        cgMethod.getReturn().setNullable(true);
 
         cgMethod.getThrowList().add(
                 cgFactory.createException("java.io.IOException",
-                        "入出力例外が発生した場合。"));
+                        "If an I/O exception occurs."));
 
-        // アノテーションの追加。
+        // Adds an annotation.
         cgMethod.getAnnotationList().add(
                 "Copyright(value=\"blanco Framework\")");
         cgMethod.setOverride(true);
 
-        // メソッドの内容を追加します。
-        cgMethod.getLineList().add("// 代入の試験です。");
+        // Adds the contents of the method.
+        cgMethod.getLineList().add("// Testing assignment.");
         cgMethod.getLineList().add("val a : Int = 0");
 
         final BlancoCgTransformer cgTransformerKotlin = BlancoCgTransformerFactory
@@ -298,70 +298,70 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
     }
 
     /**
-     * インタフェースの展開試験。
+     * Interface expansion test.
      *
      * @throws Exception
      */
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
-                "テスト用のインタフェース");
+                "Interface for testing");
         cgSourceFile.getImportList().add("java.text.NumberFormat");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgInterface cgInterface = cgOf.createInterface(
-                "MyInterface", "このインタフェースは、テストのためのインタフェースです。");
+                "MyInterface", "This interface is for testing.");
         cgSourceFile.getInterfaceList().add(cgInterface);
         cgInterface.getLangDoc().getTagList().add(
                 cgOf.createLangDocTag("author", null, "blanco Framework"));
         cgInterface.getExtendClassList().add(
                 cgOf.createType("java.lang.Thread"));
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgOf.createField("myField",
-                "java.util.Date", "日付フィールドの試験です。");
+                "java.util.Date", "Testing a date field.");
         cgInterface.getFieldList().add(cgField);
         cgField.setDefault("Date()");
 
-        // メソッドを生成します。
+        // Generates a method.
         final BlancoCgMethod cgMethod = cgOf.createMethod("myMethod",
-                "メソッドの試験です。");
+                "Testing method.");
         cgInterface.getMethodList().add(cgMethod);
 
-        // パラメータを追加します。
+        // Adds parameters
         cgMethod.getParameterList()
                 .add(
                         cgOf.createParameter("argString", "java.lang.String",
-                                "文字列引数。"));
+                                "String argument."));
         cgMethod.getParameterList().add(
-                cgOf.createParameter("argDate", "java.util.Date", "日付引数。"));
-        // 戻り値を設定します。
-        cgMethod.setReturn(cgOf.createReturn("boolean", "成功ならtrue。"));
+                cgOf.createParameter("argDate", "java.util.Date", "Date argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgOf.createReturn("boolean", "True if success."));
 
         cgMethod.getThrowList().add(
-                cgOf.createException("java.io.IOException", "入出力例外が発生した場合。"));
+                cgOf.createException("java.io.IOException", "If an I/O exception occurs."));
 
-        // abstract メソッドを生成します。
+        // Generates an abstract method.
         final BlancoCgMethod cgMethodAbst = cgOf.createMethod("myMethodAbst",
-                "abstract メソッドの試験です。");
+                "Testing an abstract method.");
         cgMethodAbst.setAbstract(true);
 
         cgInterface.getMethodList().add(cgMethodAbst);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgMethodAbst.getParameterList()
                 .add(
                         cgOf.createParameter("argString", "java.lang.String",
-                                "文字列引数。", false));
+                                "String argument.", false));
         cgMethodAbst.getParameterList().add(
-                cgOf.createParameter("argDate", "java.util.Date", "日付引数。", true));
-        // 戻り値を設定します。
-        cgMethodAbst.setReturn(cgOf.createReturn("boolean", "成功ならtrue。"));
+                cgOf.createParameter("argDate", "java.util.Date", "Date argument.", true));
+        // Sets the return value.
+        cgMethodAbst.setReturn(cgOf.createReturn("boolean", "True if success."));
 
         cgMethodAbst.getThrowList().add(
-                cgOf.createException("java.io.IOException", "入出力例外が発生した場合。"));
+                cgOf.createException("java.io.IOException", "If an I/O exception occurs."));
 
         final BlancoCgTransformer cgTransformerKotlin = BlancoCgTransformerFactory
                 .getKotlinSourceTransformer();
@@ -369,24 +369,24 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
     }
 
     /**
-     * Generics なクラスのテストです。
+     * Generics class test.
      * @throws Exception
      */
     public void testTransformercGenerics() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
-                "myprog", "テスト用のクラス");
+                "myprog", "Class for testing");
         cgSourceFile.setEncoding("UTF-8");
         cgSourceFile.getImportList().add("java.text.NumberFormat");
-        // 同じパッケージのインポート試験。
+        // Import test of the same package.
         cgSourceFile.getImportList().add("myprog.MyClass");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgClass cgClass = cgFactory.createClass("MyClassGenerics",
-                "このクラスは、テストのためのクラスです。");
+                "This class is for testing.");
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
@@ -397,15 +397,15 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
         cgClass.setFinal(true);
         cgClass.setGenerics("T");
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgFactory.createField("myField",
-                "java.util.Date", "日付フィールドの試験です。");
+                "java.util.Date", "Testing a date field.");
         cgClass.getConstructorArgList().add(cgField);
         cgField.setDefault("Date()");
         cgField.setAccess("public");
         cgField.setFinal(true);
 
-        final BlancoCgField cgField2 = cgFactory.createField("myField2", "T", "Genericsの私見です");
+        final BlancoCgField cgField2 = cgFactory.createField("myField2", "T", "Testing Generics.");
         cgClass.getFieldList().add(cgField2);
         cgField2.setNotnull(false);
         cgField2.setAccess("public");

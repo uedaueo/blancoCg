@@ -35,26 +35,26 @@ import java.util.List;
 import blanco.cg.resourcebundle.BlancoCgResourceBundle;
 
 /**
- * blancoCg のソースファイル用のユーティリティ・クラス。
+ * Utility class for the source file of blancoCg.
  * 
  * @author IGA Tosiki
  */
 public class BlancoCgSourceFileUtil {
     /**
-     * リソースバンドル・メッセージを扱うためのクラス。
+     * A class for handling resource bundle messages.
      */
     protected static final BlancoCgResourceBundle fBundle = new BlancoCgResourceBundle();
 
     /**
-     * デフォルトのファイル・コメントの取得。
+     * Gets the default file comments.
      * 
      * <UL>
-     * <LI>相対パス meta/program/fileheader.txt があれば、これを優先利用します。(UTF-8
-     * で記載されている必要があります)
-     * <LI>リソースバンドルの指定を利用します。
+     * <LI>If there is a relative path meta/program/fileheader.txt, this will be used preferentially.
+     * (It must be written in UTF-8)
+     * <LI>Uses the resource bundle specification.
      * </UL>
      * 
-     * @return デフォルトのファイル・コメントの配列。
+     * @return An array of default file comments.
      */
     public static List<String> getDefaultFileComment() {
         final List<String> result = new ArrayList<String>();

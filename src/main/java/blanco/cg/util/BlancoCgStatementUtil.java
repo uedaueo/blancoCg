@@ -28,23 +28,23 @@ import blanco.cg.BlancoCgSupportedLang;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * blancoCgのステートメントに関するユーティリティです。
+ * A utility of blancoCg for statements.
  *
- * このクラスはプログラミング言語を超えて利用されます。
+ * This class is used across programming languages.
  *
  * @author IGA Tosiki
  */
 class BlancoCgStatementUtil {
     /**
-     * if文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "if" statement.
      *
-     * ブロック開始を表す文字列（Javaの場合、中括弧）も含みます。
+     * It also includes a string indicating the start of the block (in Java, curly braces).
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argExpr
-     *            条件式。
-     * @return if文の開始部分を表す文字列。
+     *            Conditional expression.
+     * @return A string indicating the start of the "if" statement.
      */
     public static final String getIfBegin(final int argTargetLang,
             final String argExpr) {
@@ -66,19 +66,20 @@ class BlancoCgStatementUtil {
             return "if " + argExpr + " then begin";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language (" + argTargetLang
+                            + ") has been given.");
         }
     }
 
     /**
-     * if文の終了部分を表す文字列を取得します。
+     * Gets a string indicating the end of the "if" statement.
      *
-     * Pythonでは、if文の終了部分は文法的に必要ありませんが、 自動生成されたソースコードを整形するために、コメント文字列 を戻します。
+     * In Python, the end of an "if" statement is not grammatically necessary, 
+     * but the comment string is returned to format the auto-generated source code.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return if文の終了部分を表す文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the end of the "if" statement.
      */
     public static final String getIfEnd(final int argTargetLang) {
         switch (argTargetLang) {
@@ -99,25 +100,25 @@ class BlancoCgStatementUtil {
             return "#end";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language (" + argTargetLang
+                            + ") has been given.");
         }
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Java, C#, JavaScript, PHPに対応しています。
+     * Java, C#, JavaScript and PHP are supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argExpr1
-     *            初期化処理。
+     *            Initialization.
      * @param argExpr2
-     *            継続条件。
+     *            Condition.
      * @param argExpr3
-     *            ループのつど実施する処理。
-     * @return for文の開始部分を表す文字列。
+     *            A statement to be executed at each loop.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginJava(final int argTargetLang,
             final String argExpr1, final String argExpr2, final String argExpr3) {
@@ -130,25 +131,25 @@ class BlancoCgStatementUtil {
                     + ") {";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil.getForBeginJava: サポートしないプログラミング言語("
-                            + argTargetLang + ")が与えられました。");
+                    "BlancoCgStatementUtil.getForBeginJava: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * VB.NETに対応しています。
+     * VB.NET is supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCounter
-     *            ループカウンタ。「例: i As Integer = 1」
+     *            Loop counter. Example: i As Integer = 1
      * @param argTo
-     *            終了となるしきい値 (条件ではありません)。「例: 10」
+     *            End value (not a condition). Example: 10.
      * @param argStep
-     *            Stepに利用される値。「例: 2」。nullの場合には Stepは省略されます。
-     * @return for文の開始部分を表す文字列。
+     *            The value to be used for Step. Example: 2. If it is null, Step is omitted.
+     * @return A string indicating the start of the "for" statement.
      */
     public static final String getForBeginVb(final int argTargetLang,
             final String argCounter, final String argTo, final String argStep) {
@@ -157,8 +158,8 @@ class BlancoCgStatementUtil {
             break;
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil.getForBeginVb: サポートしないプログラミング言語("
-                            + argTargetLang + ")が与えられました。");
+                    "BlancoCgStatementUtil.getForBeginVb: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
 
         String argLine = "For " + argCounter + " To " + argTo;
@@ -171,19 +172,19 @@ class BlancoCgStatementUtil {
 
     /**
      *
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Rubyに対応しています。
+     * Ruby is supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCounter
-     *            ループカウンタ。
+     *            Loop counter.
      * @param argFrom
-     *            開始値 (条件ではありません)。「例: 1」
+     *            Start value (not a condition). Example: 1.
      * @param argTo
-     *            終了値 (条件ではありません)。「例: 10」
-     * @return for文の開始部分を表す文字列。
+     *            End value (not a condition). Example: 10.
+     * @return A string indicating the start of the "for" statement.
      */
     public static String getForBeginRuby(int argTargetLang, String argCounter,
             String argFrom, String argTo) {
@@ -192,8 +193,8 @@ class BlancoCgStatementUtil {
             break;
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil.getForBeginRuby: サポートしないプログラミング言語("
-                            + argTargetLang + ")が与えられました。");
+                    "BlancoCgStatementUtil.getForBeginRuby: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
 
         String argLine = "for " + argCounter + " in " + argFrom + ".." + argTo;
@@ -203,17 +204,17 @@ class BlancoCgStatementUtil {
 
     /**
      *
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Pythonに対応しています。
+     * Python is supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argItem
-     *            ループ対象となるオブジェクトの現在値。
+     *            The current value of the object to be looped.
      * @param argItems
-     *            ループ対象となるオブジェクト。
-     * @return for文の開始部分を表す文字列。
+     *            An object to be looped.
+     * @return A string indicating the start of the "for" statement.
      */
     public static String getForBeginPython(int argTargetLang, String argItem,
             String argItems) {
@@ -222,8 +223,8 @@ class BlancoCgStatementUtil {
             break;
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil.getForBeginRuby: サポートしないプログラミング言語("
-                            + argTargetLang + ")が与えられました。");
+                    "BlancoCgStatementUtil.getForBeginRuby: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
 
         String argLine = "for " + argItem + " in " + argItems + ":";
@@ -233,12 +234,10 @@ class BlancoCgStatementUtil {
 
     /**
      *
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Kotlin に対応しています。
-     * 整数範囲でloopを組みたい場合は argItems に
-     *   1..100
-     * などと記述します。
+     * Kotlin is supported.
+     * If you want to loop over a range of integers, write "1..100" etc. in argItems.
      *
      * @param argTargetLang
      * @param argItem
@@ -251,8 +250,8 @@ class BlancoCgStatementUtil {
                 break;
             default:
                 throw new IllegalArgumentException(
-                        "BlancoCgStatementUtil.getForBeginKotlin: サポートしないプログラミング言語("
-                                + argTargetLang + ")が与えられました。");
+                        "BlancoCgStatementUtil.getForBeginKotlin: An unsupported programming language ("
+                                + argTargetLang + ") has been given.");
         }
 
         String argLine = "for (" + argItem + " in " + argItems + ") {";
@@ -262,19 +261,19 @@ class BlancoCgStatementUtil {
 
     /**
      *
-     * for文の開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of the "for" statement.
      *
-     * Delphiに対応しています。
+     * Delphi is supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCounter
-     *            ループカウンタ。
+     *            Loop counter.
      * @param argFrom
-     *            ループの開始値。
+     *            Start value of the loop.
      * @param argTo
-     *            ループの終了値。
-     * @return for文の開始部分を表す文字列。
+     *            End value of the loop.
+     * @return A string indicating the start of the "for" statement.
      */
     public static String getForBeginDelphi(int argTargetLang,
             final String argCounter, final String argFrom, final String argTo) {
@@ -283,8 +282,8 @@ class BlancoCgStatementUtil {
             break;
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil.getForBeginRuby: サポートしないプログラミング言語("
-                            + argTargetLang + ")が与えられました。");
+                    "BlancoCgStatementUtil.getForBeginRuby: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
 
         String argLine = "for " + argCounter + " := " + argFrom + " to "
@@ -294,11 +293,11 @@ class BlancoCgStatementUtil {
     }
 
     /**
-     * for文の終了部分を表す文字列を取得します。
+     * Gets a string indicating the end of the "for" statement.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return for文の終了部分を表す文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the end of the "for" statement.
      */
     public static final String getForEnd(final int argTargetLang) {
         switch (argTargetLang) {
@@ -310,7 +309,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.TS:
             return "}";
         case BlancoCgSupportedLang.VB:
-            // ループ変数は省略します。
+            // The loop variable is omitted.
             return "Next";
         case BlancoCgSupportedLang.RUBY:
             return "end";
@@ -320,19 +319,19 @@ class BlancoCgStatementUtil {
             return "end;";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * for文を抜ける文を表わす文字列を取得します。
+     * Get a string indicating the statement that exits the "for" statement.
      *
-     * 文の終わりを示す文字(Javaの場合、セミコロン)は含みません。
+     * It does not include the character indicating the end of the statement (semicolon in Java).
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return for文を抜ける文を表わす文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the statement that exits the "for" statement.
      */
     public static final String getForExit(final int argTargetLang) {
         switch (argTargetLang) {
@@ -350,21 +349,21 @@ class BlancoCgStatementUtil {
             return "Exit For";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * while文の開始部分を表わす文字列を取得します。
+     * Gets a string indicating the start of the "while" statement.
      *
-     * Ruby, Pythonに対応しています。
+     * Ruby and Python are supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCon
-     *            条件式。
-     * @return while文の開始部分を表わす文字列。
+     *            Conditional expression.
+     * @return A string indicating the start of the "while" statement.
      */
     public static String getWhileBeginRuby(int argTargetLang, String argCon) {
         switch (argTargetLang) {
@@ -376,21 +375,21 @@ class BlancoCgStatementUtil {
             return "while " + argCon + " do begin";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil.getWhileBeginRuby: サポートしないプログラミング言語("
-                            + argTargetLang + ")が与えられました。");
+                    "BlancoCgStatementUtil.getWhileBeginRuby: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * while文の開始部分を表わす文字列を取得します。
+     * Gets a string indicating the start of the "while" statement.
      *
-     * Delphiに対応しています。
+     * Delphi is supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argCon
-     *            条件式。
-     * @return while文の開始部分を表わす文字列。
+     *            Conditional expression.
+     * @return A string indicating the start of the "while" statement.
      */
     public static String getWhileBeginDelphi(int argTargetLang, String argCon) {
         switch (argTargetLang) {
@@ -398,20 +397,21 @@ class BlancoCgStatementUtil {
             return "while " + argCon + " do begin";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil.getWhileBeginRuby: サポートしないプログラミング言語("
-                            + argTargetLang + ")が与えられました。");
+                    "BlancoCgStatementUtil.getWhileBeginRuby: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * while文の終了部分を表す文字列を取得します。
+     * Gets a string indicating the end of the "while" statement.
      *
-     * Ruby, Pythonに対応しています。 Pythonでは、while文の終了部分は文法的に必要ありませんが、
-     * 自動生成されたソースコードを整形するために、コメント文字列 を戻します。
+     * Ruby and Python are supported. 
+     * In Python, the end of an "while" statement is not grammatically necessary, 
+     * but the comment string is returned to format the auto-generated source code.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return while文の終了部分を表す文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the end of the "while" statement.
      */
     public static final String getWhileEnd(final int argTargetLang) {
         switch (argTargetLang) {
@@ -423,23 +423,23 @@ class BlancoCgStatementUtil {
             return "end;";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * eachブロックの開始部分を表す文字列を取得します。
+     * Gets a string indicating the start of "each" block.
      *
-     * Rubyに対応しています。
+     * Ruby is supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argObject
-     *            eachメソッドを呼び出す対象となるオブジェクト。
+     *            The object on which to call the "each" method.
      * @param argVariable
-     *            eachメソッドの現在値。
-     * @return eachブロックの開始部分を表す文字列。
+     *            Current value of "each" method.
+     * @return A string indicating the start of "each" block.
      */
     public static String getEachBeginRuby(int argTargetLang, String argObject,
             String argVariable) {
@@ -449,19 +449,19 @@ class BlancoCgStatementUtil {
             return argObject + ".each do |" + argVariable + "|";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * eachブロックの終了部分を表す文字列を取得します。
+     * Gets a string indicating the end of "each" block.
      *
-     * Rubyに対応しています。
+     * Ruby is supported.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return eachブロックの終了部分を表す文字列。
+     *            The programming language of the output target.
+     * @return A string indicating the end of "each" block.
      */
     public static final String getEachEnd(final int argTargetLang) {
         switch (argTargetLang) {
@@ -469,19 +469,20 @@ class BlancoCgStatementUtil {
             return "end";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * 文の終わりを示す文字を取得します。
+     * Gets a character indicating the end of a statement.
      *
-     * Javaなど多くの言語では、セミコロンを戻します。 Rubyなど文の終わりを示す文字が必要ない言語では、長さ0の文字列を 戻します。
+     * In many languages, such as Java, the semicolon is returned.
+     * In languages that do not require a character to indicate the end of a statement, such as Ruby, it returns a zero-length string.
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
-     * @return 文の終わりを示す文字。
+     *            The programming language of the output target.
+     * @return A character indicating the end of a statement.
      */
     public static final String getTerminator(final int argTargetLang) {
         switch (argTargetLang) {
@@ -500,21 +501,21 @@ class BlancoCgStatementUtil {
             return "";
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 
     /**
-     * return文を表す文字列を取得します。
+     * Gets a string indicating the "return" statement.
      *
-     * 文の終わりを示す文字(Javaの場合、セミコロン)は含みません。
+     * It does not include the character indicating the end of the statement (semicolon in Java).
      *
      * @param argTargetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param argExpr
-     *            returnされる式。
-     * @return return文を表す文字列。
+     *            A statement to be returned.
+     * @return A string indicating the "return" statement.
      */
     public static final String getReturn(final int argTargetLang,
             final String argExpr) {
@@ -527,15 +528,15 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.KOTLIN:
-            // 注意。セミコロンは含みません。
+            // Note: Semicolons are not included.
             return "return " + argExpr;
         case BlancoCgSupportedLang.VB:
-            // ループ変数は省略します。
+            // The loop variables are omitted.
             return "Return " + argExpr;
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgStatementUtil: サポートしないプログラミング言語(" + argTargetLang
-                            + ")が与えられました。");
+                    "BlancoCgStatementUtil: An unsupported programming language ("
+                            + argTargetLang + ") has been given.");
         }
     }
 

@@ -36,24 +36,25 @@ import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.*;
 
 /**
- * blancoCgのソースコード関連ユーティリティです。
+ * A utility of blancoCg for source code.
  *
- * このクラスはプログラミング言語を超えて利用されます。
+ * This class i s used across programming languages.
  *
  * @author IGA Tosiki
  */
 public class BlancoCgSourceUtil {
     /**
-     * 与えられた文字列をソースコード文字列として出力するものとしてエスケープ処理します。
+     * Escapes the given string as if it were output as a source code string.
      *
-     * ￥/バックスラッシュのエスケープおよび改行コードのエスケープを行います。<br>
-     * それ以外の処理は行いません。たとえばインジェクション攻撃などへの耐性は、このメソッドは扱いません。
+     * Escapes ¥/ backslashes and newline codes.<br>
+     * It does not perform any other processing.
+     * For example, resistance to injection attacks is not handled by this method.
      *
      * @param targetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param originalString
-     *            入力文字列。
-     * @return エスケープ処理が行われた後の文字列。
+     *            Input string.
+     * @return The string after the escape processing has been performed.
      */
     public static String escapeStringAsSource(final int targetLang,
             final String originalString) {
@@ -68,28 +69,29 @@ public class BlancoCgSourceUtil {
         case BlancoCgSupportedLang.VB:
             return BlancoVbSourceUtil.escapeStringAsVbSource(originalString);
         case BlancoCgSupportedLang.PHP:
-        case BlancoCgSupportedLang.RUBY: // TODO 妥当性の確認
-        case BlancoCgSupportedLang.PYTHON: // TODO 妥当性の確認
+        case BlancoCgSupportedLang.RUBY: // TODO: Validity check
+        case BlancoCgSupportedLang.PYTHON: // TODO: Validity check
             return BlancoPhpSourceUtil.escapeStringAsPhpSource(originalString);
-        case BlancoCgSupportedLang.DELPHI: // TODO 妥当性の確認
+        case BlancoCgSupportedLang.DELPHI: // TODO: Validity check
             return escapeStringAsDelphiSource(originalString);
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgSourceUtil.escapeAsSourceString にサポートされない言語("
-                            + targetLang + ")が引数として与えられました。");
+                    "An unsupported language (" + targetLang
+                        + ") has been given as an argument to BlancoCgSourceUtil.escapeAsSourceString.");
         }
     }
 
     /**
-     * 与えられた文字列を言語ドキュメント文字列として扱うことができるように エスケープ処理します。
+     * Escapes the given string so that it can be treated as a language document string.
      *
-     * JavaDoc文字列としてエスケープを行います。 HTMLとしてのエスケープと同等の処理が行われます。＜＞＆”がエスケープされます。
+     * Escapes as a JavaDoc string. This is equivalent to escaping as HTML.
+     * <, >, &, and ” are escaped.
      *
      * @param targetLang
-     *            出力対象のプログラミング言語。
+     *            The programming language of the output target.
      * @param originalString
-     *            入力文字列
-     * @return エスケープ処理が行われた後の文字列。
+     *            Input string.
+     * @return The string after the escape processing has been performed.
      */
     public static final String escapeStringAsLangDoc(final int targetLang,
             final String originalString) {
@@ -108,26 +110,27 @@ public class BlancoCgSourceUtil {
                 return BlancoJavaSourceUtil.escapeStringAsJavaDoc(originalString);
         default:
             throw new IllegalArgumentException(
-                    "BlancoCgSourceUtil.escapeStringAsLangDoc にサポートされない言語("
-                            + targetLang + ")が引数として与えられました。");
+                     "An unsupported language (" + targetLang
+                        + ") has been given as an argument to BlancoCgSourceUtil.escapeStringAsLangDoc.");
         }
     }
 
     /**
-     * 与えられた文字列をDelphiソースコード文字列として出力するためのエスケープ処理をします。
+     * Escapes the given string for output as a Delphi source code string.
      *
-     * ￥/バックスラッシュのエスケープおよび改行コードのエスケープを行います。<br>
-     * それ以外の処理は行いません。たとえばインジェクション攻撃などへの耐性は、このメソッドは扱いません。
+     * Escapes ¥/ backslashes and newline codes.<br>
+     * It does not perform any other processing.
+     * For example, resistance to injection attacks is not handled by this method.
      *
      * @param originalString
-     *            入力文字列
-     * @return エスケープ処理が行われた後の文字列
+     *            Input string.
+     * @return The string after the escape processing has been performed.
      */
     private static final String escapeStringAsDelphiSource(
             final String originalString) {
         if (originalString == null) {
             throw new IllegalArgumentException(
-                    "BlancoCgSourceUtil.escapeStringAsDelphiSourceで入力違反が発生。このメソッドにnullがパラメータとして与えられました。null以外の値を入力してください。");
+                    "Input violation in BlancoCgSourceUtil.escapeStringAsDelphiSource. This method was given null as a parameter, please enter a non-null value.");
         }
 
         final StringReader reader = new StringReader(originalString);
@@ -139,7 +142,7 @@ public class BlancoCgSourceUtil {
                     break;
                 }
                 switch (iRead) {
-                // Delphi言語では、バックスラッシュをエスケープする必要がありません。
+                // In Delphi, there is no need to escape backslashes.
 //                case '\\':
 //                    writer.write("\\");
 //                    break;
@@ -156,14 +159,14 @@ public class BlancoCgSourceUtil {
             }
             writer.flush();
         } catch (IOException e) {
-            // ここに入ってくることは、ありえません。
+            // There is no way that it can come in here.
             e.printStackTrace();
         }
         return writer.toString();
     }
 
     /**
-     * クラス名が正式形かどうかを判定します。
+     * Checks if the class name is in formal form.
      *
      * @param className
      * @return
@@ -185,15 +188,15 @@ public class BlancoCgSourceUtil {
                 break;
             default:
                 throw new IllegalArgumentException(
-                        "BlancoCgSourceUtil.isCanonicalClassName にサポートされない言語("
-                                + targetLang + ")が引数として与えられました。");
+                        "An unsupported language (" + targetLang
+                            + ") has been given as an argument to BlancoCgSourceUtil.isCanonicalClassName.");
         }
 
         return result;
     }
 
     /**
-     * Make canonical classname into packageName
+     * Makes canonical classname into packageName.
      *
      * @param argClassNameCanon
      * @return
@@ -203,7 +206,7 @@ public class BlancoCgSourceUtil {
             return "";
         }
 
-        // trim generics
+        // Trims generics.
         String simpleCanon = getTypeNameWithoutGenerics(argClassNameCanon);
 
         String simpleName = "";
@@ -234,7 +237,7 @@ public class BlancoCgSourceUtil {
     }
 
     /**
-     * parse BlancoCgType and convert generics into genericsListTree,
+     * Parses BlancoCgType and converts generics into genericsListTree,
      * if neccessary.
      *
      * @param argType
@@ -244,7 +247,7 @@ public class BlancoCgSourceUtil {
         BlancoCgType targetType = argType;
         if (argType.getGenericsTree() == null || argType.getGenericsTree().size() == 0) {
             /*
-             * genericsTree がなかった場合は generics 文字列から作成してみる
+             * If genericsTree is null, tries to create one from a generics string.
              */
             if (BlancoStringUtil.null2Blank(argType.getGenerics()).length() > 0) {
                 String strType = argType.getName() + "<" + argType.getGenerics() + ">";
@@ -255,7 +258,7 @@ public class BlancoCgSourceUtil {
     }
 
     /**
-     * parse type string into cgType tree.
+     * Parses type string into cgType tree.
      *
      * @param argTypeWithGenerics
      * @param argCgFactory
@@ -310,7 +313,7 @@ public class BlancoCgSourceUtil {
                     }
                 }
             } else {
-                // ここまでが一区切り
+                // This is the break.
                 firstGenerics = argFullString.substring(0, findComma);
                 remainedGenerics = argFullString.substring(findComma + 1).trim();
             }
@@ -346,7 +349,7 @@ public class BlancoCgSourceUtil {
     }
 
     /**
-     * Expand type like java style with generics
+     * Expands type like java style with generics.
      *
      * @param argType
      * @return
@@ -357,14 +360,14 @@ public class BlancoCgSourceUtil {
         final StringBuffer buf = new StringBuffer();
         buf.append(BlancoNameUtil.trimJavaPackage(argType.getName()));
 
-        // 配列を展開します。
+        // Expands the array.
         if (argType.getArray()) {
             for (int dimension = 0; dimension < argType.getArrayDimension(); dimension++) {
                 buf.append("[]");
             }
         }
 
-        // ジェネリクスを展開します。
+        // Expands the generics.
         if (argType.getGenericsTree() != null && argType.getGenericsTree().size() > 0) {
             buf.append("<");
             int count = 0;

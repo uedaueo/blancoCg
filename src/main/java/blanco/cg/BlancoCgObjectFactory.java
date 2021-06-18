@@ -28,48 +28,48 @@ import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.*;
 
 /**
- * blancoCgのバリューオブジェクトを作成するためのファクトリクラスです。
+ * A factory class for creating blancoCg value objects.
  *
- * このクラスはプログラミング言語を超えて利用されます。<br>
- * blancoCgのバリューオブジェクトは、このファクトリクラスを経由して生成することが推奨されます。 <br>
- * とはいえ個別にバリューオブジェクトを生成することは禁止していません。
+ * This class is used across programming languages.<br>
+ * It is recommended that blancoCg value objects be generated via this factory class. <br>
+ * However, it does not prohibit the creation of value objects individually.
  *
- * ※このクラスは 非finalとします。利用者がこのクラスを継承して拡張することを想定します。
+ * Note: This class is assumed to be non-final. It is assumed that users will extend this class by inheriting from it.
  *
- * 以前 createLine というメソッドがありましたが、廃止されました。
+ * There used to be a method called createLine, but it has been deprecated.
  *
  * @author IGA Tosiki
  */
 public class BlancoCgObjectFactory {
 
     /**
-     * オブジェクトファクトリのコンストラクタ。
+     * Object factory constructor.
      *
-     * private化して、ファクトリを通じてしか新規作成できないようにしています。
+     * It is made private so that it can only be created anew through a factory.
      */
     private BlancoCgObjectFactory() {
     }
 
     /**
-     * BlancoCgオブジェクトファクトリのインスタンスを取得します。
+     * Gets an instance of BlancoCg object factory.
      *
-     * @return BlancoCgオブジェクトファクトリのインスタンス。
+     * @return An instance of BlancoCg object factory.
      */
     public static BlancoCgObjectFactory getInstance() {
         return new BlancoCgObjectFactory();
     }
 
     /**
-     * ソースファイルインスタンスを生成します。
+     * Creates a source file instance.
      *
-     * ファイル名は明示的に指定していないという点に注意して呼び出してください。<br>
-     * ソースファイル名はクラス名から導出されます。
+     * When you call this method, please note that the file name is not explicitly specified. <br>
+     * The source file name is derived from the class name.
      *
      * @param argPackageName
-     *            パッケージ名。このパッケージ名から自動生成時のディレクトリ構造が決定されます。
+     *            Package name. This package name determines the directory structure during auto-generation.
      * @param argDescription
-     *            ソースファイルの説明。
-     * @return ソースファイルインスタンス。
+     *            Source file description.
+     * @return Source file instance.
      */
     public BlancoCgSourceFile createSourceFile(final String argPackageName,
             final String argDescription) {
@@ -77,42 +77,42 @@ public class BlancoCgObjectFactory {
         cgSourceFile.setPackage(argPackageName);
         cgSourceFile.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスをデフォルトで生成します。
+        // Creates an instance of language document by default.
         cgSourceFile.setLangDoc(new BlancoCgLangDoc());
 
         return cgSourceFile;
     }
 
     /**
-     * 型インスタンスを生成します。
+     * Creates a type instance.
      *
-     * 配列フラグやジェネリクス指定については、生成後のオブジェクトにセットしてください。
+     * As for the array flag and generics specification, please sest them in the generated object.
      *
      * @param argTypeName
-     *            型名。パッケージ名を含んだクラス名・インタフェース名を指定する点に注意してください。
-     * @return 型インスタンス。
+     *            Type name. Note that the class and interface names that include the package name are specified.
+     * @return Type instance.
      */
     public BlancoCgType createType(final String argTypeName) {
         final BlancoCgType cgType = new BlancoCgType();
         cgType.setName(BlancoCgSourceUtil.getTypeNameWithoutGenerics(argTypeName));
 
-        // Descriptionについては、ファクトリからの生成時にはセットしません。
+        // Description is not set when it is generated from the factory.
 
-        // ジェネリクスがあるばあいには、それを格納
+        // Stores generics, if any.
         cgType.setGenerics(BlancoCgSourceUtil.getGenericsFromFullName(argTypeName));
 
         return cgType;
     }
 
     /**
-     * クラスインスタンスを生成します。
+     * Creates a class instance.
      *
      * @param argClassName
-     *            クラス名。パッケージ名を除くクラス名を指定する点に注意してください。パッケージ名はソースファイルインスタンスを参照した上で導出されます
-     *            。
+     *            Class name. Note that the class name is specified excluding the package name.
+     *            The package name is derived by referring to the source file instance.
      * @param argDescription
-     *            クラスの説明。
-     * @return クラスインスタンス。
+     *            Class description.
+     * @return Class instance.
      */
     public BlancoCgClass createClass(final String argClassName,
             final String argDescription) {
@@ -120,21 +120,21 @@ public class BlancoCgObjectFactory {
         cgClass.setName(argClassName);
         cgClass.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスをデフォルトで生成します。
+        // Creates an instance of language document by default.
         cgClass.setLangDoc(new BlancoCgLangDoc());
 
         return cgClass;
     }
 
     /**
-     * インタフェースインスタンスを生成します。
+     * Creates an interface instance.
      *
      * @param argInterfaceName
-     *            インタフェース名。パッケージ名を除くインタフェース名を指定する点に注意してください。
-     *            パッケージ名はソースファイルインスタンスを参照した上で導出されます。
+     *            Interface name. Note that the interface name is specified excluding the package name.
+     *            The package name is derived by referring to the source file instance.
      * @param argDescription
-     *            インタフェースの説明。
-     * @return インタフェースインスタンス。
+     *            Interface description.
+     * @return Interface instance.
      */
     public BlancoCgInterface createInterface(final String argInterfaceName,
             final String argDescription) {
@@ -142,22 +142,22 @@ public class BlancoCgObjectFactory {
         cgInterface.setName(argInterfaceName);
         cgInterface.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスをデフォルトで生成します。
+        // Creates an instance of language document by default.
         cgInterface.setLangDoc(new BlancoCgLangDoc());
 
         return cgInterface;
     }
 
     /**
-     * フィールドインスタンスを生成します。
+     * Creates a field instance.
      *
      * @param argName
-     *            フィールドの変数名。
+     *            Variable name of the field.
      * @param argTypeNameWithPackage
-     *            パッケージ名付きの型名。
+     *            Type name with package name.
      * @param argDescription
-     *            フィールドの説明。
-     * @return フィールドインスタンス。
+     *            Field description.
+     * @return Field instance.
      */
     public BlancoCgField createField(final String argName,
             final String argTypeNameWithPackage, final String argDescription) {
@@ -165,23 +165,23 @@ public class BlancoCgObjectFactory {
         cgField.setName(argName);
         cgField.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスをデフォルトで生成します。
+        // Creates an instance of language document by default.
         cgField.setLangDoc(new BlancoCgLangDoc());
 
-        // 型オブジェクトを作成して、情報をセットします。
+        // Creates a type object and sets the information.
         cgField.setType(createType(argTypeNameWithPackage));
 
         return cgField;
     }
 
     /**
-     * メソッドインスタンスを生成します。
+     * Creates a method instance.
      *
      * @param methodName
-     *            メソッド名。
+     *            Method name.
      * @param argDescription
-     *            メソッドの説明。
-     * @return メソッドインスタンス。
+     *            Method description.
+     * @return Method instance.
      */
     public BlancoCgMethod createMethod(final String methodName,
             final String argDescription) {
@@ -189,22 +189,22 @@ public class BlancoCgObjectFactory {
         cgMethod.setName(methodName);
         cgMethod.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスをデフォルトで生成します。
+        // Creates an instance of language document by default.
         cgMethod.setLangDoc(new BlancoCgLangDoc());
 
         return cgMethod;
     }
 
     /**
-     * パラメータインスタンスを生成します。
+     * Creates a parameter instance.
      *
      * @param argName
-     *            パラメータの引数名。
+     *            Parameter argument name.
      * @param argFullTypeName
-     *            フル型名。
+     *            Full type name.
      * @param argDescription
-     *            説明。
-     * @return パラメータインスタンス。
+     *            Description.
+     * @return Parameter instance.
      */
     public BlancoCgParameter createParameter(final String argName,
             final String argFullTypeName, final String argDescription) {
@@ -212,17 +212,17 @@ public class BlancoCgObjectFactory {
     }
 
     /**
-     * パラメータインスタンスを生成します。
+     * Creates a parameter instance.
      *
      * @param argName
-     *            パラメータの引数名。
+     *            Parameter argument name.
      * @param argFullTypeName
-     *            フル型名。
+     *            Full type name.
      * @param argDescription
-     *            説明。
+     *            Description.
      * @param argNotNull
-     *            非null制約が付与されるかどうか。
-     * @return パラメータインスタンス。
+     *            Whether or not a non-null constraint will be given.
+     * @return Parameter instance.
      */
     public BlancoCgParameter createParameter(final String argName,
             final String argFullTypeName, final String argDescription,
@@ -232,24 +232,24 @@ public class BlancoCgObjectFactory {
         cgParameter.setDescription(argDescription);
         cgParameter.setNotnull(argNotNull);
 
-        // 言語ドキュメントのインスタンスは、パラメータインスタンスには存在しません。
+        // An instance of language document does not exist in the parameter instance.
 
-        // 型オブジェクトを作成して、情報をセットします。
+        // Creates a type object and sets the information.
         cgParameter.setType(createType(argFullTypeName));
 
         return cgParameter;
     }
 
     /**
-     * create instance of virtual parameter (generic)
+     * Creates instance of virtual parameter (generic).
      *
      * @param argName
-     *            name of virtual parameter
+     *            Name of virtual parameter.
      * @param argFullTypeName
-     *            full qualified type name
+     *            Full qualified type name.
      * @param argDescription
-     *            description
-     * @return instance of virtual parameter
+     *            Description.
+     * @return An instance of virtual parameter.
      */
     public BlancoCgVirtualParameter createVirtualParameter(
             final String argName,
@@ -259,14 +259,14 @@ public class BlancoCgObjectFactory {
         final BlancoCgVirtualParameter cgParameter = new BlancoCgVirtualParameter();
         cgParameter.setName(argName);
         cgParameter.setDescription(argDescription);
-        // create type object and set informations.
+        // Creates type object and sets informations.
         cgParameter.setType(createType(argFullTypeName));
 
         return cgParameter;
     }
 
     /**
-     * ローカル変数定義インスタンスを生成します。
+     * Creates a local variable definition instance.
      *
      */
     public BlancoCgLocalVariable createLocalVariable(final String argName,
@@ -274,66 +274,66 @@ public class BlancoCgObjectFactory {
         final BlancoCgLocalVariable cgLocalVariable = new BlancoCgLocalVariable();
         cgLocalVariable.setName(argName);
 
-        // 言語ドキュメントのインスタンスは、ローカル変数定義インスタンスには存在しません。
+        // An instance of language document does not exist in the local variable definition instance.
 
-        // 型オブジェクトを作成して、情報をセットします。
+        // Creates type object and sets informations.
         cgLocalVariable.setType(createType(argType));
 
         return cgLocalVariable;
     }
 
     /**
-     * Returnインスタンスを生成します。
+     * Creates a Return instance.
      *
      * @param argFullTypeName
-     *            フル型名。
+     *            Full type name.
      * @param argDescription
-     *            戻り値の説明。
-     * @return Returnインスタンス。
+     *            Return value description.
+     * @return Return instance.
      */
     public BlancoCgReturn createReturn(final String argFullTypeName,
             final String argDescription) {
         final BlancoCgReturn cgReturn = new BlancoCgReturn();
         cgReturn.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスは、Returnインスタンスには存在しません。
+        // An instance of language document does not exist in the Return instance.
 
-        // 型オブジェクトを作成して、情報をセットします。
+        // Creates type object and sets informations.
         cgReturn.setType(createType(argFullTypeName));
 
         return cgReturn;
     }
 
     /**
-     * 例外インスタンスを生成します。
+     * Creates an exception instance.
      *
      * @param argFullTypeName
-     *            フル型名。
+     *            Full type name.
      * @param argDescription
-     *            説明。
-     * @return 例外インスタンス。
+     *            Description.
+     * @return Exception instance.
      */
     public BlancoCgException createException(final String argFullTypeName,
             final String argDescription) {
         final BlancoCgException cgException = new BlancoCgException();
         cgException.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスは、例外インスタンスには存在しません。
+        // An instance of language document does not exist in the exception instance.
 
-        // 型オブジェクトを作成して、情報をセットします。
+        // Creates type object and sets informations.
         cgException.setType(createType(argFullTypeName));
 
         return cgException;
     }
 
     /**
-     * 列挙体インスタンスを生成します。
+     * Creates an enumeration instance.
      *
      * @param argEnumName
-     *            列挙体の名前。
+     *            Enumeration name.
      * @param argDescription
-     *            列挙体の説明。
-     * @return 列挙体インスタンス。
+     *            Enumeration description.
+     * @return Enumeration instance.
      */
     public BlancoCgEnum createEnum(final String argEnumName,
             final String argDescription) {
@@ -341,20 +341,20 @@ public class BlancoCgObjectFactory {
         cgEnum.setName(argEnumName);
         cgEnum.setDescription(argDescription);
 
-        // 言語ドキュメントのインスタンスをデフォルトで生成します。
+        // Creates an instance of language document by default.
         cgEnum.setLangDoc(new BlancoCgLangDoc());
 
         return cgEnum;
     }
 
     /**
-     * 列挙体の要素のインスタンスを生成します。
+     * Creates an instance of an element of the enumeration.
      *
      * @param argEnumElementName
-     *            列挙体の要素の名前。
+     *            Enumeration element name.
      * @param argDescription
-     *            列挙体の要素の説明。
-     * @return 列挙体要素インスタンス。
+     *            Enumeration element description.
+     * @return Enumeration element instance.
      */
     public BlancoCgEnumElement createEnumElement(
             final String argEnumElementName, final String argDescription) {
@@ -366,15 +366,15 @@ public class BlancoCgObjectFactory {
     }
 
     /**
-     * 言語ドキュメントのタグを生成します。
+     * Generates a tag for language documentation.
      *
      * @param argName
-     *            タグの名前。
+     *            Tag name.
      * @param argKey
-     *            タグのキー名。指定したく無い場合にはnullを与えます。
+     *            The key name of the tag. Gives null if you don't want to specify it.
      * @param argValue
-     *            タグの値。
-     * @return 行インスタンス。
+     *            Value of the tag.
+     * @return Row instance.
      */
     public BlancoCgLangDocTag createLangDocTag(final String argName,
             final String argKey, final String argValue) {

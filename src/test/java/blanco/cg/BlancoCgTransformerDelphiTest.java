@@ -22,13 +22,13 @@ import blanco.cg.valueobject.BlancoCgMethod;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
- * Delphi言語用の生成試験。
+ * Generation test for Delphi.
  * 
  * @author YAMAMOTO Koji
  */
 public class BlancoCgTransformerDelphiTest extends TestCase {
     /**
-     * Delphiの試験。
+     * The test for Delphi.
      * 
      * @throws Exception
      */
@@ -36,19 +36,19 @@ public class BlancoCgTransformerDelphiTest extends TestCase {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
 
-        // ソースファイルを生成します。
+        // Generates a source file.
 
         final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
-                "Unit1", "テスト用のクラス");
+                "Unit1", "Class for testing");
         cgSourceFile.setName("Unit1");
 
         cgSourceFile.getImportList().add("System.Text.DummyText");
-        // 同じパッケージのインポート試験。
+        // Import test of the same package.
         cgSourceFile.getImportList().add("Myprog.MyClass2");
 
-        // クラスを生成します。
+        // Generates the class.
         final BlancoCgClass cgClass = cgFactory.createClass("TMyClass",
-                "このクラスは、テストのためのクラスです。");
+                "This class is for testing.");
         cgSourceFile.getClassList().add(cgClass);
         // cgClass.getLangDoc().getTagList().add(
         // cgFactory.createLangDocTag("author", null, "blanco Framework"));
@@ -58,65 +58,65 @@ public class BlancoCgTransformerDelphiTest extends TestCase {
         // cgClass.getImplementInterfaceList().add(
         // cgFactory.createType("System.WebException2"));
 
-        // 列挙体
+        // Enumeration
         // final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
-        // "列挙体の試験。");
+        // "Testing enumerated type.");
         // cgClass.getEnumList().add(cgEnum);
         // final BlancoCgEnumElement cgEnumElementFirst = cgFactory
         // .createEnumElement("Red", "あか");
         // cgEnumElementFirst.setDefault("1");
         // cgEnum.getElementList().add(cgEnumElementFirst);
         // cgEnum.getElementList().add(
-        // cgFactory.createEnumElement("Yerrow", "きいろ"));
+        // cgFactory.createEnumElement("Yellow", "きいろ"));
         // cgEnum.getElementList().add(cgFactory.createEnumElement("Blue",
         // "あお"));
 
-        // フィールドを生成します。
+        // Generates a field.
         final BlancoCgField cgField = cgFactory.createField("MyField",
-                "String", "Stringフィールドの試験です。");
+                "String", "Testing a String field.");
         cgClass.getFieldList().add(cgField);
         // cgField.setDefault("new DateTime()");
         //
         // final BlancoCgField cgField2 = cgFactory.createField("myField2",
-        // "java.util.Date", "日付フィールドの試験v2です。");
+        // "java.util.Date", "Testing a date field v2.");
         // cgClass.getFieldList().add(cgField2);
         // cgField2.getType().setArray(true);
 
-        // プロシージャを生成します。
+        // Generates a procedure.
         final BlancoCgMethod cgMethod = cgFactory.createMethod("MyMethod",
-                "プロシージャの試験です。");
+                "Testing a procedure.");
         cgClass.getMethodList().add(cgMethod);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgMethod.getParameterList().add(
-                cgFactory.createParameter("argString", "String", "文字列引数。"));
+                cgFactory.createParameter("argString", "String", "String argument."));
         cgMethod.getParameterList().add(
-                cgFactory.createParameter("argInt", "integer", "整数引数。"));
+                cgFactory.createParameter("argInt", "integer", "Integer argument."));
 
-        // ファンクションを生成します。
+        // Generates a function.
         final BlancoCgMethod cgFunction = cgFactory.createMethod("MyFunction",
-                "メソッドの試験です。");
+                "Testing method.");
         cgClass.getMethodList().add(cgFunction);
 
-        // パラメータを追加します。
+        // Adds parameters.
         cgFunction.getParameterList().add(
-                cgFactory.createParameter("argString", "String", "文字列引数。"));
+                cgFactory.createParameter("argString", "String", "String argument."));
         cgFunction.getParameterList().add(
-                cgFactory.createParameter("argInt", "integer", "整数引数。"));
+                cgFactory.createParameter("argInt", "integer", "Integer argument."));
 
-        // 戻り値を設定します。
-        cgFunction.setReturn(cgFactory.createReturn("boolean", "成功ならtrue。"));
+        // Sets the return value.
+        cgFunction.setReturn(cgFactory.createReturn("boolean", "True if success."));
 
         // cgMethod.getThrowList().add(
         // cgFactory.createException("System.IO.IOException",
-        // "入出力例外が発生した場合。"));
+        // "If an I/O exception occurs."));
 
-        // アノテーションの追加。
+        // Adds an annotation.
         // cgMethod.getAnnotationList().add(
         // "Copyright(value=\"blanco Framework\")");
 
-        // メソッドの内容を追加します。
-        // cgMethod.getLineList().add("// 代入の試験です。");
+        // Adds the contents of the method.
+        // cgMethod.getLineList().add("// Testing assignment.");
         // cgMethod.getLineList().add("int a = 0;");
 
         final BlancoCgTransformer cgTransformerDelphi = BlancoCgTransformerFactory
