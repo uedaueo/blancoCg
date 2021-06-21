@@ -35,41 +35,41 @@ import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgInterfaceをソースコードに展開します。
+ * Expands BlancoCgInterface into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgInterfacePythonSourceExpander {
 
     /**
-     * ここでinterfaceを展開します。
+     * Expands the interface here.
      * 
      * @param cgInterface
-     *            処理対象となるインタフェース。
+     *            The interface to be processed.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformInterface(final BlancoCgInterface cgInterface,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // インタフェースの場合には フィールドやメソッドからpublicが除外されます。
+        // In the case of an interface, "public" is excluded from fields and methods.
 
-        // 最初にインタフェース情報をLangDocに展開。
+        // First, it expands the interface information into LangDoc.
         if (cgInterface.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // If LangDoc is not specified, creates an instance here.
             cgInterface.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgInterface.getLangDoc().getTitle() == null) {
             cgInterface.getLangDoc().setTitle(cgInterface.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocPythonSourceExpander().transformLangDoc(cgInterface
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgInterface, argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
@@ -77,34 +77,34 @@ class BlancoCgInterfacePythonSourceExpander {
         if (BlancoStringUtil.null2Blank(cgInterface.getAccess()).length() > 0) {
             buf.append(cgInterface.getAccess() + " ");
         }
-        // staticやfinalは展開しません。
+        // Static and final are not expanded.
         buf.append("interface " + cgInterface.getName());
 
-        // ここで親クラスを展開。
+        // Expands the parent class here.
         expandExtendClassList(cgInterface, buf);
 
-        // ※ポイント: 親インタフェース展開は interfaceには存在しません。
+        // Point: The parent interface expansion does not exist in interface.
 
         buf.append(" {");
 
         argSourceLines.add(buf.toString());
 
-        // ここでフィールドを展開。
+        // Expands the field here.
         expandFieldList(cgInterface, argSourceFile, argSourceLines);
 
-        // ここでメソッドを展開。
+        // Expands the method here.
         expandMethodList(cgInterface, argSourceFile, argSourceLines);
 
         argSourceLines.add("}");
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      * 
      * @param cgInterface
-     *            インタフェース。
+     *            The interface.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgInterface cgInterface,
             final List<java.lang.String> argSourceLines) {
@@ -112,13 +112,13 @@ class BlancoCgInterfacePythonSourceExpander {
             final String strAnnotation = cgInterface.getAnnotationList().get(
                     index);
 
-            // Java言語のAnnotationは @ から記述します。
+            // Annotasion in Java is written starting with @.
             argSourceLines.add("@" + strAnnotation);
         }
     }
 
     /**
-     * 親クラスを展開します。
+     * Expands the parent class.
      * 
      * @param cgClass
      * @param buf
@@ -131,13 +131,13 @@ class BlancoCgInterfacePythonSourceExpander {
                 buf.append(" extends "
                         + BlancoCgTypePythonSourceExpander.toTypeString(type));
             } else {
-                throw new IllegalArgumentException("Java言語では継承は一回しか実施できません。");
+                throw new IllegalArgumentException("In Java, inheritance can only be performed once.");
             }
         }
     }
 
     /**
-     * 含まれる各々のフィールドを展開します。
+     * Expands each of the included fields.
      * 
      * @param cgInterface
      * @param argSourceFile
@@ -147,9 +147,9 @@ class BlancoCgInterfacePythonSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgInterface.getFieldList() == null) {
-            // フィールドのリストにnullが与えられました。
-            // かならずフィールドのリストにはListをセットしてください。
-            throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
+            // A null was given for the list of fields.
+            // Make sure to set the list of fields to List.
+            throw new IllegalArgumentException("A null was given for the list of fields.");
         }
 
         for (int index = 0; index < cgInterface.getFieldList().size(); index++) {
@@ -160,7 +160,7 @@ class BlancoCgInterfacePythonSourceExpander {
     }
 
     /**
-     * 含まれる各々のメソッドを展開します。
+     * Expands each of the included methods.
      * 
      * @param cgInterface
      * @param argSourceFile
@@ -170,7 +170,7 @@ class BlancoCgInterfacePythonSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgInterface.getMethodList() == null) {
-            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
+            throw new IllegalArgumentException("A null was given for the list of method.");
         }
         for (int index = 0; index < cgInterface.getMethodList().size(); index++) {
             final BlancoCgMethod cgMethod = cgInterface.getMethodList().get(

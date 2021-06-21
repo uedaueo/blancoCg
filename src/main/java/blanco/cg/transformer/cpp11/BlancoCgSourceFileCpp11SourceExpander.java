@@ -70,7 +70,7 @@ class BlancoCgSourceFileCpp11SourceExpander {
      */
     public List<java.lang.String> transformSourceFile(
             final BlancoCgSourceFile argSourceFile) {
-        // Definitely initialize the list of source lines.
+        // Definitely initializes the list of source lines.
         fSourceLines = new ArrayList<java.lang.String>();
 
         fCgSourceFile = argSourceFile;

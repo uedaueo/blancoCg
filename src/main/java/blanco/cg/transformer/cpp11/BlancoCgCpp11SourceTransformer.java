@@ -43,12 +43,12 @@ public class BlancoCgCpp11SourceTransformer extends
         AbstractBlancoCgJavaStyleTransformer {
 
     /**
-     * Converts the source file value object to C#.NET souce code and outputs it to the writer.
+     * Converts the source file value object to C#.NET source code and outputs it to the writer.
      * 
      * Does not consider the package structure to be a directory structure in this API. In this process, it just outputs to the writer.
      * 
      * @param argSourceFile
-     *            A source file valie object.
+     *            A source file value object.
      * @param argWriter
      *            A writer for output.
      * @throws IOException If an I/O exception occurs.
