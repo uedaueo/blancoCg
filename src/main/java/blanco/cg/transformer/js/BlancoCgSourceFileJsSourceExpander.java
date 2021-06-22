@@ -35,49 +35,48 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgSourceFileをソースコードに展開します。
+ * Expands BlancoCgSourceFile into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgSourceFileJsSourceExpander {
     /**
-     * リソースバンドル・メッセージを扱うためのクラス。
+     * A class for handling resource bundle messages.
      */
     protected static final BlancoCgResourceBundle fBundle = new BlancoCgResourceBundle();
 
     /**
-     * 入力となるソースコード構造。
+     * The input source code structure.
      */
     private BlancoCgSourceFile fCgSourceFile = null;
 
     /**
-     * 中間的に利用するソースコードをあらわすList。java.lang.Stringがリストに格納されます。(BlancoCgLineではありません。
-     * )
+     * List indicating the source code to be used intermediately. java.lang.String will be stored (It is not BlancoCgLine).
      * 
-     * ここでは整形前ソースコードが中間的にたくわえられます。
+     * The unformatted source code will be stored in the interim here.
      */
     private List<java.lang.String> fSourceLines = null;
 
     /**
-     * SourceFileから整形前ソースコードリストを生成します。
+     * Generates a list of unformatted source code from SourceFile.
      * 
      * @param argSourceFile
-     *            ソースコードをあらわすバリューオブジェクト。
-     * @return ソースコードに展開後のリスト。
+     *            A value object representing the source code.
+     * @return A list after expansion into source code.
      */
     public List<java.lang.String> transformSourceFile(
             final BlancoCgSourceFile argSourceFile) {
-        // 確実にソース行のリストを初期化します。
+        // Definitely initializes the list of source lines.
         fSourceLines = new ArrayList<java.lang.String>();
 
         fCgSourceFile = argSourceFile;
 
-        // ソースファイルのファイルヘッダーを出力処理します。
+        // Outputs the file headers of the source file.
         expandSourceFileHeader();
 
-        // パッケージ部分の生成。
+        // Generates the package part.
         if (BlancoStringUtil.null2Blank(fCgSourceFile.getPackage()).length() > 0) {
             // fSourceLines.add("/* package " + fCgSourceFile.getPackage()
             // + "; */");
@@ -85,26 +84,26 @@ class BlancoCgSourceFileJsSourceExpander {
         }
 
         if (fCgSourceFile.getImportList() == null) {
-            throw new IllegalArgumentException("importのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of imports has been given a null value.");
         }
 
-        // 処理の後半でインポート文を編成しなおしますが、その際に参照するアンカー文字列を追加しておきます。
+        // Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.
         BlancoCgImportJsSourceExpander.insertAnchorString(fSourceLines);
 
-        // インタフェースの展開は JavaScriptには存在しません。
+        // Interface expansion does not exist in JavaScript.
         if (fCgSourceFile.getInterfaceList().size() > 0) {
-            throw new IllegalArgumentException("JavaScriptにはインタフェースは存在しません。");
+            throw new IllegalArgumentException("There are no interfaces in JavaScript.");
         }
 
-        // クラスの展開を実施します。
+        // Performs class expansion.
         if (fCgSourceFile.getClassList() == null) {
-            throw new IllegalArgumentException("クラスのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of classes has been given a null value.");
         }
         for (int index = 0; index < fCgSourceFile.getClassList().size(); index++) {
             final BlancoCgClass cgClass = fCgSourceFile.getClassList().get(
                     index);
 
-            // ファイル情報をクラスへと移送します。
+            // Transfers file information to the class.
             String fileDescription = fCgSourceFile.getDescription();
             if (BlancoStringUtil.null2Blank(fileDescription).length() == 0) {
                 fileDescription = fBundle.getDefaultFileComment();
@@ -112,15 +111,15 @@ class BlancoCgSourceFileJsSourceExpander {
             cgClass.getLangDoc().getTagList().add(
                     BlancoCgObjectFactory.getInstance().createLangDocTag(
                             "fileoverview", null, fileDescription));
-            // ポイント：ここではファイルヘッダー情報のみ移送しています。Description以外は移送の必要はありません。
+            // Point: Only the file header information is transferred. Except for Description, there is no need to transfer.
 
             new BlancoCgClassJsSourceExpander().transformClass(cgClass,
                     fCgSourceFile, fSourceLines);
         }
 
-        // importの展開をします。
-        // この処理が、クラス展開より後に実施されているのには意味があります。
-        // クラス展開などを経て、初めてインポート文の一覧が確定するからです。
+        // Expands import.
+        // There is a reason why this process is done after the class expansion.
+        // This is because the list of import statements can be finalized only after the class expansion, etc.
         new BlancoCgImportJsSourceExpander().transformImport(fCgSourceFile,
                 fSourceLines);
 
@@ -128,7 +127,7 @@ class BlancoCgSourceFileJsSourceExpander {
     }
 
     /**
-     * ソースファイルのファイルヘッダーを出力処理します。
+     * Outputs the file headers of the source file.
      */
     private void expandSourceFileHeader() {
         fSourceLines.add("/*");
@@ -136,13 +135,13 @@ class BlancoCgSourceFileJsSourceExpander {
                 .length() > 0) {
             fSourceLines.add("* " + fCgSourceFile.getDescription());
         } else {
-            // 指定が無い場合にはデフォルトのコメントを利用します。
+            // If not specified, the default comment will be used.
             for (String line : BlancoCgSourceFileUtil.getDefaultFileComment()) {
                 fSourceLines.add("* " + line);
             }
         }
 
-        // 言語ドキュメントの中間部を生成します。
+        // Generates the intermediate part of a language document.
         new BlancoCgLangDocJsSourceExpander().transformLangDocBody(
                 fCgSourceFile.getLangDoc(), fSourceLines);
 

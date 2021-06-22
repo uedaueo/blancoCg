@@ -36,48 +36,48 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgFieldをソースコードへと展開します。
+ * Expands BlancoCgField into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgFieldJsSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.JS;
 
     /**
-     * ここでフィールドを展開します。
+     * Expands a field here.
      * 
      * @param cgClass
-     *            処理対象となるクラス。
+     *            The class to be processed.
      * @param cgField
-     *            処理対象となるフィールド。
+     *            The field to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      */
     public void transformField(final BlancoCgClass cgClass,
             final BlancoCgField cgField,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (BlancoStringUtil.null2Blank(cgField.getName()).length() == 0) {
-            throw new IllegalArgumentException("フィールドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The field name is not set to an appropriate value.");
         }
         if (BlancoStringUtil.null2Blank(cgField.getType().getName()).length() == 0) {
-            throw new IllegalArgumentException("フィールド[" + cgField.getName()
-                    + "]の型が適切な値が設定されていません。");
+            throw new IllegalArgumentException("The type of the field [" + cgField.getName()
+                    + "] is not set to an appropriate value.");
         }
 
-        // 有無をいわさず改行を付与します。
+        // Adds a line break inevitably.
         argSourceLines.add("");
 
-        // 最初にフィールド情報をLangDocに展開。
+        // First, it expands the field information into LangDoc.
         if (cgField.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgField.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgField.getLangDoc().getTitle() == null) {
@@ -87,7 +87,7 @@ class BlancoCgFieldJsSourceExpander {
         if (BlancoStringUtil.null2Blank(cgField.getAccess()).equals("private")
                 || BlancoStringUtil.null2Blank(cgField.getAccess()).equals(
                         "protected")) {
-            // protected または private の場合にのみスコープ表現を展開します。
+            // Expands the scope expression only if it is protected or private.
             cgField.getLangDoc().getTagList().add(
                     BlancoCgObjectFactory.getInstance().createLangDocTag(
                             cgField.getAccess(), null, ""));
@@ -101,24 +101,24 @@ class BlancoCgFieldJsSourceExpander {
                             "type", null, cgField.getType().getName()));
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocJsSourceExpander().transformLangDoc(cgField
                 .getLangDoc(), argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
         if (cgField.getStatic()) {
-            // クラスフィールド (staticなフィールド)は、下記のようにクラス名.フィールド名で直接展開されます。
+            // Class fields (static fields) are expanded directly by the <class name>.<field name> as followed.
             buf.append(cgClass.getName() + ".");
         } else {
-            // 通常のフィールド変数は this.フィールド名 のように展開します。
+            // A normal field variable is expanded as this.<field name>.
             buf.append("this.");
         }
 
-        // フィールド生成の本体部分を展開します。
+        // Expands the body part of the field generation.
         buf.append(cgField.getName());
 
-        // デフォルト値の指定がある場合にはこれを展開します。
+        // If a default value is specified, this will be expanded.
         if (BlancoStringUtil.null2Blank(cgField.getDefault()).length() > 0) {
             buf.append(" = " + cgField.getDefault()
                     + BlancoCgLineUtil.getTerminator(TARGET_LANG));
@@ -128,7 +128,7 @@ class BlancoCgFieldJsSourceExpander {
 
         argSourceLines.add(buf.toString());
 
-        // import文に型を追加。
+        // Adds the type to the import statement.
         argSourceFile.getImportList().add(cgField.getType().getName());
     }
 }

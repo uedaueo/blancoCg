@@ -53,7 +53,6 @@ class BlancoCgSourceFilePythonSourceExpander {
 
     /**
      * List indicating the source code to be used intermediately. java.lang.String will be stored (It is not BlancoCgLine).
-     * )
      * 
      * The unformatted source code will be stored in the interim here.
      */

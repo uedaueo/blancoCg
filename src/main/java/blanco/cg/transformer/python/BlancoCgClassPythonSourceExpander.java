@@ -138,7 +138,7 @@ class BlancoCgClassPythonSourceExpander {
      * Currently, the source code is expanded in the order of registration.
      * 
      * @param cgClass
-     *            The class being processed.
+     *            The class to be processed.
      * @param argSourceFile
      *            Source file.
      * @param argSourceLines
@@ -166,7 +166,7 @@ class BlancoCgClassPythonSourceExpander {
      * Expands each method contained in the class.
      * 
      * @param cgClass
-     *            The class being processed.
+     *            The class to be processed.
      * @param argSourceFile
      *            Source file.
      * @param argSourceLines

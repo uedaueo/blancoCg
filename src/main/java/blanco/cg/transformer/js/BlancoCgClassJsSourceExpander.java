@@ -33,42 +33,42 @@ import blanco.cg.valueobject.BlancoCgMethod;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
- * BlancoCgClassをソースコードへと展開します。
+ * Expands BlancoCgClass into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgClassJsSourceExpander {
 
     /**
-     * ここでClassを展開します。
+     * Expands the class here.
      * 
      * @param cgClass
-     *            処理対象となるクラス。
+     *            A class to be processed.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformClass(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // 最初にクラス情報をLangDocに展開。
+        // First, it expands the class information into a LangDoc.
         if (cgClass.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // If LangDoc is not specified, creates an instance here.
             cgClass.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgClass.getLangDoc().getTitle() == null) {
             cgClass.getLangDoc().setTitle(cgClass.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         // new BlancoCgLangDocJsSourceExpander().transformLangDoc(cgClass
         // .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgClass, argSourceLines);
 
-        // コンストラクタが存在するか、あるいはひとつも存在しないかどうかチェックします。
+        // Checks for the existence of a constructor, or none at all.
         boolean isConstructorExist = false;
         for (int index = 0; index < cgClass.getMethodList().size(); index++) {
             final BlancoCgMethod cgMethod = cgClass.getMethodList().get(index);
@@ -78,23 +78,23 @@ class BlancoCgClassJsSourceExpander {
             }
         }
         if (isConstructorExist == false) {
-            // クラスのコンストラクタがひとつも存在しない場合には、blancoCgの責務としてデフォルトコンストラクタを自前で生成する必要が出てきます。
-            // これは JavaScriptの言語仕様としてのクラスの構造の特色に由来するものです。
-            // 内容が空のメソッドとしてデフォルトコンストラクタを生成します。
+            // If there is no constructor for a class, it is the reponsibility of blancoCg to generate its own default constructor.
+            // This is due to a feature of the class structure in the JavaScript specification.
+            // Generates a default constructor as a method with empty content.
             final BlancoCgMethod cgMethod = BlancoCgObjectFactory.getInstance()
-                    .createMethod(cgClass.getName(), "デフォルトコンストラクタ");
+                    .createMethod(cgClass.getName(), "A default constructor");
             cgMethod.setConstructor(true);
             cgClass.getMethodList().add(cgMethod);
         }
 
-        // クラスの情報は、クラスのコンストラクタへと移送します。
-        // これは JavaScriptの言語仕様としてのクラスの構造の特色に由来するものです。
-        // クラスの宣言部がコンストラクタそのものであるので、コンストラクタにクラスの情報を移送する必要があるからです。
+        // Class information is transferred to the constructor of the class.
+        // This is due to a feature of the class structure in the JavaScript specification.
+        // This is because the declaration part of the class is the constructor itself, so it is necessary to transfer the class information to the constructor.
         for (int index = 0; index < cgClass.getMethodList().size(); index++) {
             final BlancoCgMethod cgMethod = cgClass.getMethodList().get(index);
             if (cgMethod.getConstructor()) {
-                // クラスの情報をコンストラクタに移送します。
-                // ただしタイトルは移送しません。
+                // Transfers class information to the constructor.
+                // However, the title will not be transfered.
                 for (int indexClassLangDoc = 0; indexClassLangDoc < cgClass
                         .getLangDoc().getDescriptionList().size(); indexClassLangDoc++) {
                     cgMethod.getLangDoc().getDescriptionList().add(
@@ -110,19 +110,19 @@ class BlancoCgClassJsSourceExpander {
             }
         }
 
-        // ここでメソッドを展開。
+        // Expands the method here.
         expandMethodList(cgClass, argSourceFile, argSourceLines);
 
-        argSourceLines.add("/* クラス[" + cgClass.getName() + "]宣言の終了。 */");
+        argSourceLines.add("/* End of class [" + cgClass.getName() + "] declaration. */");
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      * 
      * @param cgClass
-     *            クラス。
+     *            A class.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgClass cgClass,
             final List<java.lang.String> argSourceLines) {
@@ -130,51 +130,51 @@ class BlancoCgClassJsSourceExpander {
             final String strAnnotation = cgClass.getAnnotationList().get(index);
 
             throw new IllegalArgumentException(
-                    "現バージョンの blancoCgは JavaScript言語の際にはアノテーションをサポートしません。"
+                    "The current version of blancoCg does not support annotations in JavaScript."
                             + strAnnotation);
-            // JavaScript言語のAnnotationは不明です。
+            // Annotation for JavaScript is unknown.
             // argSourceLines.add("@" + strAnnotation);
         }
     }
 
     /**
-     * クラスに含まれる各々のメソッドを展開します。
+     * Expands each method contained in the class.
      * 
      * @param cgClass
-     *            処理中のクラス。
+     *            The class to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            Source file.
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            A source code line list.
      */
     private void expandMethodList(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgClass.getMethodList() == null) {
-            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
+            throw new IllegalArgumentException("A null was given for the list of method.");
         }
 
-        // 最初にコンストラクタを展開。
+        // First, expands the constructor.
         for (int index = 0; index < cgClass.getMethodList().size(); index++) {
             final BlancoCgMethod cgMethod = cgClass.getMethodList().get(index);
 
             if (cgMethod.getConstructor()) {
-                // コンストラクタのみを最初に展開します。
+                // Only the constructor will be expanded first.
                 new BlancoCgMethodJsSourceExpander().transformMethod(cgClass,
                         cgMethod, argSourceFile, argSourceLines);
             }
         }
 
-        // クラスフィールド (staticなフィールド)を展開します。
+        // Expands class fields (static fields).
         new BlancoCgMethodJsSourceExpander().transformStaticFieldList(cgClass,
                 argSourceFile, argSourceLines);
 
-        // 次に一般のメソッドを展開。
+        // Next, expands the general method.
         for (int index = 0; index < cgClass.getMethodList().size(); index++) {
             final BlancoCgMethod cgMethod = cgClass.getMethodList().get(index);
 
             if (cgMethod.getConstructor() == false) {
-                // コンストラクタ以外を展開します。
+                // Expands all but the constructor.
                 new BlancoCgMethodJsSourceExpander().transformMethod(cgClass,
                         cgMethod, argSourceFile, argSourceLines);
             }

@@ -29,77 +29,77 @@ import java.util.List;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
- * BlancoCgSourceFileのなかの import情報を展開します。
+ * Expands the import information in the BlancoCgSourceFile.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。<br>
- * import展開は意外にも複雑な処理です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.<br>
+ * import expansion is a surprisingly complex process.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgImportJsSourceExpander {
     /**
-     * import文を展開するためのアンカー文字列。
+     * An anchor string to expand the import statement.
      */
     private static final String REPLACE_IMPORT_HERE = "/*replace import here*/";
 
     /**
-     * 発見されたアンカー文字列のインデックス。
+     * Index of found anchor string.
      * 
-     * このクラスの処理の過程で import文が編集されますが、その都度 この値も更新されます。
+     * Whenever the import statement is edited in the process of this class, this value will also be updated.
      */
     private int fFindReplaceImport = -1;
 
     /**
-     * importを展開します。
+     * Expands import.
      * 
-     * このメソッドはクラス展開・メソッド展開など一式が終了した後に呼び出すようにします。
+     * This method is called after the completion of class expansion, method expansion, etc.
      * 
      * @param argSourceFile
-     *            ソースファイルインスタンス。
+     *            A source file instance.
      * @param argSourceLines
-     *            ソース行イメージ。(java.lang.Stringが格納されます)
+     *            A source line image. (java.lang.String will be stored)
      */
     public void transformImport(final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // アンカー文字列を検索します。
+        // Searches for an anchor string.
         fFindReplaceImport = findAnchorString(argSourceLines);
         if (fFindReplaceImport < 0) {
-            throw new IllegalArgumentException("import文の置換文字列を発見することができませんでした。");
+            throw new IllegalArgumentException("Could not find the replacement string for the import statement.");
         }
 
-        // アンカー文字列を除去します。
+        // Removes the anchor string.
         removeAnchorString(argSourceLines);
     }
 
     /**
-     * 置換アンカー文字列の行数(0オリジン)を検索します。
+     * Searches for the number of lines (0-origin) in the replacement anchor string.
      * 
-     * @return 発見したアンカー文字列の位置(0オリジン)。発見できなかった場合には-1。
+     * @return Position of the found anchor string (0-origin). If not found, -1.
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     private static final int findAnchorString(
             final List<java.lang.String> argSourceLines) {
         for (int index = 0; index < argSourceLines.size(); index++) {
             final String line = argSourceLines.get(index);
             if (line.equals(REPLACE_IMPORT_HERE)) {
-                // 発見しました。
+                // Found it.
                 return index;
             }
         }
 
-        // 発見できませんでした。発見できなかったことを示す -1 を戻します。
+        // Could not be found. Returns -1 to indicate it.
         return -1;
     }
 
     /**
-     * アンカー文字列を挿入します。
+     * Inserts an anchor string.
      * 
-     * 処理の後半でインポート文を編成しなおしますが、その際に参照するアンカー文字列を追加しておきます。<br>
-     * このメソッドは他のクラスから呼び出されます。
+     * Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.<br>
+     * This method is called by other classes.
      * 
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     public static final void insertAnchorString(
             final List<java.lang.String> argSourceLines) {
@@ -107,17 +107,17 @@ class BlancoCgImportJsSourceExpander {
     }
 
     /**
-     * アンカー文字列を除去します。
+     * Removes the anchor string.
      * 
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     private static final void removeAnchorString(
             final List<java.lang.String> argSourceLines) {
-        // 最後にアンカー文字列そのものを除去。
+        // Finally, removes the anchor string itself.
         int findReplaceImport2 = findAnchorString(argSourceLines);
         if (findReplaceImport2 < 0) {
-            throw new IllegalArgumentException("import文の置換文字列を発見することができませんでした。");
+            throw new IllegalArgumentException("Could not find the replacement string for the import statement.");
         }
         argSourceLines.remove(findReplaceImport2);
     }

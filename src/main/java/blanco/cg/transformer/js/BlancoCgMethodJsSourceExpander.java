@@ -40,83 +40,83 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgMethodをソースコードに展開します。
+ * Expands BlancoCgMethod into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgMethodJsSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.JS;
 
     /**
-     * ここでメソッドを展開します。
+     * Expands a method here.
      * 
      * @param cgMethod
-     *            処理対象となるメソッド。
+     *            The method to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      */
     public void transformMethod(final BlancoCgClass cgClass,
             final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (BlancoStringUtil.null2Blank(cgMethod.getName()).length() == 0) {
-            throw new IllegalArgumentException("メソッドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The method name is not set to an appropriate value.");
         }
         if (cgMethod.getReturn() == null) {
-            // それはありえます。voidの場合にはnullが指定されるのです。
+            // It is possible; null is specified in the case of void.
         }
 
-        // 改行を付与。
+        // Adds a line break.
         argSourceLines.add("");
 
         prepareExpand(cgClass, cgMethod, argSourceFile);
 
-        // 情報が一式そろったので、ソースコードの実際の展開を行います。
+        // Now that we have a complete set of information, performs the actual expansion of the source code.
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, expands LangDoc into source code format.
         new BlancoCgLangDocJsSourceExpander().transformLangDoc(cgMethod
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgMethod, argSourceLines);
 
-        // メソッドの本体部分を展開。
+        // Expands the body part of the method.
         expandMethodBody(cgClass, cgMethod, argSourceFile, argSourceLines);
     }
 
     /**
-     * クラスに含まれる static なフィールドを展開します。
+     * Expands the static fields contained in the class.
      * 
-     * 現在は 登録順でソースコード展開します。
+     * Currently, the source code is expanded in the order of registration.
      * 
      * @param cgClass
-     *            処理中のクラス。
+     *            A class to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            Line list of source code.
      */
     public void transformStaticFieldList(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgClass.getFieldList() == null) {
-            // フィールドのリストにnullが与えられました。
-            // かならずフィールドのリストにはListをセットしてください。
-            throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
+            // A null was given for the list of fields.
+            // Make sure to set the list of fields to List.
+            throw new IllegalArgumentException("A null was given for the list of fields.");
         }
 
         for (int index = 0; index < cgClass.getFieldList().size(); index++) {
             final BlancoCgField cgField = cgClass.getFieldList().get(index);
 
             if (cgField.getStatic()) {
-                // ここではクラスのフィールド (staticなフィールド) のみを展開します。
+                // Here it will expand only the fields of the class (static fields).
                 new BlancoCgFieldJsSourceExpander().transformField(cgClass,
                         cgField, argSourceFile, argSourceLines);
             }
@@ -124,19 +124,19 @@ class BlancoCgMethodJsSourceExpander {
     }
 
     /**
-     * ソースコード展開に先立ち、必要な情報の収集を行います。
+     * Before source code expansion, gathers the necessary information.
      * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      */
     private void prepareExpand(final BlancoCgClass cgClass,
             final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile) {
-        // 最初にメソッド情報をLangDocに展開。
+        // First, it expands the method information into LangDoc.
         if (cgMethod.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgMethod.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgMethod.getLangDoc().getParameterList() == null) {
@@ -152,7 +152,7 @@ class BlancoCgMethodJsSourceExpander {
         }
 
         if (cgMethod.getConstructor()) {
-            // ファンクション名そのものをLangDocに展開します。
+            // Expands the function name itself into a LangDoc.
             cgMethod.getLangDoc().getTagList().add(
                     BlancoCgObjectFactory.getInstance().createLangDocTag(
                             "class", null, cgClass.getDescription()));
@@ -177,46 +177,46 @@ class BlancoCgMethodJsSourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(indexParameter);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgParameter.getType().getName());
 
-            // 言語ドキュメントにパラメータを追加。
+            // Adds a parameter to the language document.
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
         if (cgMethod.getReturn() != null) {
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(
                     cgMethod.getReturn().getType().getName());
 
-            // 言語ドキュメントにreturnを追加。
+            // Adds return to the language document.
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
         }
 
-        // 例外についてLangDoc構造体に展開
+        // Expands to LangDoc structure for exceptions.
         for (int index = 0; index < cgMethod.getThrowList().size(); index++) {
             final BlancoCgException cgException = cgMethod.getThrowList().get(
                     index);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgException.getType().getName());
 
-            // 言語ドキュメントに例外を追加。
+            // Adds an exception to the language document.
             cgMethod.getLangDoc().getThrowList().add(cgException);
         }
     }
 
     /**
-     * メソッドの本体部分を展開します。
+     * Expands the body part of the method.
      * 
      * @param cgClass
-     *            クラスオブジェクト。
+     *            A class object.
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceFile
-     *            ソースコード。
+     *            Source code.
      * @param argSourceLines
-     *            インタフェースとして展開するかどうか。
+     *            Whether to expand it as an interface.
      */
     private void expandMethodBody(final BlancoCgClass cgClass,
             final BlancoCgMethod cgMethod,
@@ -225,34 +225,34 @@ class BlancoCgMethodJsSourceExpander {
         final StringBuffer buf = new StringBuffer();
 
         if (cgMethod.getConstructor()) {
-            // コンストラクタの場合には functionから始まります。
+            // In the case of a constructor, it starts with function.
             buf.append("function " + cgClass.getName());
         } else {
-            // 通常のメソッドの場合には、コンストラクタの prototypeへのfunctionの追加となります。
+            // In the case of a normal method, it is the addition of a function to the prototype of the constructor.
             buf.append(cgClass.getName() + ".prototype." + cgMethod.getName()
                     + " = function");
         }
 
-        // JavaScriptにはアクセスフラグそのものは存在しません。
-        // JSDocの記述としてアクセスを表現しています。
+        // The access flag itself does not exist in JavaScript.
+        // It expresses access as a JSDoc description.
 
-        // JavaScriptでは言語としては戻り値は出力しません。JSDocの記述としてのみ表現します。
+        // In JavaScript, it does not output the return value, but only as a JSDoc description.
 
         buf.append("(");
         for (int index = 0; index < cgMethod.getParameterList().size(); index++) {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(index);
             if (cgParameter.getType() == null) {
-                throw new IllegalArgumentException("メソッド[" + cgMethod.getName()
-                        + "]のパラメータ[" + cgParameter.getName()
-                        + "]に型がnullが与えられました。");
+                throw new IllegalArgumentException("The parameter [" + cgParameter.getName()
+                        + "] of the method [" + cgMethod.getName()
+                        + "] has been given a null.");
             }
 
             if (index != 0) {
                 buf.append(", ");
             }
 
-            // JavaScriptではfinal修飾は無効です。
+            // The "final" modifier is disabled in JavaScript.
 
             buf.append("/* "
                     + BlancoCgTypeJsSourceExpander.toTypeString(cgParameter
@@ -262,32 +262,32 @@ class BlancoCgMethodJsSourceExpander {
         }
         buf.append(")");
 
-        // 例外スロー展開はJavaScriptには存在しません。
+        // Exception throw expansion does not exist in JavaScript.
 
         if (cgMethod.getAbstract()) {
-            // 抽象メソッドまたはインタフェースの場合には、メソッドの本体を展開しません。
+            // In the case of an abstract method or interface, the body of the method is not expanded.
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
-            // メソッドブロックの開始。
+            // The start of a method block.
             buf.append(" {");
 
-            // ここでいったん、行を確定。
+            // Fixes the line.
             argSourceLines.add(buf.toString());
 
-            // 引数チェックの自動生成を行います。
-            argSourceLines.add("/* パラメータの数、型チェックを行います。 */");
+            // Auto-generates argument checks.
+            argSourceLines.add("/* Performs number and type checks for parameters. */");
             argSourceLines.add(BlancoCgLineUtil.getIfBegin(TARGET_LANG,
                     "arguments.length !== "
                             + cgMethod.getParameterList().size()));
             argSourceLines
-                    .add("throw new Error(\"[ArgumentException]: "
+                    .add("throw new Error(\"[ArgumentException]: The number of parameters in "
                             + cgClass.getName()
                             + "."
                             + cgMethod.getName()
-                            + " のパラメータは["
+                            + " should be ["
                             + cgMethod.getParameterList().size()
-                            + "]個である必要があります。しかし実際には[\" + arguments.length +  \"]個のパラメータを伴って呼び出されました。\");");
+                            + "]. But in fact, they were called with [\" + arguments.length +  \"] parameters.\");");
             argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
 
             for (int indexParameter = 0; indexParameter < cgMethod
@@ -306,71 +306,71 @@ class BlancoCgMethodJsSourceExpander {
                                     + cgParameter.getType().getName()
                                     + " == false"));
                 }
-                argSourceLines.add("throw new Error(\"[ArgumentException]: "
-                        + cgClass.getName() + "." + cgMethod.getName() + " の"
-                        + (indexParameter + 1) + "番目のパラメータは["
+                argSourceLines.add("throw new Error(\"[ArgumentException]: The parameter of the order "
+                        + (indexParameter + 1) + " of "
+                        + cgClass.getName() + "." + cgMethod.getName() + " must be of type ["
                         + cgParameter.getType().getName()
-                        + "]型でなくてはなりません。しかし実際には[\" + typeof("
-                        + cgParameter.getName() + ") + \"]型が与えられました。\");");
+                        + "]. But in fact, it was given the type [\" + typeof("
+                        + cgParameter.getName() + ") + \"].\");");
                 argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
             }
 
             argSourceLines.add("");
 
             if (cgMethod.getConstructor()) {
-                // コンストラクタであるのでフィールドを展開します。
-                // JavaScriptの場合には、クラスにフィールドを展開するのではなくコンストラクタにフィールド展開が存在します。
+                // Expands the field since it is a constructor.
+                // In the case of JavaScript, the field expansion exists in the constructor instead of expanding the field in the class.
                 expandFieldList(cgClass, argSourceFile, argSourceLines);
             }
 
-            // 親クラスメソッド実行機能の展開。
+            // Expands parent class method execution function.
             if (BlancoStringUtil.null2Blank(cgMethod.getSuperclassInvocation())
                     .length() > 0) {
-                // super(引数) などが含まれます。
+                // This includes super(argument), etc.
                 argSourceLines.add(cgMethod.getSuperclassInvocation()
                         + BlancoCgLineUtil.getTerminator(TARGET_LANG));
             }
 
-            // 行を展開します。
+            // Expands a line.
             expandLineList(cgMethod, argSourceLines);
 
-            // メソッドブロックの終了。
+            // The end of a method block.
             if (cgMethod.getConstructor()) {
-                // クラス宣言では最後にセミコロンが付与しません。
+                // A semicolon is not given at the end of a class declaration.
                 argSourceLines.add("}");
             } else {
-                // JavaScriptでは最後にセミコロンが付与されます。
+                // In JavaScript, a semicolon is given at the end.
                 argSourceLines.add("};");
             }
         }
     }
 
     /**
-     * クラスに含まれる各々のフィールドを展開します。
+     * Expands each field contained in the class.
      * 
-     * 現在は 登録順でソースコード展開します。
+     * Currently, the source code is expanded in the order of registration.
      * 
      * @param cgClass
-     *            処理中のクラス。
+     *            The class to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            Source file.
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            A source code line list.
      */
     private void expandFieldList(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgClass.getFieldList() == null) {
-            // フィールドのリストにnullが与えられました。
-            // かならずフィールドのリストにはListをセットしてください。
-            throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
+            // A null was given for the list of fields.
+            // Make sure to set the list of fields to List.
+            throw new IllegalArgumentException("A null was given for the list of fields.");
         }
 
         for (int index = 0; index < cgClass.getFieldList().size(); index++) {
             final BlancoCgField cgField = cgClass.getFieldList().get(index);
 
             if (cgField.getStatic() == false) {
-                // コンストラクタの中で、staticではないフィールドを展開します。
+                // Expands the non-static fields in the constructor.
                 new BlancoCgFieldJsSourceExpander().transformField(cgClass,
                         cgField, argSourceFile, argSourceLines);
             }
@@ -378,19 +378,19 @@ class BlancoCgMethodJsSourceExpander {
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
         if (cgMethod.getOverride()) {
-            // JavaScript言語での override表現は現時点ではサポート外です。
+            // The override expression in JavaScript is not supported at this time.
             throw new IllegalArgumentException(
-                    "現バージョンの blancoCgは JavaScript言語の際にはオーバーライド表現をサポートしません。");
+                    "The current version of blancoCg does not support override expressions in JavaScript.");
             // argSourceLines.add("@Override");
         }
 
@@ -398,20 +398,20 @@ class BlancoCgMethodJsSourceExpander {
             final String strAnnotation = cgMethod.getAnnotationList()
                     .get(index);
             throw new IllegalArgumentException(
-                    "現バージョンの blancoCgは JavaScript言語の際にはアノテーションをサポートしません。"
+                    "The current version of blancoCg does not support annotations in JavaScript."
                             + strAnnotation);
-            // JavaScript言語のAnnotationは不明です。
+            // Annotation of JavaScript is unknown.
             // argSourceLines.add("@" + strAnnotation);
         }
     }
 
     /**
-     * 行を展開します。
+     * Expands the line.
      * 
      * @param cgMethod
-     *            メソッド情報。
+     *            Method information.
      * @param argSourceLines
-     *            出力行リスト。
+     *            List of output lines.
      */
     private void expandLineList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
