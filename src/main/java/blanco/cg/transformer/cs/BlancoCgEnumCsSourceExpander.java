@@ -36,50 +36,50 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgEnumをソースコードへと展開します。
+ * Expands BlancoCgEnum into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgEnumCsSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.JAVA;
 
     /**
-     * ここで列挙体を展開します。
+     * Expands the enumeration here.
      * 
      * @param cgEnum
-     *            処理対象となる列挙体。
+     *            The enumeration to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            Source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an instance or not. False for a class, true for an interface.
      */
     public void transformEnum(final BlancoCgEnum cgEnum,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (BlancoStringUtil.null2Blank(cgEnum.getName()).length() == 0) {
-            throw new IllegalArgumentException("列挙体の名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The enumeration name is not set to an appropriate value.");
         }
 
-        // 有無をいわさず改行を付与します。
+        // Adds a line break inevitably.
         argSourceLines.add("");
 
-        // 最初にフィールド情報をLangDocに展開。
+        // First, it expands the enum information into LangDoc.
         if (cgEnum.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgEnum.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgEnum.getLangDoc().getTitle() == null) {
             cgEnum.getLangDoc().setTitle(cgEnum.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocCsSourceExpander().transformLangDoc(cgEnum
                 .getLangDoc(), argSourceLines);
 
@@ -89,10 +89,10 @@ class BlancoCgEnumCsSourceExpander {
             buf.append(cgEnum.getAccess() + " ");
         }
 
-        // 列挙体生成の本体部分を展開します。
+        // Expands the body part of the enumeration generation.
         buf.append("enum " + cgEnum.getName());
 
-        // 要素を展開します。
+        // Expands the elements.
         buf.append("{");
         boolean isFirstElement = true;
         for (BlancoCgEnumElement element : cgEnum.getElementList()) {
@@ -103,7 +103,7 @@ class BlancoCgEnumCsSourceExpander {
             }
             buf.append(element.getName());
 
-            // デフォルト値を出力。
+            // Outputs the default value.
             if (BlancoStringUtil.null2Blank(element.getDefault()).length() > 0) {
                 buf.append(" = " + element.getDefault());
             }

@@ -33,85 +33,85 @@ import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
- * BlancoCgSourceFileのなかの import情報を展開します。
+ * Expands the import information in the BlancoCgSourceFile.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。<br>
- * import展開は意外にも複雑な処理です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.<br>
+ * import expansion is a surprisingly complex process.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgImportCsSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.CS;
 
     /**
-     * import文を展開するためのアンカー文字列。
+     * An anchor string to expand the import statement.
      */
     private static final String REPLACE_IMPORT_HERE = "/*replace import here*/";
 
     /**
-     * 発見されたアンカー文字列のインデックス。
+     * Index of found anchor string.
      * 
-     * このクラスの処理の過程で import文が編集されますが、その都度 この値も更新されます。
+     * Whenever the import statement is edited in the process of this class, this value will also be updated.
      */
     private int fFindReplaceImport = -1;
 
     /**
-     * importを展開します。
+     * Expands import.
      * 
-     * このメソッドはクラス展開・メソッド展開など一式が終了した後に呼び出すようにします。
+     * This method is called after the completion of class expansion, method expansion, etc.
      * 
      * @param argSourceFile
-     *            ソースファイルインスタンス。
+     *            A source file instance.
      * @param argSourceLines
-     *            ソース行イメージ。(java.lang.Stringが格納されます)
+     *             A source line image. (java.lang.String will be stored)
      */
     public void transformImport(final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // import対象のクラス名終端に付与されている配列表現を除去します。
+        // Removes the array representation attached to the end of the class name to be imported.
         trimArraySuffix(argSourceFile.getImportList());
 
-        // import(using)のリストからクラス名を除去します。
+        // Removes the class name from the import (using) list.
         trimClassName(argSourceFile);
 
-        // 最初にimport文をソートして処理を行いやすくします。
+        // First, sorts the import statements to make it easier to process.
         sortImport(argSourceFile.getImportList());
 
-        // 重複するimport文を除去します。
+        // Removes duplicate import statements.
         trimRepeatedImport(argSourceFile.getImportList());
 
-        // importする必要のないクラスを除去します
+        // Removes classes that do not need to be imported.
         trimUnnecessaryImport(argSourceFile.getImportList());
 
-        // 自クラスが所属するパッケージに対するimportを抑制します。
+        // Suppresses import for packages belonging to its own class.
         trimMyselfImport(argSourceFile, argSourceFile.getImportList());
 
-        // アンカー文字列を検索します。
+        // Searches for an anchor string.
         fFindReplaceImport = findAnchorString(argSourceLines);
         if (fFindReplaceImport < 0) {
-            throw new IllegalArgumentException("import文の置換文字列を発見することができませんでした。");
+            throw new IllegalArgumentException("Could not find the replacement string for the import statement.");
         }
 
-        // 最初に「System」パッケージを展開します。
+        // First, expands the "System" package.
         expandImportWithTarget(argSourceFile, "System", argSourceLines);
 
-        // 最後に「System」以外のパッケージを展開します。
+        // Then, expands the packages other than "System".
         expandImportWithTarget(argSourceFile, null, argSourceLines);
 
-        // アンカー文字列を除去します。
+        // Removes the anchor string.
         removeAnchorString(argSourceLines);
     }
 
     /**
-     * import(using)のリストからクラス名を除去します。
+     * Removes the class name from the import (using) list.
      * 
-     * これは、C#.NETでは名前空間単位のusing指定を行うからです。<br>
-     * まずクラス名を除去して皇族の処理を実行します。
+     * This is because C#.NET specifies "using" per-namespace.<br>
+     * First, removes the class name and executes the subsequent process.
      * 
      * @param argSourceFile
-     *            ソースファイルオブジェクト。
+     *            A source file object.
      */
     private void trimClassName(final BlancoCgSourceFile argSourceFile) {
         for (int index = 0; index < argSourceFile.getImportList().size(); index++) {
@@ -125,13 +125,13 @@ class BlancoCgImportCsSourceExpander {
     }
 
     /**
-     * 展開対象となるターゲットを意識してインポートを展開します。
+     * Expands the import with the target of the expansion in mind.
      * 
      * @param argSourceFile
      * @param argTarget
-     *            java. または javax. または nullを指定します。
+     *            Specifies java. or javax. or null.
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            A source code line list.
      */
     private void expandImportWithTarget(final BlancoCgSourceFile argSourceFile,
             final String argTarget, final List<java.lang.String> argSourceLines) {
@@ -140,15 +140,15 @@ class BlancoCgImportCsSourceExpander {
             final String strImport = argSourceFile.getImportList().get(index);
 
             if (argTarget == null) {
-                // System. 以外を展開します。
+                // Expands all except "System.".
                 if (strImport.startsWith("System")) {
-                    // 処理対象とするパッケージ以外であるので、処理をスキップします。
-                    // ※System. はハードコードされている点に注意してください。
+                    // Skips the process since this is not the package to be processed.
+                    // Note that "System." is hard-coded.
                     continue;
                 }
             } else {
                 if (strImport.startsWith(argTarget) == false) {
-                    // 処理対象とするパッケージ以外であるので、処理をスキップします。
+                    // Skips the process since this is not the package to be processed.
                     continue;
                 }
             }
@@ -159,40 +159,40 @@ class BlancoCgImportCsSourceExpander {
         }
 
         if (isProcessed) {
-            // import展開処理が存在した場合にのみ空白を付与します。
+            // Adds a blank only if the import expansion process exists.
             argSourceLines.add(fFindReplaceImport++, "");
         }
     }
 
     /**
-     * 置換アンカー文字列の行数(0オリジン)を検索します。
+     * Searches for the number of lines (0-origin) in the replacement anchor string.
      * 
-     * @return 発見したアンカー文字列の位置(0オリジン)。発見できなかった場合には-1。
+     * @return Position of the found anchor string (0-origin). If not found, -1.
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     private static final int findAnchorString(
             final List<java.lang.String> argSourceLines) {
         for (int index = 0; index < argSourceLines.size(); index++) {
             final String line = argSourceLines.get(index);
             if (line.equals(REPLACE_IMPORT_HERE)) {
-                // 発見しました。
+                // Found it.
                 return index;
             }
         }
 
-        // 発見できませんでした。発見できなかったことを示す -1 を戻します。
+        // Could not be found. Returns -1 to indicate it.
         return -1;
     }
 
     /**
-     * アンカー文字列を挿入します。
+     * Inserts an anchor string.
      * 
-     * 処理の後半でインポート文を編成しなおしますが、その際に参照するアンカー文字列を追加しておきます。<br>
-     * このメソッドは他のクラスから呼び出されます。
+     * Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.<br>
+     * This method is called by other classes.
      * 
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     public static final void insertAnchorString(
             final List<java.lang.String> argSourceLines) {
@@ -200,41 +200,41 @@ class BlancoCgImportCsSourceExpander {
     }
 
     /**
-     * アンカー文字列を除去します。
+     * Removes the anchor string.
      * 
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     private static final void removeAnchorString(
             final List<java.lang.String> argSourceLines) {
-        // 最後にアンカー文字列そのものを除去。
+        // Finally, removes the anchor string itself.
         int findReplaceImport2 = findAnchorString(argSourceLines);
         if (findReplaceImport2 < 0) {
-            throw new IllegalArgumentException("import文の置換文字列を発見することができませんでした。");
+            throw new IllegalArgumentException("Could not find the replacement string for the import statement.");
         }
         argSourceLines.remove(findReplaceImport2);
     }
 
     /**
-     * 与えられたimportをソートします。
+     * Sorts the given imports.
      * 
-     * 想定されるノードの型(java.lang.String)以外が与えられると、例外が発生します。
+     * If a node type other than the expected one (java.lang.String) is given, an exception is raised.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private static final void sortImport(final List<java.lang.String> argImport) {
         Collections.sort(argImport, new Comparator<java.lang.String>() {
             public int compare(final String arg0, final String arg1) {
                 if (arg0 instanceof String == false) {
-                    throw new IllegalArgumentException("importのリストの値ですが、["
-                            + arg0 + "]ですが java.lang.String以外の型["
-                            + arg0.getClass().getName() + "]になっています。");
+                    throw new IllegalArgumentException("The value ["
+                            + arg0 + "] in the import list is a type ["
+                            + arg0.getClass().getName() + "] other than java.lang.String.");
                 }
                 if (arg1 instanceof String == false) {
-                    throw new IllegalArgumentException("importのリストの値ですが、["
-                            + arg1 + "]ですが java.lang.String以外の型["
-                            + arg1.getClass().getName() + "]になっています。");
+                    throw new IllegalArgumentException("The value ["
+                            + arg1 + "] in the import list is a type ["
+                            + arg1.getClass().getName() + "] other than java.lang.String.");
                 }
                 final String str0 = (String) arg0;
                 final String str1 = (String) arg1;
@@ -244,16 +244,16 @@ class BlancoCgImportCsSourceExpander {
     }
 
     /**
-     * import対象のクラス名終端に付与されている配列表現を除去します。
+     * Removes the array representation attached to the end of the class name to be imported.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private void trimArraySuffix(final List<java.lang.String> argImport) {
         for (int index = 0; index < argImport.size(); index++) {
             String strImport = argImport.get(index);
             for (;;) {
-                // 配列表現で終了している限り繰り返します。
+                // Iterates as long as it ends with the array representation.
                 if (strImport.endsWith("[]")) {
                     strImport = strImport.substring(0, strImport.length() - 2);
                     argImport.set(index, strImport);
@@ -265,39 +265,39 @@ class BlancoCgImportCsSourceExpander {
     }
 
     /**
-     * 重複する不要なimportを除去します。
+     * Removes a duplicate import.
      * 
-     * このメソッドは、与えられたListが既にソート済みであることを前提とします。
+     * This method assumes that the given list has already been sorted.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private void trimRepeatedImport(final List<java.lang.String> argImport) {
-        // 重複するimportを除去。
+        // Removes a duplicate import.
         String pastImport = "";
         for (int index = argImport.size() - 1; index >= 0; index--) {
             final String strImport = argImport.get(index);
             if (pastImport.equals(strImport)) {
-                // 既に処理されている重複するimportです。不要なのでこれを除去します。
+                // This is a already processed import. Removes it.
                 argImport.remove(index);
             }
-            // 今回のimportを前回分importとして記憶します。
+            // The current import is stored as the previous import.
             pastImport = strImport;
         }
     }
 
     /**
-     * importする必要のないクラスを除去します。
+     * Removes classes that do not need to be imported.
      * 
-     * 具体的には java.lang や プリミティブ型が不要と判断される対象です。
+     * Specifically, java.lang and primitive types will be considered to be unnecessary.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private void trimUnnecessaryImport(final List<java.lang.String> argImport) {
-        // まずはプリミティブ型を除去します。
+        // First, it removes primitive types.
         for (int index = argImport.size() - 1; index >= 0; index--) {
-            // ソート時点で型チェックは実施済みです。
+            // Type checking has been performed at the time of sorting.
             final String strImport = argImport.get(index);
 
             if (BlancoCgTypeCsSourceExpander
@@ -308,12 +308,12 @@ class BlancoCgImportCsSourceExpander {
     }
 
     /**
-     * 自分自身が所属するパッケージのimportを除去します。
+     * Removes import for packages belonging to its own class.
      * 
      * @param argSourceFile
-     *            ソースファイルインスタンス。
+     *            A source file instance.
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private void trimMyselfImport(final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argImport) {
@@ -321,22 +321,22 @@ class BlancoCgImportCsSourceExpander {
     }
 
     /**
-     * 特定のパッケージについて、これをリストから除去します。
+     * For a particular package, removes it from the list.
      * 
-     * 自クラスが所属するパッケージの除去に利用されます。
+     * It is used to remove java.lang and the package to which its class belongs.
      * 
      * @param argSpecificPackage
-     *            処理対象とするパッケージ。
+     *            The package to be processed.
      * @param argImport
-     *            インポートのリスト。
+     *            A list of imports.
      */
     private static void trimSpecificPackage(final String argSpecificPackage,
             final List<java.lang.String> argImport) {
         for (int index = argImport.size() - 1; index >= 0; index--) {
-            // ソート時点で型チェックは実施済みです。
+            // Type checking has been performed at the time of sorting.
             final String strImport = argImport.get(index);
 
-            // C#.NETでは名前空間が格納されています。名前空間同士を直接比較します。
+            // Namespaces are stored in C#.NET. They are directly compared with each other.
             if (argSpecificPackage.equals(strImport)) {
                 argImport.remove(index);
             }

@@ -116,7 +116,7 @@ class BlancoCgImportPythonSourceExpander {
      * 
      * @param argSourceFile
      * @param argTarget
-     *            Specify java. or javax. or null.
+     *            Specifies java. or javax. or null.
      * @param argSourceLines
      *            A source code line list.
      */
@@ -283,7 +283,7 @@ class BlancoCgImportPythonSourceExpander {
      *            A list of imports.
      */
     private void trimUnnecessaryImport(final List<java.lang.String> argImport) {
-        // Firstm it removes primitive types.
+        // First, it removes primitive types.
         for (int index = argImport.size() - 1; index >= 0; index--) {
             // Type checking has been performed at the time of sorting.
             final String strImport = argImport.get(index);

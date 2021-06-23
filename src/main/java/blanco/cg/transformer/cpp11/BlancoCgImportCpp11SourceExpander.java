@@ -112,7 +112,7 @@ class BlancoCgImportCpp11SourceExpander {
      * 
      * @param argSourceFile
      * @param argTarget
-     *            Specify java. or javax. or null.
+     *            Specifies java. or javax. or null.
      * @param argSourceLines
      *            A source code line list.
      */
