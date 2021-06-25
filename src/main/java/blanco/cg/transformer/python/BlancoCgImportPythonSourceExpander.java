@@ -348,7 +348,7 @@ class BlancoCgImportPythonSourceExpander {
             final String strImport = argImport.get(index);
 
             if (strImport.indexOf(".") < 0) {
-                // It should be removed from the list of candidates since it has no package structure.
+                // It is removed from the list of candidates since it has no package structure.
                 continue;
             }
 

@@ -194,7 +194,7 @@ class BlancoCgMethodPythonSourceExpander {
         // buf.append("static ");
         // }
         // if (cgMethod.getFinal() && argIsInterface == false) {
-        // // In the case of an interface, "final" is not given.
+        // // Note: "final" is not given in the case of interface.
         // buf.append("final ");
         // }
 

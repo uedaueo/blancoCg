@@ -34,49 +34,48 @@ import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgSourceFileをソースコードに展開します。
- *
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * Expands BlancoCgSourceFile into source code.
+ * 
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
  */
 class BlancoCgSourceFileJavaSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.JAVA;
 
     /**
-     * 入力となるソースコード構造。
+     * The input source code structure.
      */
     private BlancoCgSourceFile fCgSourceFile = null;
 
     /**
-     * 中間的に利用するソースコードをあらわすList。java.lang.Stringがリストに格納されます。(BlancoCgLineではありません。
-     * )
-     *
-     * ここでは整形前ソースコードが中間的にたくわえられます。
+     * List indicating the source code to be used intermediately. java.lang.String will be stored (It is not BlancoCgLine).
+     * 
+     * The unformatted source code will be stored in the interim here.
      */
     private List<java.lang.String> fSourceLines = null;
 
     /**
-     * SourceFileから整形前ソースコードリストを生成します。
-     *
+     * Generates a list of unformatted source code from SourceFile.
+     * 
      * @param argSourceFile
-     *            ソースコードをあらわすバリューオブジェクト。
-     * @return ソースコードに展開後のリスト。
+     *            A value object representing the source code.
+     * @return A list after expansion into source code.
      */
     public List<java.lang.String> transformSourceFile(
             final BlancoCgSourceFile argSourceFile) {
-        // 確実にソース行のリストを初期化します。
+        // Definitely initializes the list of source lines.
         fSourceLines = new ArrayList<java.lang.String>();
 
         fCgSourceFile = argSourceFile;
 
-        // ソースファイルのファイルヘッダーを出力処理します。
+        // Outputs the file headers of the source file.
         expandSourceFileHeader();
 
-        // パッケージ部分の生成。
+        // Generates the package part.
         if (BlancoStringUtil.null2Blank(fCgSourceFile.getPackage()).length() > 0) {
             fSourceLines.add("package " + fCgSourceFile.getPackage()
                     + BlancoCgLineUtil.getTerminator(TARGET_LANG));
@@ -84,39 +83,39 @@ class BlancoCgSourceFileJavaSourceExpander {
         }
 
         if (fCgSourceFile.getImportList() == null) {
-            throw new IllegalArgumentException("importのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of imports has been given a null value.");
         }
 
-        // 処理の後半でインポート文を編成しなおしますが、その際に参照するアンカー文字列を追加しておきます。
+        // Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.
         BlancoCgImportJavaSourceExpander.insertAnchorString(fSourceLines);
 
-        // 列挙体の展開を実施します。
+        // Performs enumeration expansion.
         for (BlancoCgEnum cgEnum : fCgSourceFile.getEnumList()) {
             new BlancoCgEnumJavaSourceExpander().transformEnum(cgEnum,
                     argSourceFile, fSourceLines);
         }
 
-        // インタフェースの展開を実施します。
+        // Performs interface expansion.
         if (fCgSourceFile.getInterfaceList() == null) {
-            throw new IllegalArgumentException("インタフェースのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of interfaces has been given a null value.");
         }
         for (BlancoCgInterface cgInterface : fCgSourceFile.getInterfaceList()) {
             new BlancoCgInterfaceJavaSourceExpander().transformInterface(
                     cgInterface, fCgSourceFile, fSourceLines);
         }
 
-        // クラスの展開を実施します。
+        // Performs class expansion.
         if (fCgSourceFile.getClassList() == null) {
-            throw new IllegalArgumentException("クラスのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of classes has been given a null value.");
         }
         for (BlancoCgClass cgClass : fCgSourceFile.getClassList()) {
             new BlancoCgClassJavaSourceExpander().transformClass(cgClass,
                     fCgSourceFile, fSourceLines);
         }
 
-        // importの展開をします。
-        // この処理が、クラス展開より後に実施されているのには意味があります。
-        // クラス展開などを経て、初めてインポート文の一覧が確定するからです。
+        // Expands import.
+        // There is a reason why this process is done after the class expansion.
+        // This is because the list of import statements can be finalized only after the class expansion, etc.
         new BlancoCgImportJavaSourceExpander().transformImport(fCgSourceFile,
                 fSourceLines);
 
@@ -124,15 +123,15 @@ class BlancoCgSourceFileJavaSourceExpander {
     }
 
     /**
-     * ソースファイルのファイルヘッダーを出力処理します。
+     * Outputs the file headers of the source file.
      */
     private void expandSourceFileHeader() {
         if (BlancoStringUtil.null2Blank(fCgSourceFile.getDescription()).length() == 0
                 && BlancoStringUtil.null2Blank(fCgSourceFile.getLangDoc().getTitle()).length() == 0
                 && fCgSourceFile.getLangDoc().getDescriptionList().size() == 0
                 ) {
-            // 言語コメントが全く指定されない場合には出力を抑止します。
-            // 当初デフォルトコメントを出力していましたがこれは廃止しました。
+            // If no language comments are specified at all, output is suppressed.
+            // Initially, the default comments were output, but this has been removed.
             return;
         }
 
@@ -141,7 +140,7 @@ class BlancoCgSourceFileJavaSourceExpander {
             fSourceLines.add("* " + fCgSourceFile.getDescription());
         }
 
-        // 言語ドキュメントの中間部を生成します。
+        // Generates the intermediate part of a language document.
         new BlancoCgLangDocJavaSourceExpander().transformLangDocBody(
                 fCgSourceFile.getLangDoc(), fSourceLines);
 
@@ -150,7 +149,7 @@ class BlancoCgSourceFileJavaSourceExpander {
 
 
     /**
-     * Add import statement for fully qualified class name.
+     * Adds import statement for fully qualified class name.
      *
      * @param argCgType
      * @param argSourceFile

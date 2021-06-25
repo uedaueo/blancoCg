@@ -33,41 +33,41 @@ import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgLangDoc(言語ドキュメント)をソースコードに展開します。
- *
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。<br>
- * クラス、メソッド、フィールドなど、各種言語ドキュメントを展開する共通処理です。
+ * Expands BlancoCgLangDoc (language document) into source code.
+ * 
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.<br>
+ * This is a common process to expand various language documents such as classes, methods, and fields.
  *
  * @author IGA Tosiki
  */
 class BlancoCgLangDocJavaSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.JAVA;
 
     /**
-     * 言語ドキュメント情報を元にソースコードを展開します。
-     *
+     * Expands the source code based on the language document information.
+     * 
      * @param langDoc
-     *            言語ドキュメント情報。
+     *            The language document information.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformLangDoc(final BlancoCgLangDoc langDoc,
             final List<java.lang.String> argSourceLines) {
         argSourceLines.add("/**");
 
-        // 開始・終了を除く本体を展開します。
+        // Expands the main body except for the start and end.
         transformLangDocBody(langDoc, argSourceLines);
 
         argSourceLines.add("*/");
     }
 
     /**
-     * 言語ドキュメントのうち、本体部分を展開します。
-     *
-     * このメソッドはソースファイルのファイルヘッダー展開からも利用されています。
+     * Expands the main body of the language document.
+     * 
+     * This method is also used from the file header expansion of the source file.
      *
      * @param langDoc
      * @param argSourceLines
@@ -79,7 +79,7 @@ class BlancoCgLangDocJavaSourceExpander {
         if (BlancoStringUtil.null2Blank(langDoc.getTitle()).length() > 0) {
             isLangDocTitleStarted = true;
 
-            // 改行が含まれている場合、適切に分割する。
+            // If it contains a line break, splits the string appropriately.
             for (String line : BlancoNameUtil.splitString(BlancoCgSourceUtil
                     .escapeStringAsLangDoc(TARGET_LANG, langDoc.getTitle()),
                     '\n')) {
@@ -87,11 +87,11 @@ class BlancoCgLangDocJavaSourceExpander {
             }
         }
 
-        // 空行が挿入済みかどうかをチェックするためのフラグ。
+        // Flag to check if a blank line has already been inserted.
         boolean isLangDocDescriptionStarted = false;
 
         for (String strDescrption : langDoc.getDescriptionList()) {
-            // 空行挿入。
+            // Inserts a blank line.
             if (isLangDocDescriptionStarted == false) {
                 isLangDocDescriptionStarted = true;
                 if (isLangDocTitleStarted) {
@@ -99,19 +99,19 @@ class BlancoCgLangDocJavaSourceExpander {
                 }
             }
 
-            // 改行が含まれている場合、適切に分割する。
+            // If it contains a line break, splits the string appropriately.
             for (String line : BlancoNameUtil.splitString(strDescrption, '\n')) {
                 argSourceLines.add("* " + line);
             }
         }
 
-        // 空行が挿入済みかどうかをチェックするためのフラグ。
+        // Flag to check if a blank line has already been inserted.
         boolean isLangDocTagStarted = false;
 
-        // authorなど付加情報を展開。
+        // Expands additional information such as author.
         if (langDoc.getTagList() != null) {
             for (BlancoCgLangDocTag langDocTag : langDoc.getTagList()) {
-                // 空行挿入。
+                // Inserts a blank line.
                 if (isLangDocTagStarted == false) {
                     isLangDocTagStarted = true;
                     argSourceLines.add("*");
@@ -119,12 +119,12 @@ class BlancoCgLangDocJavaSourceExpander {
 
                 if (langDocTag.getName() == null) {
                     throw new IllegalArgumentException(
-                            "BlancoCgLangDocTagのnameにnullが与えられました。"
+                            "A null was given for the name of BlancoCgLangDocTag."
                                     + langDocTag.toString());
                 }
                 if (langDocTag.getValue() == null) {
                     throw new IllegalArgumentException(
-                            "BlancoCgLangDocTagのvalueにnullが与えられました。"
+                            "A null was given for the value of BlancoCgLangDocTag."
                                     + langDocTag.toString());
                 }
 
@@ -139,9 +139,9 @@ class BlancoCgLangDocJavaSourceExpander {
             }
         }
 
-        // メソッドパラメータを展開。
+        // Expands method parameters.
         for (BlancoCgParameter cgParameter : langDoc.getParameterList()) {
-            // 空行挿入。
+            // Inserts a blank line.
             if (isLangDocTagStarted == false) {
                 isLangDocTagStarted = true;
                 argSourceLines.add("*");
@@ -158,9 +158,9 @@ class BlancoCgLangDocJavaSourceExpander {
             argSourceLines.add(bufParameter.toString());
         }
 
-        // Expand virtual parameters
+        // Expands virtual parameters.
         for (BlancoCgVirtualParameter cgVirtualParameter : langDoc.getVirtualParameterList()) {
-            // insert empty line
+            // Inserts a blank line.
             if (isLangDocTagStarted == false) {
                 isLangDocTagStarted = true;
                 argSourceLines.add("*");
@@ -180,7 +180,7 @@ class BlancoCgLangDocJavaSourceExpander {
         if (langDoc.getReturn() != null
                 && langDoc.getReturn().getType().getName().equals("void") == false) {
 
-            // 空行挿入。
+            // Inserts a blank line.
             if (isLangDocTagStarted == false) {
                 isLangDocTagStarted = true;
                 argSourceLines.add("*");
@@ -197,9 +197,9 @@ class BlancoCgLangDocJavaSourceExpander {
             argSourceLines.add(bufReturn.toString());
         }
 
-        // throwsリストを展開。
+        // Expands the throws list.
         for (BlancoCgException cgException : langDoc.getThrowList()) {
-            // 空行挿入。
+            // Inserts a blank line.
             if (isLangDocTagStarted == false) {
                 isLangDocTagStarted = true;
                 argSourceLines.add("*");
@@ -207,8 +207,8 @@ class BlancoCgLangDocJavaSourceExpander {
 
             final StringBuffer bufThrow = new StringBuffer();
 
-            // 言語ドキュメント処理においては、blancoCgのTypeに関する共通処理を利用することはできません。
-            // 個別に記述を行います。
+            // For language document processing, blancoCg's common processing for Type cannot be used.
+            // Describes individually.
             bufThrow.append("* @throws "
                     + BlancoNameUtil.trimJavaPackage(cgException.getType()
                             .getName()));

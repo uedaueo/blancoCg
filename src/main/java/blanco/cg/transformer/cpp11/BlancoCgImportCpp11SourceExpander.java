@@ -97,7 +97,7 @@ class BlancoCgImportCpp11SourceExpander {
             throw new IllegalArgumentException("Could not find the replacement string for the import statement.");
         }
 
-        // First it expands the "System" package.
+        // First, it expands the "System" package.
         expandImportWithTarget(argSourceFile, "System", argSourceLines);
 
         // Finally, it expands the packages other than "System".
