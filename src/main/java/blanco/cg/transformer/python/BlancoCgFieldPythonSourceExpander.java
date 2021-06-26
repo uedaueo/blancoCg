@@ -43,7 +43,7 @@ class BlancoCgFieldPythonSourceExpander {
     /**
      * The programming language to be processed by this class.
      */
-    protected static final int TARGET_LANG = BlancoCgSupportedLang.JAVA;
+    protected static final int TARGET_LANG = BlancoCgSupportedLang.PYTHON;
 
     /**
      * Expands a field here.

@@ -76,7 +76,7 @@ class BlancoCgInterfaceCpp11SourceExpander {
         if (BlancoStringUtil.null2Blank(cgInterface.getAccess()).length() > 0) {
             buf.append(cgInterface.getAccess() + ": ");
         }
-        // Static and final are not expanded.
+        // static and final are not expanded.
         buf.append("interface " + cgInterface.getName());
 
         // Expands the parent class here.

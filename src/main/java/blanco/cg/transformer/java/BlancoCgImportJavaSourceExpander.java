@@ -295,7 +295,7 @@ class BlancoCgImportJavaSourceExpander {
         }
 
         // Next, it removes java.lang.
-        // This is because in Java, java.lang is the package that is implicitly imported.
+        // This is because in Java, java.lang is implicitly imported.
         trimSpecificPackage("java.lang", argImport);
     }
 

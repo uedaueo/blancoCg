@@ -78,7 +78,7 @@ class BlancoCgInterfaceJavaSourceExpander {
         if (BlancoStringUtil.null2Blank(cgInterface.getAccess()).length() > 0) {
             buf.append(cgInterface.getAccess() + " ");
         }
-        // Static and final are not expanded.
+        // static and final are not expanded.
         if (cgInterface.getDefineAnnotation()) {
             buf.append("@interface " + cgInterface.getName());
         } else {

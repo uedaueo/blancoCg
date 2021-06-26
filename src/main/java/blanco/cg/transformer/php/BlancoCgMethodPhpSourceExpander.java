@@ -38,31 +38,31 @@ import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgMethodをソースコードに展開します。
+ * Expands BlancoCgMethod into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgMethodPhpSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.PHP;
 
     /**
-     * ここでメソッドを展開します。
+     * Expands a method here.
      * 
      * @param strClassName
-     *            クラス名。
+     *            A class name.
      * @param cgMethod
-     *            処理対象となるメソッド。
+     *            The method to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an instance or not. False for a class, true for an interface.
      */
     public void transformMethod(final String strClassName,
             final BlancoCgMethod cgMethod,
@@ -70,44 +70,44 @@ class BlancoCgMethodPhpSourceExpander {
             final List<java.lang.String> argSourceLines,
             final boolean argIsInterface) {
         if (BlancoStringUtil.null2Blank(cgMethod.getName()).length() == 0) {
-            throw new IllegalArgumentException("メソッドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The method name is not set to an appropriate value.");
         }
         if (cgMethod.getReturn() == null) {
-            // それはありえます。voidの場合にはnullが指定されるのです。
+            // It is possible; null is specified in the case of void.
         }
 
-        // 改行を付与。
+        // Adds a line break.
         argSourceLines.add("");
 
         prepareExpand(cgMethod, argSourceFile);
 
-        // 情報が一式そろったので、ソースコードの実際の展開を行います。
+        // Now that we have a complete set of information, performs the actual expansion of the source code.
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocPhpSourceExpander().transformLangDoc(cgMethod
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgMethod, argSourceLines);
 
-        // メソッドの本体部分を展開。
+        // Expands the body part of the method.
         expandMethodBody(strClassName, cgMethod, argSourceFile, argSourceLines,
                 argIsInterface);
     }
 
     /**
-     * ソースコード展開に先立ち、必要な情報の収集を行います。
+     * Before source code expansion, gathers the necessary information.
      * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      */
     private void prepareExpand(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile) {
-        // 最初にメソッド情報をLangDocに展開。
+        // First, it expands the method information into LangDoc.
         if (cgMethod.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgMethod.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgMethod.getLangDoc().getParameterList() == null) {
@@ -127,46 +127,46 @@ class BlancoCgMethodPhpSourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(indexParameter);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgParameter.getType().getName());
 
-            // 言語ドキュメントにパラメータを追加。
+            // Adds a parameter to the language document.
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
         if (cgMethod.getReturn() != null) {
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(
                     cgMethod.getReturn().getType().getName());
 
-            // 言語ドキュメントにreturnを追加。
+            // Adds return to the language document.
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
         }
 
-        // 例外についてLangDoc構造体に展開
+        // Expands to LangDoc structure for exceptions.
         for (int index = 0; index < cgMethod.getThrowList().size(); index++) {
             final BlancoCgException cgException = cgMethod.getThrowList().get(
                     index);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgException.getType().getName());
 
-            // 言語ドキュメントに例外を追加。
+            // Adds an exception to the language document.
             cgMethod.getLangDoc().getThrowList().add(cgException);
         }
     }
 
     /**
-     * メソッドの本体部分を展開します。
+     * Expands the body part of the method.
      * 
      * @param strClassName
-     *            クラス名。
+     *            A class name.
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      * @param argIsInterface
-     *            インタフェースとして展開するかどうか。
+     *            Whether it is an instance or not.
      */
     private void expandMethodBody(final String strClassName,
             final BlancoCgMethod cgMethod,
@@ -177,27 +177,27 @@ class BlancoCgMethodPhpSourceExpander {
 
         if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
             if (argIsInterface && cgMethod.getAccess().equals("public")) {
-                // インタフェース且つpublicの場合には出力を抑制します。
-                // これはCheckstyle対策となります。
+                // If it's an interface and public, the output is suppressed.
+                // This is a countermeasure to Checkstyle.
             } else {
                 buf.append(cgMethod.getAccess() + " ");
             }
         }
 
         if (cgMethod.getAbstract() && argIsInterface == false) {
-            // ※インタフェースの場合には abstractは付与しません。
+            // Note: "abstract" is not given in the case of interface.
             buf.append("abstract ");
         }
         if (cgMethod.getStatic()) {
             buf.append("static ");
         }
         if (cgMethod.getFinal() && argIsInterface == false) {
-            // ※インタフェースの場合には finalは付与しません。
+            // Note: "final" is not given in the case of interface.
             buf.append("final ");
         }
 
-        // PHPの場合には、コンストラクタの場合にも、戻り値を出力させます。
-        // これは PHPLintの現状の仕様に対応させるためのものです。
+        // In the case of PHP, a constructor will also output the return value.
+        // This is to keep up with the current specification of PHPLint.
         if (cgMethod.getReturn() != null
                 && cgMethod.getReturn().getType() != null) {
             buf.append("/*."
@@ -212,7 +212,7 @@ class BlancoCgMethodPhpSourceExpander {
         buf.append("function ");
 
         if (cgMethod.getConstructor()) {
-            // コンストラクタの場合、メソッド名は利用されません。
+            // In the case of a constructor, the method name will not be used.
             buf.append("__construct(");
         } else {
             buf.append(cgMethod.getName() + "(");
@@ -222,9 +222,9 @@ class BlancoCgMethodPhpSourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(index);
             if (cgParameter.getType() == null) {
-                throw new IllegalArgumentException("メソッド[" + cgMethod.getName()
-                        + "]のパラメータ[" + cgParameter.getName()
-                        + "]の型にnullが与えられました。");
+                throw new IllegalArgumentException("The parameter [" + cgParameter.getName()
+                        + "] of the method [" + cgMethod.getName()
+                        + "] has been given a null.");
             }
 
             if (index != 0) {
@@ -232,7 +232,7 @@ class BlancoCgMethodPhpSourceExpander {
             }
 
             if (cgParameter.getFinal()) {
-                // PHP5ではパラメータのfinalはありません。
+                // There is no final of parameter in PHP5.
                 // buf.append("final ");
             }
             buf.append("/*.");
@@ -244,37 +244,37 @@ class BlancoCgMethodPhpSourceExpander {
         }
         buf.append(")");
 
-        // 例外スローを展開。
+        // Expands the exception throw.
         expandThrowList(cgMethod, buf);
 
         if (cgMethod.getAbstract() || argIsInterface) {
-            // 抽象メソッドまたはインタフェースの場合には、メソッドの本体を展開しません。
+            // In the case of an abstract method or interface, the body of the method is not expanded.
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
-            // メソッドブロックの開始。
+            // The start of a method block.
             buf.append(" {");
 
-            // ここでいったん、行を確定。
+            // Fixes the line.
             argSourceLines.add(buf.toString());
 
-            argSourceLines.add("/* パラメータの数、型チェックを行います。 */");
+            argSourceLines.add("/* Performs number and type checks for parameters. */");
             argSourceLines.add(BlancoCgLineUtil
                     .getIfBegin(TARGET_LANG, "func_num_args() !== "
                             + cgMethod.getParameterList().size()));
 
-            // standardをimport
+            // Imports "standard".
             argSourceFile.getImportList().add("standard.Exception");
             argSourceLines.add("throw new \\Exception("
                     + BlancoCgLineUtil.getStringLiteralEnclosure(TARGET_LANG)
-                    + "[ArgumentException]: " + strClassName + "."
-                    + cgMethod.getName() + " のパラメータは["
+                    + "[ArgumentException]: The number of parameters in " + strClassName + "."
+                    + cgMethod.getName() + " should be ["
                     + cgMethod.getParameterList().size()
-                    + "]個である必要があります。しかし実際には["
+                    + "]. But in fact, they were called with ["
                     + BlancoCgLineUtil.getStringLiteralEnclosure(TARGET_LANG)
                     + " . func_num_args() .  "
                     + BlancoCgLineUtil.getStringLiteralEnclosure(TARGET_LANG)
-                    + "]個のパラメータを伴って呼び出されました。"
+                    + "] parameters."
                     + BlancoCgLineUtil.getStringLiteralEnclosure(TARGET_LANG)
                     + ");");
             argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
@@ -288,8 +288,8 @@ class BlancoCgMethodPhpSourceExpander {
                                 .null2Blank(cgParameter.getType().getName()))) {
                     String typeName = cgParameter.getType().getName();
                     if (typeName.equals("float")) {
-                        // PHPは歴史的な理由により floatはdoubleを返すとのこと。
-                        // 参考: http://www.php.net/manual/ja/function.gettype.php
+                        // In PHP, it will return double if it is a float for historical reasons.
+                        // cf. http://www.php.net/manual/ja/function.gettype.php
                         typeName = "double";
                     }
                     argSourceLines
@@ -321,15 +321,15 @@ class BlancoCgMethodPhpSourceExpander {
                 argSourceLines.add("throw new \\Exception("
                         + BlancoCgLineUtil
                                 .getStringLiteralEnclosure(TARGET_LANG)
-                        + "[ArgumentException]: "
+                        + "[ArgumentException]: The parameter of the order "
+                        + (indexParameter + 1)
+                        + " of "
                         + strClassName
                         + "."
                         + cgMethod.getName()
-                        + " の"
-                        + (indexParameter + 1)
-                        + "番目のパラメータは["
+                        + " must be of type ["
                         + cgParameter.getType().getName()
-                        + "]型でなくてはなりません。しかし実際には["
+                        + "]. But in fact, it was given the type ["
                         + BlancoCgLineUtil
                                 .getStringLiteralEnclosure(TARGET_LANG)
                         + " "
@@ -349,7 +349,7 @@ class BlancoCgMethodPhpSourceExpander {
                         + " "
                         + BlancoCgLineUtil
                                 .getStringLiteralEnclosure(TARGET_LANG)
-                        + "]型が与えられました。"
+                        + "]."
                         + BlancoCgLineUtil
                                 .getStringLiteralEnclosure(TARGET_LANG) + ");");
                 argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
@@ -357,35 +357,35 @@ class BlancoCgMethodPhpSourceExpander {
 
             argSourceLines.add("");
 
-            // 親クラスメソッド実行機能の展開。
-            // パラメータチェックより後に展開。
+            // Expands parent class method execution function.
+            // Expands after the parameter check.
             if (BlancoStringUtil.null2Blank(cgMethod.getSuperclassInvocation())
                     .length() > 0) {
-                // super(引数) などが含まれます。
+                // This includes super(argument), etc.
                 argSourceLines.add(cgMethod.getSuperclassInvocation()
                         + BlancoCgLineUtil.getTerminator(TARGET_LANG));
             }
 
             argSourceLines.add("");
 
-            // パラメータの非null制約の展開。
+            // Expands non-null constraints on parameters.
             expandParameterCheck(cgMethod, argSourceLines);
 
-            // 行を展開します。
+            // Expands a line.
             expandLineList(cgMethod, argSourceLines);
 
-            // メソッドブロックの終了。
+            // The end of a method block.
             argSourceLines.add("}");
         }
     }
 
     /**
-     * 例外スローを展開します。
+     * Expands the exception throw.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param buf
-     *            出力バッファ。
+     *            Output buffer.
      */
     private void expandThrowList(final BlancoCgMethod cgMethod,
             final StringBuffer buf) {
@@ -398,25 +398,25 @@ class BlancoCgMethodPhpSourceExpander {
             } else {
                 buf.append(", ");
             }
-            // 言語ドキュメント処理においては、blancoCgのTypeに関する共通処理を利用することはできません。
-            // 個別に記述を行います。
+            // For language document processing, common processing for Type of blancoCg cannot be used. 
+            // Describes individually.
             buf.append(BlancoNameUtil.trimJavaPackage(cgException.getType()
                     .getName()));
         }
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
         if (cgMethod.getOverride()) {
-            // Java言語では overrideはアノテーションで表現します。
+            // In Java, override is represented by the annotation.
             argSourceLines.add("@Override");
         }
 
@@ -424,18 +424,18 @@ class BlancoCgMethodPhpSourceExpander {
             final String strAnnotation = cgMethod.getAnnotationList()
                     .get(index);
 
-            // Java言語のAnnotationは @ から記述します。
+            // Annotasion in Java is written starting with "@".
             argSourceLines.add("@" + strAnnotation);
         }
     }
 
     /**
-     * パラメータの非null制約の展開。
+     * Expands non-null constraints on parameters.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandParameterCheck(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
@@ -448,27 +448,26 @@ class BlancoCgMethodPhpSourceExpander {
 
                 argSourceLines.add(BlancoCgLineUtil.getIfBegin(TARGET_LANG, "$"
                         + cgParameter.getName() + " === null"));
-                argSourceLines.add("throw new \\Exception('メソッド["
-                        + cgMethod.getName() + "]のパラメータ["
-                        + cgParameter.getName()
-                        + "]にnullが与えられました。しかし、このパラメータにnullを与えることはできません。');");
+                argSourceLines.add("throw new \\Exception('The parameter ["
+                        + cgParameter.getName() + "] of the method ["
+                        + cgMethod.getName() + "] has been given null. However, null cannot be given to this parameter.');");
                 argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
             }
         }
 
         if (isProcessed) {
-            // パラメータチェックが展開された場合には空行を挿入します。
+            // Inserts a blank line if the parameter check is expanded.
             argSourceLines.add("");
         }
     }
 
     /**
-     * 行を展開します。
+     * Expands the line.
      * 
      * @param cgMethod
-     *            メソッド情報。
+     *            Method information.
      * @param argSourceLines
-     *            出力行リスト。
+     *            List of output lines.
      */
     private void expandLineList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {

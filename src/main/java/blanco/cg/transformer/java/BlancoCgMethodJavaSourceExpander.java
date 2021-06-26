@@ -329,7 +329,7 @@ class BlancoCgMethodJavaSourceExpander {
         }
 
         for (String strAnnotation : cgMethod.getAnnotationList()) {
-            // Annotasion in Java is written starting with @.
+            // Annotasion in Java is written starting with "@".
             argSourceLines.add("@" + strAnnotation);
         }
     }

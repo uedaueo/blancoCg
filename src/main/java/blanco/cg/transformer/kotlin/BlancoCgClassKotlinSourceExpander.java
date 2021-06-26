@@ -38,45 +38,45 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * BlancoCgClassをソースコードへと展開します。
- *
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * Expands BlancoCgClass into source code.
+ * 
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
  */
 class BlancoCgClassKotlinSourceExpander {
 
     /**
-     * ここでClassを展開します。
-     *
+     * Expands the class here.
+     * 
      * @param cgClass
-     *            処理対象となるクラス。
+     *            A class to be processed.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformClass(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // 最初にクラス情報をLangDocに展開。
+        // First, it expands the class information into a LangDoc.
         if (cgClass.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // If LangDoc is not specified, creates an instance here.
             cgClass.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgClass.getLangDoc().getTitle() == null) {
             cgClass.getLangDoc().setTitle(cgClass.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocKotlinSourceExpander().transformLangDoc(cgClass
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgClass.getAnnotationList(), argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
         if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0) {
-            // kotlin ではデフォルトがpublic
+            // In Kotlin, it defaults public.
             if (!"public".equals(cgClass.getAccess())) {
                 buf.append(cgClass.getAccess() + " ");
             }
@@ -84,27 +84,27 @@ class BlancoCgClassKotlinSourceExpander {
         if (cgClass.getAbstract()) {
             buf.append("abstract ");
         }
-        // kotlin ではデフォルトが final
+        // In Kotlin, it defaults final.
         if (!cgClass.getFinal()) {
             buf.append("open ");
         }
         buf.append("class " + cgClass.getName());
 
-        // クラスのGenericを展開
+        // Expands the Generic of the class.
         if (cgClass.getGenerics() != null && cgClass.getGenerics().length() > 0) {
             buf.append("<" + cgClass.getGenerics() + ">");
         }
 
-        // primary constructor を展開
+        // Expands the primary constructor.
         /*
-         * kotlin ではプライマリコンストラクタは class 定義の一部として記述されます。
+         * In Kotlin, the primary constructor is written as part of the class definition.
          */
         expandPrimaryConstructorList(cgClass, argSourceFile, buf, argSourceLines);
 
-        // 親クラスを展開。
+        // Expands a parent class.
         boolean expanded = expandExtendClassList(cgClass, argSourceFile, buf);
 
-        // 親インタフェースを展開。
+        // Expands a parent interface.
         expandImplementInterfaceList(cgClass, argSourceFile, buf, expanded);
 
         boolean hasFields = false;
@@ -112,34 +112,34 @@ class BlancoCgClassKotlinSourceExpander {
                 cgClass.getEnumList().size() > 0 ||
                 cgClass.getFieldList().size() > 0
         ) {
-            // クラスのブロックの開始。
+            // The start of a class block.
             buf.append(" {");
             hasFields = true;
         }
 
-        // 行を確定して書き出しを実施。
+        // Finalizes the line and performs the export.
         argSourceLines.add(buf.toString());
 
-        // kotlinでは列挙型はクラスとして定義されますが、当面、自動生成の対象外とします。(tueda)
+        // In Kotlin, an enumeration is defined as a class, but for the time being, it is not subject to auto-generation. (tueda)
 
-        // ここでフィールドとメソッドを展開。
+        // Expands the field and method here.
         expandFieldAndMethodList(cgClass, argSourceFile, argSourceLines);
 
         if (hasFields) {
-            // クラスのブロックの終了。
+            // The end of a class block.
             argSourceLines.add("}");
         }
     }
 
     /**
-     * kotlin のプライマリコンストラクタを展開します。
+     * Expands the primary constructor of Kotlin.
      *
      * @param cgClass
-     *            クラスのバリューオブジェクト。
+     *            A value object of the class.
      * @param argSourceFile
-     *            ソースファイル。
+     *            Source file.
      * @param argBuf
-     *            出力先文字列バッファ。
+     *            Output string buffer.
      */
     private void expandPrimaryConstructorList(
             final BlancoCgClass cgClass,
@@ -153,14 +153,14 @@ class BlancoCgClassKotlinSourceExpander {
 
         argBuf.append(" constructor (");
 
-        // Constractor 指定が存在する場合はここで一旦改行する
+        // If the Constractor specification exists, a new line is created here.
         argSourceLines.add(argBuf.toString());
         argBuf.delete(0, argBuf.length());
 
         int count = 0;
         for (blanco.cg.valueobject.BlancoCgField constField : constructorArgs) {
             final BlancoCgType type = constField.getType();
-            // import文に型を追加
+            // Adds a type to the import statement.
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
                 argSourceFile.getImportList().add(type.getName());
             }
@@ -171,35 +171,35 @@ class BlancoCgClassKotlinSourceExpander {
                 argBuf.delete(0, argBuf.length());
             }
 
-            // 最初にフィールド情報をLangDocに展開。
-            if (constField.getLangDoc() == null) {
-                // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+        // First, it expands the class information into a LangDoc.
+        if (constField.getLangDoc() == null) {
+            // If LangDoc is not specified, creates an instance here.
                 constField.setLangDoc(new BlancoCgLangDoc());
             }
             if (constField.getLangDoc().getTitle() == null) {
                 constField.getLangDoc().setTitle(constField.getDescription());
             }
 
-            // 次に LangDocをソースコード形式に展開。
+            // Next, it expands LangDoc into source code format.
             new BlancoCgLangDocKotlinSourceExpander().transformLangDoc(constField.getLangDoc(), argSourceLines);
 
-            // アノテーションを展開。
+            // Expands annotations.
             BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, constField.getAnnotationList(), argSourceLines);
 
-            // kotlin ではデフォルトでfinalとなります。
-            // ただし override が指定されている場合は final と明示しなければなりません。
+            // In Kotlin, it defaults final.
+            // However, if override is specified, it must be specified as final.
             argBuf.append("    ");
             if (constField.getOverride()) {
                 if (constField.getFinal()) {
                     argBuf.append("final ");
                 }
-                argBuf.append("override "); // override はデフォルトで open です。
+                argBuf.append("override "); // "override" is open by default.
             } else if (!constField.getFinal()) {
                 argBuf.append("open ");
             }
 
-            // 変数が変更可能か不可かを設定します。
-            // コンストラクタ引数なので、通常はvalで良いようには思います, tueda
+            // Sets whether the variable is modifiable or not.
+            // Since it is a constructor argument, I think val is usually sufficient. (tueda)
             if (constField.getConst()) {
                 argBuf.append("val ");
             } else {
@@ -211,7 +211,7 @@ class BlancoCgClassKotlinSourceExpander {
                 argBuf.append("?");
             }
 
-            // デフォルト値の指定がある場合にはこれを展開します。
+            // If a default value is specified, this will be expanded.
             if (BlancoStringUtil.null2Blank(constField.getDefault()).length() > 0) {
                 argBuf.append(" = " + constField.getDefault());
             }
@@ -225,15 +225,15 @@ class BlancoCgClassKotlinSourceExpander {
     }
 
     /**
-     * 親クラスを展開します。
+     * Expands the parent class.
      *
-     * ※BlancoCgInterface展開の際に、このメソッドを共通処理として呼び出してはなりません。
-     * その共通化は、かえって理解を妨げると判断しています。
+     * Note: This method must not be called as a common process during BlancoCgInterface expansion.
+     * We believe that this commonization will hinder understanding.
      *
      * @param cgClass
-     *            クラスのバリューオブジェクト。
+     *            A value object of the class.
      * @param argBuf
-     *            出力先文字列バッファ。
+     *            Output string buffer.
      */
     private boolean expandExtendClassList(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
@@ -246,7 +246,7 @@ class BlancoCgClassKotlinSourceExpander {
                 generics = "<" + type.getGenerics() + ">";
             }
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
                 argSourceFile.getImportList().add(type.getName());
             }
@@ -255,7 +255,7 @@ class BlancoCgClassKotlinSourceExpander {
                 argBuf.append(" : "
                         + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + "(" + (constractorArg == null ? "" : constractorArg) + ")");
             } else {
-                throw new IllegalArgumentException("Kotlin 言語では継承は一回しか実施できません。");
+                throw new IllegalArgumentException("In Kotlin, inheritance can only be performed once.");
             }
             expanded = true;
         }
@@ -264,9 +264,10 @@ class BlancoCgClassKotlinSourceExpander {
     }
 
     /**
-     * 親インタフェースを展開します。
-     *  @param cgClass
-     *            処理中のクラス。
+     * Expands the parent interface.
+     * 
+     * @param cgClass
+     *            The class being processed.
      * @param argBuf
      * @param expanded
      */
@@ -276,7 +277,7 @@ class BlancoCgClassKotlinSourceExpander {
             final StringBuffer argBuf,
             boolean expanded) {
         /*
-         * 委譲リストを取得する
+         * Gets a list of delegation.
          */
         Map<String, String> delegateMap = cgClass.getDelegateMap();
 
@@ -284,7 +285,7 @@ class BlancoCgClassKotlinSourceExpander {
             final BlancoCgType type = cgClass.getImplementInterfaceList().get(
                     index);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
                 argSourceFile.getImportList().add(type.getName());
             }
@@ -298,13 +299,13 @@ class BlancoCgClassKotlinSourceExpander {
             String typeString = BlancoCgTypeKotlinSourceExpander.toTypeString(type);
 
             /*
-             * 委譲があれば設定
+             * Sets up if there is delegation.
              */
             String delegateArg = delegateMap.get(type.getName());
 //            System.out.println("type: " + type.getName() + ", delegateArg: " + delegateArg);
             if (delegateArg != null && delegateArg.length() != 0) {
                 /*
-                 * プライマリコンストラクタに無ければ無視
+                 * Ignores if not in primary constructor.
                  */
                 List<blanco.cg.valueobject.BlancoCgField> constructorArgs = cgClass.getConstructorArgList();
                 boolean found = false;
@@ -323,36 +324,35 @@ class BlancoCgClassKotlinSourceExpander {
     }
 
     /**
-     * クラスに含まれる各々のフィールドとメソッドを展開します。
-     *
-     * TODO 定数宣言を優先して展開し、その後変数宣言を展開するなどの工夫が必要です。<br>
-     * 現在は 登録順でソースコード展開します。
-     *
+     * Expands each field contained in the class.
+     * 
+     * TODO: It is necessary to give priority to constant declarations, and then expands variable declarations.<br>
+     * Currently, the source code is expanded in the order of registration.
+     * 
      * @param cgClass
-     *            処理中のクラス。
+     *            The class being processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            Source file.
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            A source code line list.
      */
     private void expandFieldAndMethodList(
             final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgClass.getFieldList() == null) {
-            // フィールドのリストにnullが与えられました。
-            // かならずフィールドのリストにはListをセットしてください。
-            throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
+            // A null was given for the list of fields.
+            // Make sure to set the list of fields to List.
+            throw new IllegalArgumentException("A null was given for the list of fields.");
         }
         if (cgClass.getMethodList() == null) {
-            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
+            throw new IllegalArgumentException("A null was given for the list of methods.");
         }
 
-        // kotlin では static なフィールドと Method は companion オブジェクト内に宣言するため、
-        // フィールドの展開は2段階に分けます。
-        // Java からの呼び出しがある場合には @JvmField アノテーションで対応して頂く想定です。
+        // In Kotlin, static fields and Method are declared in the companion object, so the field expansion is divided into two steps.
+        // If there is a call from Java, it is assumed to be handled by @JvmField annotation.
 
-        // まず static フィールドを展開します。
+        // First, expands the static field.
         boolean foundStatic = false;
         for (BlancoCgField cgField : cgClass.getFieldList()) {
             if (cgField.getStatic()) {
@@ -365,9 +365,9 @@ class BlancoCgClassKotlinSourceExpander {
             }
         }
 
-        // 次に static Method を展開します。
+        // Next, expands the static Method.
         for (BlancoCgMethod cgMethod : cgClass.getMethodList()) {
-            // クラスのメソッドとして展開を行います。
+            // Expands as a method of the class.
             if (cgMethod.getStatic()) {
                 if (!foundStatic) {
                     argSourceLines.add("companion object {");
@@ -381,7 +381,7 @@ class BlancoCgClassKotlinSourceExpander {
             argSourceLines.add("}");
         }
 
-        // 非 static なフィールドを展開します。
+        // Expands non-static field.
         for (BlancoCgField cgField : cgClass.getFieldList()) {
             if (!cgField.getStatic()) {
                 new BlancoCgFieldKotlinSourceExpander().transformField(cgField,
@@ -389,9 +389,9 @@ class BlancoCgClassKotlinSourceExpander {
             }
         }
 
-        // 最後に非 static Method を展開します。
+        // Finally, expands the non-static Method.
         for (BlancoCgMethod cgMethod : cgClass.getMethodList()) {
-            // クラスのメソッドとして展開を行います。
+            // Expands as a method of the class.
             if (!cgMethod.getStatic()) {
                 new BlancoCgMethodKotlinSourceExpander().transformMethod(cgMethod,
                         argSourceFile, argSourceLines, false);

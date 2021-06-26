@@ -33,10 +33,10 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 import com.facebook.ktfmt.FormatterKt;
 
 /**
- * blancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーのエントリポイントです。
- *
- * BlancoCgTransformerFactoryを経由して生成することを推奨します。<br>
- * このトランスフォーマーではバリューオブジェクトをKotlinソースコードへと変換します。
+ * An entry point of the transformer that auto-generates source code from blancoCg value objects.
+ * 
+ * It is recommended to generate them via BlancoCgTransformerFactory.<br>
+ * This transformer converts a value object into Kotlin source code.
  *
  * @author IGA Tosiki
  */
@@ -44,35 +44,35 @@ public class BlancoCgKotlinSourceTransformer extends
         AbstractBlancoCgJavaStyleTransformer {
 
     /**
-     * ソースファイル・バリューオブジェクトをkotlinソースコードに変換してライターに出力します。
-     *
-     * このAPIではパッケージ構造をディレクトリ構造とは考慮しません。この処理の中ではライターに向けて出力するだけです。
-     *
+     * Converts the source file value object to Kotlin source code and outputs it to the writer.
+     * 
+     * Does not consider the package structure to be a directory structure in this API. In this process, it just outputs to the writer.
+     * 
      * @param argSourceFile
-     *            ソースファイル・バリューオブジェクト。
+     *            A source file value object.
      * @param argWriter
-     *            出力先のライター。
-     * @throws IOException 入出力例外が発生した場合
+     *            A writer for output.
+     * @throws IOException If an I/O exception occurs.
      */
     public void transform(final BlancoCgSourceFile argSourceFile,
             final BufferedWriter argWriter) throws IOException {
         if (argSourceFile == null) {
-            throw new IllegalArgumentException("ソースファイルにnullが与えられました。処理中断します。");
+            throw new IllegalArgumentException("A source file was given as a null value. Aborts the process.");
         }
         if (argWriter == null) {
-            throw new IllegalArgumentException("出力先ライターにnullが与えられました。処理中断します。");
+            throw new IllegalArgumentException("A writer for output was given as a null value. Aborts the process.");
         }
 
         final List<java.lang.String> sourceLines = new BlancoCgSourceFileKotlinSourceExpander()
                 .transformSourceFile(argSourceFile);
 
-        // ソースコードを整形します。
+        // Formats the source code.
         formatSource(sourceLines);
 
-        // ソースコードをライタへと出力します。
+        // Outputs the source code to the writer.
         source2Writer(sourceLines, argWriter);
 
-        // 念のためフラッシュを実施。
+        // Performs a flush to be sure.
         argWriter.flush();
     }
 
@@ -95,9 +95,9 @@ public class BlancoCgKotlinSourceTransformer extends
     }
 
     /**
-     * ソースコードに付けられる拡張子を取得します。
-     *
-     * @return ソースコードに付けられる拡張子。
+     * Gets the extension to be attached to the source code.
+     * 
+     * @return An extension to attach to the source code.
      */
     protected String getSourceFileExt() {
         return ".kt";

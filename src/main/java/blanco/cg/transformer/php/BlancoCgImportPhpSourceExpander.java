@@ -37,27 +37,27 @@ import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgSourceFileのなかの import情報を展開します。
+ * Expands the import information in the BlancoCgSourceFile.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。<br>
- * import展開は意外にも複雑な処理です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.<br>
+ * import expansion is a surprisingly complex process.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgImportPhpSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.PHP;
 
     /**
-     * ソート時に優先して処理されるパッケージ一覧。
+     * An array of packages to be prioritized when sorting.
      */
     private static final String[] PREFERRED_PACKAGE = { "java.", "javax.",
             "org.", "blanco.", "com." };
 
     /**
-     * 一般的に知られているPHPモジュール。
+     * PHP modules commonly known.
      */
     private static final String[] PHP_MODULE = { "apache", "bcmath", "bz2",
             "calendar", "com2", "cpdf", "ctype", "curl", "dba", "dbase", "dbx",
@@ -74,72 +74,72 @@ class BlancoCgImportPhpSourceExpander {
             "wddx", "xml", "xmlrpc", "yp", "zlib" };
 
     /**
-     * import文を展開するためのアンカー文字列。
+     * An anchor string to expand the import statement.
      */
     private static final String REPLACE_IMPORT_HERE = "/*replace import here*/";
 
     /**
-     * 発見されたアンカー文字列のインデックス。
+     * Index of found anchor string.
      * 
-     * このクラスの処理の過程で import文が編集されますが、その都度 この値も更新されます。
+     * Whenever the import statement is edited in the process of this class, this value will also be updated.
      */
     private int fFindReplaceImport = -1;
 
     /**
-     * importを展開します。
+     * Expands import.
      * 
-     * このメソッドはクラス展開・メソッド展開など一式が終了した後に呼び出すようにします。
+     * This method is called after the completion of class expansion, method expansion, etc.
      * 
      * @param argSourceFile
-     *            ソースファイルインスタンス。
+     *            A source file instance.
      * @param argSourceLines
-     *            ソース行イメージ。(java.lang.Stringが格納されます)
+     *            A source line image. (java.lang.String will be stored)
      */
     public void transformImport(final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // import対象のクラス名終端に付与されている配列表現を除去します。
+        // Removes the array representation attached to the end of the class name to be imported.
         trimArraySuffix(argSourceFile.getImportList());
 
-        // 最初にimport文をソートして処理を行いやすくします。
+        // First, sorts the import statements to make it easier to process.
         sortImport(argSourceFile.getImportList());
 
-        // 重複するimport文を除去します。
+        // Removes duplicate import statements.
         trimRepeatedImport(argSourceFile.getImportList());
 
-        // importする必要のないクラスを除去します
+        // Removes classes that do not need to be imported.
         trimUnnecessaryImport(argSourceFile.getImportList());
 
-        // 自クラスが所属するパッケージに対するimportを抑制します。
-        // PHPには自クラスが所属するパッケージという概念がありません。
+        // PHP does not have the concept of packages to which its classes belong.
+        // Suppresses import for packages belonging to its own class.
         // trimMyselfImport(argSourceFile, argSourceFile.getImportList());
 
-        // アンカー文字列を検索します。
+        // Searches for an anchor string.
         fFindReplaceImport = findAnchorString(argSourceLines);
         if (fFindReplaceImport < 0) {
-            throw new IllegalArgumentException("import文の置換文字列を発見することができませんでした。");
+            throw new IllegalArgumentException("Could not find the replacement string for the import statement.");
         }
 
         for (int indexPreferredPackage = 0; indexPreferredPackage < PREFERRED_PACKAGE.length; indexPreferredPackage++) {
-            // 優先パッケージを最初に展開します。
+            // Expands the preferred packages first.
             expandImportWithTarget(argSourceFile,
                     PREFERRED_PACKAGE[indexPreferredPackage], argSourceLines);
         }
 
-        // 最後に優先パッケージ以外 (「java.」「javax.」など以外)のパッケージを展開します。
+        // Finally, expands the non-priority packages (other than "java.", "javax.", etc.).
         expandImportWithTarget(argSourceFile, null, argSourceLines);
 
-        // アンカー文字列を除去します。
+        // Removes the anchor string.
         removeAnchorString(argSourceLines);
     }
 
     /**
-     * import(using)のリストからクラス名を除去します。
+     * Removes the class name from the import (using) list.
      * 
-     * これは、C#.NETでは名前空間単位のusing指定を行うからです。<br>
-     * まずクラス名を除去して皇族の処理を実行します。
+     * This is because PHP specifies "using" per-namespace.<br>
+     * First, removes the class name and executes the subsequent process.
      * 
-     * @param strImport
-     *            ソースファイルオブジェクト。
+     * @param argSourceFile
+     *            A source file object.
      */
     private String trimClassName(final String strImport) {
         final int findLastDot = strImport.lastIndexOf('.');
@@ -150,13 +150,13 @@ class BlancoCgImportPhpSourceExpander {
     }
 
     /**
-     * 展開対象となるターゲットを意識してインポートを展開します。
+     * Expands the import with the target of the expansion in mind.
      * 
      * @param argSourceFile
      * @param argTarget
-     *            java. または javax. または nullを指定します。
+     *            Specifies java. or javax. or null.
      * @param argSourceLines
-     *            ソースコード行リスト。
+     *            A source code line list.
      */
     private void expandImportWithTarget(final BlancoCgSourceFile argSourceFile,
             final String argTarget, final List<java.lang.String> argSourceLines) {
@@ -166,15 +166,15 @@ class BlancoCgImportPhpSourceExpander {
             final String strImport = argSourceFile.getImportList().get(index);
 
             if (argTarget == null) {
-                // 優先パッケージ以外 (java. javax. 以外) を展開します。
+                // Expands the non-priority packages (other than "java.", "javax.", etc.).
                 if (isPreferredPackage(strImport)) {
-                    // 処理対象とするパッケージ以外であるので、処理をスキップします。
-                    // ※java. および javax. はハードコードされている点に注意してください。
+                    // Skips the process since this is not the package to be processed.
+                    // Note that java. and javax. are hard-coded.
                     continue;
                 }
             } else {
                 if (strImport.startsWith(argTarget) == false) {
-                    // 処理対象とするパッケージ以外であるので、処理をスキップします。
+                    // Skips the process since this is not the package to be processed.
                     continue;
                 }
             }
@@ -191,7 +191,7 @@ class BlancoCgImportPhpSourceExpander {
             }
             if (isModule) {
                 if (mapModule.get(trimClassName(strImport)) != null) {
-                    // 処理済モジュール名の場合には展開しません。
+                    // If it is a processed module name, it will not be expanded.
                 } else {
                     argSourceLines.add(fFindReplaceImport++,
                             "/*. require_module '"
@@ -200,10 +200,10 @@ class BlancoCgImportPhpSourceExpander {
                                     + BlancoCgLineUtil
                                             .getTerminator(TARGET_LANG));
                 }
-                // 処理済モジュール名として記憶します。
+                // It is stored as the name of the processed module.
                 mapModule.put(trimClassName(strImport), strImport);
             } else {
-                // パッケージ名をディレクトリ名として展開します。
+                // Expands the package name as a directory name.
                 argSourceLines.add(fFindReplaceImport++, "require_once('"
                         + BlancoStringUtil.replaceAll(strImport, ".", "/")
                         + ".php')"
@@ -212,40 +212,40 @@ class BlancoCgImportPhpSourceExpander {
         }
 
         if (isProcessed) {
-            // import展開処理が存在した場合にのみ空白を付与します。
+            // Adds a blank only if the import expansion process exists.
             argSourceLines.add(fFindReplaceImport++, "");
         }
     }
 
     /**
-     * 置換アンカー文字列の行数(0オリジン)を検索します。
+     * Searches for the number of lines (0-origin) in the replacement anchor string.
      * 
-     * @return 発見したアンカー文字列の位置(0オリジン)。発見できなかった場合には-1。
+     * @return Position of the found anchor string (0-origin). If not found, -1.
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     private static final int findAnchorString(
             final List<java.lang.String> argSourceLines) {
         for (int index = 0; index < argSourceLines.size(); index++) {
             final String line = argSourceLines.get(index);
             if (line.equals(REPLACE_IMPORT_HERE)) {
-                // 発見しました。
+                // Found it.
                 return index;
             }
         }
 
-        // 発見できませんでした。発見できなかったことを示す -1 を戻します。
+        // Could not be found. Returns -1 to indicate it.
         return -1;
     }
 
     /**
-     * アンカー文字列を挿入します。
+     * Inserts an anchor string.
      * 
-     * 処理の後半でインポート文を編成しなおしますが、その際に参照するアンカー文字列を追加しておきます。<br>
-     * このメソッドは他のクラスから呼び出されます。
+     * Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.<br>
+     * This method is called by other classes.
      * 
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     public static final void insertAnchorString(
             final List<java.lang.String> argSourceLines) {
@@ -253,41 +253,41 @@ class BlancoCgImportPhpSourceExpander {
     }
 
     /**
-     * アンカー文字列を除去します。
+     * Removes the anchor string.
      * 
      * @param argSourceLines
-     *            ソースリスト。
+     *            The source list.
      */
     private static final void removeAnchorString(
             final List<java.lang.String> argSourceLines) {
-        // 最後にアンカー文字列そのものを除去。
+        // Finally, removes the anchor string itself.
         int findReplaceImport2 = findAnchorString(argSourceLines);
         if (findReplaceImport2 < 0) {
-            throw new IllegalArgumentException("import文の置換文字列を発見することができませんでした。");
+            throw new IllegalArgumentException("Could not find the replacement string for the import statement.");
         }
         argSourceLines.remove(findReplaceImport2);
     }
 
     /**
-     * 与えられたimportをソートします。
+     * Sorts the given imports.
      * 
-     * 想定されるノードの型(java.lang.String)以外が与えられると、例外が発生します。
+     * If a node type other than the expected one (java.lang.String) is given, an exception is raised.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private static final void sortImport(final List<java.lang.String> argImport) {
         Collections.sort(argImport, new Comparator<java.lang.String>() {
             public int compare(final String arg0, final String arg1) {
                 if (arg0 instanceof String == false) {
-                    throw new IllegalArgumentException("importのリストの値ですが、["
-                            + arg0 + "]ですが java.lang.String以外の型["
-                            + arg0.getClass().getName() + "]になっています。");
+                    throw new IllegalArgumentException("The value ["
+                            + arg0 + "] in the import list is a type ["
+                            + arg0.getClass().getName() + "] other than java.lang.String.");
                 }
                 if (arg1 instanceof String == false) {
-                    throw new IllegalArgumentException("importのリストの値ですが、["
-                            + arg1 + "]ですが java.lang.String以外の型["
-                            + arg1.getClass().getName() + "]になっています。");
+                    throw new IllegalArgumentException("The value ["
+                            + arg1 + "] in the import list is a type ["
+                            + arg1.getClass().getName() + "] other than java.lang.String.");
                 }
                 final String str0 = (String) arg0;
                 final String str1 = (String) arg1;
@@ -297,18 +297,18 @@ class BlancoCgImportPhpSourceExpander {
     }
 
     /**
-     * import対象のクラス名終端に付与されている配列表現を除去します。
+     * Removes the array representation attached to the end of the class name to be imported.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private void trimArraySuffix(final List<java.lang.String> argImport) {
         for (int index = 0; index < argImport.size(); index++) {
             String strImport = argImport.get(index);
             for (;;) {
-                // 配列表現で終了している限り繰り返します。
+                // Iterates as long as it ends with the array representation.
                 if (strImport.indexOf("[") > 0) {
-                    // カギカッコではじまっているところ以降は必要ありません。
+                    // It does'nt need after the part beginning with square bracket.
                     strImport = strImport.substring(0, strImport.indexOf("["));
                     argImport.set(index, strImport);
                 } else {
@@ -319,37 +319,37 @@ class BlancoCgImportPhpSourceExpander {
     }
 
     /**
-     * 重複する不要なimportを除去します。
+     * Removes a duplicate import.
      * 
-     * このメソッドは、与えられたListが既にソート済みであることを前提とします。
+     * This method assumes that the given list has already been sorted.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private void trimRepeatedImport(final List<java.lang.String> argImport) {
-        // 重複するimportを除去。
+        // Removes a duplicate import.
         String pastImport = "";
         for (int index = argImport.size() - 1; index >= 0; index--) {
             final String strImport = argImport.get(index);
             if (pastImport.equals(strImport)) {
-                // 既に処理されている重複するimportです。不要なのでこれを除去します。
+                // This is a already processed import. Removes it.
                 argImport.remove(index);
             }
-            // 今回のimportを前回分importとして記憶します。
+            // The current import is stored as the previous import.
             pastImport = strImport;
         }
     }
 
     /**
-     * importする必要のないクラスを除去します。
+     * Removes classes that do not need to be imported.
      * 
-     * 具体的には java.lang や プリミティブ型が不要と判断される対象です。
+     * Specifically, java.lang and primitive types will be considered to be unnecessary.
      * 
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     private void trimUnnecessaryImport(final List<java.lang.String> argImport) {
-        // まずはプリミティブ型を除去します。
+        // First, it removes primitive types.
         for (int index = argImport.size() - 1; index >= 0; index--) {
             final String strImport = argImport.get(index);
 
@@ -359,51 +359,51 @@ class BlancoCgImportPhpSourceExpander {
             }
         }
 
-        // 次に java.langを除去します。
-        // これは Java言語において java.langパッケージは暗黙のうちにインポートされるパッケージであるからです。
+        // Next, it removes java.lang.
+        // This is because in Java, java.lang is implicitly imported.
         trimSpecificPackage("java.lang", argImport);
     }
 
     /**
-     * 与えられた文字列が優先パッケージであるかどうかをチェックします。
+     * Checks if the given string is a preferred package.
      * 
      * @param argCheck
-     *            チェックしたい文字列。
-     * @return 優先パッケージに該当したかどうか。
+     *            A string to be checked.
+     * @return Whether it is the preferred package or not.
      */
     private boolean isPreferredPackage(final String argCheck) {
         for (int index = 0; index < PREFERRED_PACKAGE.length; index++) {
             if (argCheck.startsWith(PREFERRED_PACKAGE[index])) {
-                // この文字列は優先パッケージに該当します。
+                // This string is the preferred package.
                 return true;
             }
         }
 
-        // キーワードにヒットしませんでした。この文字列はプログラミング言語の予約語ではありません。
+        // Does not match for the keywords. This string is not a preferred package.
         return false;
     }
 
     /**
-     * 自分自身が所属するパッケージのimportを除去します。
+     * Removes import for packages belonging to its own class.
      * 
      * @param argSourceFile
-     *            ソースファイルインスタンス。
+     *            A source file instance.
      * @param argImport
-     *            インポートリスト。
+     *            A list of imports.
      */
     // private void trimMyselfImport(final BlancoCgSourceFile argSourceFile,
     // final List<java.lang.String> argImport) {
     // trimSpecificPackage(argSourceFile.getPackage(), argImport);
     // }
     /**
-     * 特定のパッケージについて、これをリストから除去します。
+     * For a particular package, removes it from the list.
      * 
-     * java.langの除去および自クラスが所属するパッケージの除去に利用されます。
+     * It is used to remove java.lang and the package to which its class belongs.
      * 
      * @param argSpecificPackage
-     *            処理対象とするパッケージ。
+     *            The package to be processed.
      * @param argImport
-     *            インポートのリスト。
+     *            A list of imports.
      */
     private static void trimSpecificPackage(final String argSpecificPackage,
             final List<java.lang.String> argImport) {
@@ -411,19 +411,19 @@ class BlancoCgImportPhpSourceExpander {
             final String strImport = argImport.get(index);
 
             if (strImport.indexOf(".") < 0) {
-                // パッケージ構造を持たないため、削除候補からはずします。
+                // It is removed from the list of candidates since it has no package structure.
                 continue;
             }
 
-            // import処理においては、blancoCgのTypeに関する共通処理を利用することはできません。
-            // 個別に記述を行います。
+            // For import processing, blancoCg's common processing for Type cannot be used.
+            // Describes individually.
             final String strImportWithoutPackage = BlancoNameUtil
                     .trimJavaPackage(strImport);
             final String strPackage = strImport.substring(0, strImport.length()
                     - strImportWithoutPackage.length());
 
             if ((argSpecificPackage + ".").equals(strPackage)) {
-                // java.lang.Stringなどは除去します。
+                // java.lang.String etc. are removed.
                 argImport.remove(index);
             }
         }

@@ -36,77 +36,76 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgSourceFileをソースコードに展開します。
+ * Expands BlancoCgSourceFile into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgSourceFilePhpSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.PHP;
 
     /**
-     * 入力となるソースコード構造。
+     * The input source code structure.
      */
     private BlancoCgSourceFile fCgSourceFile = null;
 
     /**
-     * 中間的に利用するソースコードをあらわすList。java.lang.Stringがリストに格納されます。(BlancoCgLineではありません。
-     * )
+     * List indicating the source code to be used intermediately. java.lang.String will be stored (It is not BlancoCgLine).
      * 
-     * ここでは整形前ソースコードが中間的にたくわえられます。
+     * The unformatted source code will be stored in the interim here.
      */
     private List<java.lang.String> fSourceLines = null;
 
     /**
-     * SourceFileから整形前ソースコードリストを生成します。
+     * Generates a list of unformatted source code from SourceFile.
      * 
      * @param argSourceFile
-     *            ソースコードをあらわすバリューオブジェクト。
-     * @return ソースコードに展開後のリスト。
+     *            A value object representing the source code.
+     * @return A list after expansion into source code.
      */
     public List<java.lang.String> transformSourceFile(
             final BlancoCgSourceFile argSourceFile) {
-        // 確実にソース行のリストを初期化します。
+        // Definitely initializes the list of source lines.
         fSourceLines = new ArrayList<java.lang.String>();
 
         fCgSourceFile = argSourceFile;
 
         fSourceLines.add("<?php");
 
-        // ソースファイルのファイルヘッダーを出力処理します。
+        // Outputs the file headers of the source file.
         expandSourceFileHeader();
 
-        // パッケージ部分の生成。
+        // Generates the package part.
         if (BlancoStringUtil.null2Blank(fCgSourceFile.getPackage()).length() > 0) {
             fSourceLines.add("namespace " + fCgSourceFile.getPackage() + BlancoCgLineUtil.getTerminator(TARGET_LANG));
             fSourceLines.add("");
         }
 
-        // パッケージ部分の生成。
+        // Generates the package part.
 //        if (BlancoStringUtil.null2Blank(fCgSourceFile.getPackage()).length() > 0) {
-//            // PHPにパッケージはありません。
+//            // There is no package for PHP.
 //            fSourceLines.add("/*. DOC <@package " + fCgSourceFile.getPackage()
 //                    + BlancoCgLineUtil.getTerminator(TARGET_LANG) + ">.*/");
 //            fSourceLines.add("");
 //        }
 
         if (fCgSourceFile.getImportList() == null) {
-            throw new IllegalArgumentException("importのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of imports has been given a null value.");
         }
 
-        // 処理の後半でインポート文を編成しなおしますが、その際に参照するアンカー文字列を追加しておきます。
-        // required を入れないためにcheck by tueda on 2015/09/11
+        // Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.
+        // Checks not to include "required". (tueda on 2015/09/11)
         if (fCgSourceFile.getIsImport()) {
             BlancoCgImportPhpSourceExpander.insertAnchorString(fSourceLines);
         }
 
-        // インタフェースの展開を実施します。
+        // Performs interface expansion.
         if (fCgSourceFile.getInterfaceList() == null) {
-            throw new IllegalArgumentException("インタフェースのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of interfaces has been given a null value.");
         }
         for (int index = 0; index < fCgSourceFile.getInterfaceList().size(); index++) {
             final BlancoCgInterface cgInterface = fCgSourceFile
@@ -116,9 +115,9 @@ class BlancoCgSourceFilePhpSourceExpander {
                     cgInterface, fCgSourceFile, fSourceLines);
         }
 
-        // クラスの展開を実施します。
+        // Performs class expansion.
         if (fCgSourceFile.getClassList() == null) {
-            throw new IllegalArgumentException("クラスのリストにnullが与えられました。");
+            throw new IllegalArgumentException("The list of classes has been given a null value.");
         }
         for (int index = 0; index < fCgSourceFile.getClassList().size(); index++) {
             final BlancoCgClass cgClass = fCgSourceFile.getClassList().get(
@@ -127,10 +126,10 @@ class BlancoCgSourceFilePhpSourceExpander {
                     fCgSourceFile, fSourceLines);
         }
 
-        // importの展開をします。
-        // この処理が、クラス展開より後に実施されているのには意味があります。
-        // クラス展開などを経て、初めてインポート文の一覧が確定するからです。
-        // required を入れないためにcheck by tueda on 2015/09/11
+        // Expands import.
+        // There is a reason why this process is done after the class expansion.
+        // This is because the list of import statements can be finalized only after the class expansion, etc.
+        // Checks not to include "required". (tueda on 2015/09/11)
         if (fCgSourceFile.getIsImport()) {
             new BlancoCgImportPhpSourceExpander().transformImport(fCgSourceFile,
                 fSourceLines);
@@ -142,7 +141,7 @@ class BlancoCgSourceFilePhpSourceExpander {
     }
 
     /**
-     * ソースファイルのファイルヘッダーを出力処理します。
+     * Outputs the file headers of the source file.
      */
     private void expandSourceFileHeader() {
         fSourceLines.add("/*");
@@ -150,13 +149,13 @@ class BlancoCgSourceFilePhpSourceExpander {
                 .length() > 0) {
             fSourceLines.add("* " + fCgSourceFile.getDescription());
         } else {
-            // 指定が無い場合にはデフォルトのコメントを利用します。
+            // If not specified, the default comment will be used.
             for (String line : BlancoCgSourceFileUtil.getDefaultFileComment()) {
                 fSourceLines.add("* " + line);
             }
         }
 
-        // 言語ドキュメントの中間部を生成します。
+        // Generates the intermediate part of a language document.
         new BlancoCgLangDocPhpSourceExpander().transformLangDocBody(
                 fCgSourceFile.getLangDoc(), fSourceLines);
 

@@ -45,7 +45,7 @@ class BlancoCgImportPythonSourceExpander {
     /**
      * The programming language to be processed by this class.
      */
-    protected static final int TARGET_LANG = BlancoCgSupportedLang.JAVA;
+    protected static final int TARGET_LANG = BlancoCgSupportedLang.PYTHON;
 
     /**
      * A list of packages to be prioritized when sorting.

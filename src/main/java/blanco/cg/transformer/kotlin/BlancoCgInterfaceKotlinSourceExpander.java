@@ -36,74 +36,74 @@ import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgInterfaceをソースコードに展開します。
- *
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * Expands BlancoCgInterface into source code.
+ * 
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
  */
 class BlancoCgInterfaceKotlinSourceExpander {
 
     /**
-     * ここでinterfaceを展開します。
-     *
+     * Expands the interface here.
+     * 
      * @param cgInterface
-     *            処理対象となるインタフェース。
+     *            The interface to be processed.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformInterface(final BlancoCgInterface cgInterface,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // インタフェースの場合には フィールドやメソッドからpublicが除外されます。
+        // In the case of an interface, "public" is excluded from fields and methods.
 
-        // 最初にインタフェース情報をLangDocに展開。
+        // First, it expands the interface information into LangDoc.
         if (cgInterface.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // If LangDoc is not specified, creates an instance here.
             cgInterface.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgInterface.getLangDoc().getTitle() == null) {
             cgInterface.getLangDoc().setTitle(cgInterface.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocKotlinSourceExpander().transformLangDoc(cgInterface
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgInterface.getAnnotationList(), argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
         if (BlancoStringUtil.null2Blank(cgInterface.getAccess()).length() > 0) {
-            // kotlin ではデフォルトがpublic
+            // In Kotlin, it defaults public.
             if (!"public".equals(cgInterface.getAccess())) {
                 buf.append(cgInterface.getAccess() + " ");
             }
         }
-        // staticやfinalは展開しません。
+        // static and final are not expanded.
         buf.append("interface " + cgInterface.getName());
 
-        // ここで親クラスを展開。
+        // Expands the parent class here.
         expandExtendClassList(cgInterface, argSourceFile, buf);
 
-        // ※ポイント: 親インタフェース展開は interfaceには存在しません。
+        // Point: The parent interface expansion does not exist in interface.
 
         buf.append(" {");
 
         argSourceLines.add(buf.toString());
 
-        // ここでフィールドを展開。
+        // Expands the field here.
         expandFieldList(cgInterface, argSourceFile, argSourceLines);
 
-        // ここでメソッドを展開。
+        // Expands the method here.
         expandMethodList(cgInterface, argSourceFile, argSourceLines);
 
         argSourceLines.add("}");
     }
 
     /**
-     * 親クラスを展開します。
+     * Expands the parent class.
      *
      * @param cgClass
      * @param argSourceFile
@@ -115,7 +115,7 @@ class BlancoCgInterfaceKotlinSourceExpander {
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
             final BlancoCgType type = cgClass.getExtendClassList().get(index);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
                 argSourceFile.getImportList().add(type.getName());
             }
@@ -124,13 +124,13 @@ class BlancoCgInterfaceKotlinSourceExpander {
                 argBuf.append(" : "
                         + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + "()");
             } else {
-                throw new IllegalArgumentException("Kotlin 言語では継承は一回しか実施できません。");
+                throw new IllegalArgumentException("In Kotlin, inheritance can only be performed once.");
             }
         }
     }
 
     /**
-     * 含まれる各々のフィールドを展開します。
+     * Expands each of the included fields.
      *
      * @param cgInterface
      * @param argSourceFile
@@ -140,9 +140,9 @@ class BlancoCgInterfaceKotlinSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgInterface.getFieldList() == null) {
-            // フィールドのリストにnullが与えられました。
-            // かならずフィールドのリストにはListをセットしてください。
-            throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
+            // A null was given for the list of fields.
+            // Make sure to set the list of fields to List.
+            throw new IllegalArgumentException("A null was given for the list of fields.");
         }
 
         for (BlancoCgField cgField : cgInterface.getFieldList()) {
@@ -152,7 +152,7 @@ class BlancoCgInterfaceKotlinSourceExpander {
     }
 
     /**
-     * 含まれる各々のメソッドを展開します。
+     * Expands each of the included methods.
      *
      * @param cgInterface
      * @param argSourceFile
@@ -162,7 +162,7 @@ class BlancoCgInterfaceKotlinSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgInterface.getMethodList() == null) {
-            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
+            throw new IllegalArgumentException("A null was given for the list of method.");
         }
         for (BlancoCgMethod cgMethod : cgInterface.getMethodList()) {
             new BlancoCgMethodKotlinSourceExpander().transformMethod(cgMethod,
