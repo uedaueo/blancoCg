@@ -336,7 +336,7 @@ class BlancoCgImportCsSourceExpander {
             // Type checking has been performed at the time of sorting.
             final String strImport = argImport.get(index);
 
-            // Namespaces are stored in C#.NET. They are directly compared with each other.
+            // In C#.NET, namespaces are stored. They are directly compared with each other.
             if (argSpecificPackage.equals(strImport)) {
                 argImport.remove(index);
             }

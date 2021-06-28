@@ -33,42 +33,42 @@ import blanco.cg.valueobject.BlancoCgParameter;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgLangDoc(言語ドキュメント)をソースコードに展開します。
+ * Expands BlancoCgLangDoc (language document) into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。<br>
- * クラス、メソッド、フィールドなど、各種言語ドキュメントを展開する共通処理です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.<br>
+ * This is a common process to expand various language documents such as classes, methods, and fields.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgLangDocVbSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.VB;
 
     /**
-     * 言語ドキュメント情報を元にソースコードを展開します。
+     * Expands the source code based on the language document information.
      * 
      * @param langDoc
-     *            言語ドキュメント情報。
+     *            The language document information.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformLangDoc(final BlancoCgLangDoc langDoc,
             final List<java.lang.String> argSourceLines) {
-        // 開始・終了を除く本体を展開します。
+        // Expands the main body except for the start and end.
         transformLangDocBody(langDoc, argSourceLines, false);
     }
 
     /**
-     * 言語ドキュメントのうち、本体部分を展開します。
+     * Expands the main body of the language document.
      * 
-     * このメソッドはソースファイルのファイルヘッダー展開からも利用されています。
+     * This method is also used from the file header expansion of the source file.
      * 
      * @param langDoc
      * @param argSourceLines
      * @param isFileHeader
-     *            ファイルヘッダかどうか。
+     *            Whether it is a file header.
      */
     public void transformLangDocBody(final BlancoCgLangDoc langDoc,
             final List<java.lang.String> argSourceLines,
@@ -88,7 +88,7 @@ class BlancoCgLangDocVbSourceExpander {
                             langDoc.getTitle()) + "</summary>");
         }
 
-        // 空行が挿入済みかどうかをチェックするためのフラグ。
+        // Flag to check if a blank line has already been inserted.
         boolean isLangDocDescriptionStarted = false;
 
         for (int indexDescription = 0; indexDescription < langDoc
@@ -119,11 +119,11 @@ class BlancoCgLangDocVbSourceExpander {
             argSourceLines.add(commentString + "</remarks>");
         }
 
-        // TODO authorを展開。
+        // TODO: Expands author.
 
-        // TODO author以外の展開も検討すること。
+        // TODO: Considers expanding beyond author.
 
-        // メソッドパラメータを展開。
+        // Expands method parameters.
         for (int indexParameter = 0; indexParameter < langDoc
                 .getParameterList().size(); indexParameter++) {
             final BlancoCgParameter cgParameter = langDoc.getParameterList()
@@ -155,7 +155,7 @@ class BlancoCgLangDocVbSourceExpander {
             argSourceLines.add(bufReturn.toString());
         }
 
-        // ※throwsリスト展開は C#.NETには存在しません。
-        // TODO throwリスト展開について、言語ドキュメントの説明部分へと展開すること。
+        // Note: There is not throws list expansion in VB.NET.
+        // TODO: The throw list expansion should be expanded to the description part of the document.
     }
 }

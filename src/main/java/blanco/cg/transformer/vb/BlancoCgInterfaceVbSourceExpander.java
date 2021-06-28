@@ -35,39 +35,39 @@ import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgInterfaceをソースコードに展開します。
+ * Expands BlancoCgInterface into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgInterfaceVbSourceExpander {
 
     /**
-     * ここでinterfaceを展開します。
+     * Expands the interface here.
      * 
-     * C#.NETには Java言語と同様なインタフェースが存在します。
+     * VB.NET has an interface similar to that of Java.
      * 
      * @param cgInterface
-     *            処理対象となるインタフェース。
+     *            The interface to be processed.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformInterface(final BlancoCgInterface cgInterface,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
-        // インタフェースの場合には Java言語同様にフィールドやメソッドからpublicが除外されます。
+        // In the case of an interface, "public" is excluded from fields and methods as in the Java.
 
-        // 最初にインタフェース情報をLangDocに展開。
+        // First, it expands the interface information into LangDoc.
         if (cgInterface.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // If LangDoc is not specified, creates an instance here.
             cgInterface.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgInterface.getLangDoc().getTitle() == null) {
             cgInterface.getLangDoc().setTitle(cgInterface.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocVbSourceExpander().transformLangDoc(cgInterface
                 .getLangDoc(), argSourceLines);
 
@@ -76,29 +76,29 @@ class BlancoCgInterfaceVbSourceExpander {
         if (BlancoStringUtil.null2Blank(cgInterface.getAccess()).length() > 0) {
             buf.append(cgInterface.getAccess() + " ");
         }
-        // staticやfinalは展開しません。
+        // static and final are not expanded.
         buf.append("Interface " + cgInterface.getName());
 
-        // ここで親クラスを展開。
+        // Expands the parent class here.
         expandExtendClassList(cgInterface, buf);
 
-        // ※ポイント: 親インタフェース展開は interfaceには存在しません。
+        // Point: The parent interface expansion does not exist in interface.
 
         argSourceLines.add(buf.toString());
 
         // argSourceLines.add("{");
 
-        // ここでフィールドを展開。
+        // Expands the field here.
         expandFieldList(cgInterface, argSourceFile, argSourceLines);
 
-        // ここでメソッドを展開。
+        // Expands the method here.
         expandMethodList(cgInterface, argSourceFile, argSourceLines);
 
         argSourceLines.add("End Interface");
     }
 
     /**
-     * 親クラスを展開します。
+     * Expands the parent class.
      * 
      * @param cgClass
      * @param buf
@@ -112,7 +112,7 @@ class BlancoCgInterfaceVbSourceExpander {
                 buf.append(" : Implements "
                         + BlancoCgTypeVbSourceExpander.toTypeString(type));
             } else {
-                // TODO C#.NETで継承が一度きりという制限があるかどうか確認すること。
+                // TODO: Checks to see if the inheritance in VB.NET is a one-time event.
                 buf.append(", "
                         + BlancoCgTypeVbSourceExpander.toTypeString(type));
             }
@@ -120,7 +120,7 @@ class BlancoCgInterfaceVbSourceExpander {
     }
 
     /**
-     * 含まれる各々のフィールドを展開します。
+     * Expands each of the included fields.
      * 
      * @param cgInterface
      * @param argSourceFile
@@ -130,9 +130,9 @@ class BlancoCgInterfaceVbSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgInterface.getFieldList() == null) {
-            // フィールドのリストにnullが与えられました。
-            // かならずフィールドのリストにはListをセットしてください。
-            throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
+            // A null was given for the list of fields.
+            // Make sure to set the list of fields to List.
+            throw new IllegalArgumentException("A null was given for the list of fields.");
         }
 
         for (int index = 0; index < cgInterface.getFieldList().size(); index++) {
@@ -143,7 +143,7 @@ class BlancoCgInterfaceVbSourceExpander {
     }
 
     /**
-     * 含まれる各々のメソッドを展開します。
+     * Expands each of the included methods.
      * 
      * @param cgInterface
      * @param argSourceFile
@@ -153,7 +153,7 @@ class BlancoCgInterfaceVbSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
         if (cgInterface.getMethodList() == null) {
-            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
+            throw new IllegalArgumentException("A null was given for the list of method.");
         }
         for (int index = 0; index < cgInterface.getMethodList().size(); index++) {
             final BlancoCgMethod cgMethod = cgInterface.getMethodList().get(
