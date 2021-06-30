@@ -34,55 +34,55 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgFieldをソースコードへと展開します。
+ * Expands BlancoCgField into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgFieldDelphiSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.DELPHI;
 
     /**
-     * ここでフィールドを展開します。
+     * Expands a field here.
      * 
      * @param cgField
-     *            処理対象となるフィールド。
+     *            The field to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an instance or not. False for a class, true for an interface.
      */
     public void transformField(final BlancoCgField cgField,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines,
             final boolean argIsInterface) {
         if (BlancoStringUtil.null2Blank(cgField.getName()).length() == 0) {
-            throw new IllegalArgumentException("フィールドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The field name is not set to an appropriate value.");
         }
         if (BlancoStringUtil.null2Blank(cgField.getType().getName()).length() == 0) {
-            throw new IllegalArgumentException("フィールド[" + cgField.getName()
-                    + "]の型が適切な値が設定されていません。");
+            throw new IllegalArgumentException("The type of the field [" + cgField.getName()
+                    + "] is not set to an appropriate value.");
         }
 
-        // 有無をいわさず改行を付与します。
+        // Adds a line break inevitably.
         argSourceLines.add("");
 
-        // 最初にフィールド情報をLangDocに展開。
+        // First, it expands the field information into LangDoc.
         if (cgField.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgField.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgField.getLangDoc().getTitle() == null) {
             cgField.getLangDoc().setTitle(cgField.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocDelphiSourceExpander().transformLangDoc(cgField
                 .getLangDoc(), argSourceLines);
 
@@ -90,10 +90,10 @@ class BlancoCgFieldDelphiSourceExpander {
 
         if (BlancoStringUtil.null2Blank(cgField.getAccess()).length() > 0) {
             if (argIsInterface && cgField.getAccess().equals("public")) {
-                // インタフェース且つpublicの場合には出力を抑制します。
-                // これはCheckstyle対策となります。
+                // If it's an interface and public, the output is suppressed.
+                // This is a countermeasure to Checkstyle.
             } else {
-                // Delphiではフィールド個別にアクセスコントロールをつけない
+                // Delphi does not have access control for individual fields.
                 // buf.append(cgField.getAccess() + " ");
             }
         }
@@ -104,10 +104,10 @@ class BlancoCgFieldDelphiSourceExpander {
             buf.append("const ");
         }
 
-        // Delphi言語では、型名から、その型が定義されているUnitを特定するのは困難です。
-//        argSourceFile.getImportList().add(cgField.getType().getName());
+        // In Delphi, it is difficult to determine Unit in which the type is defined from the type name.
+        // argSourceFile.getImportList().add(cgField.getType().getName());
 
-        // フィールド生成の本体部分を展開します。
+        // Expands the body part of the field generation.
         if (cgField.getFinal()) {
             buf.append(cgField.getName() + ": ");
             buf.append(BlancoCgTypeDelphiSourceExpander.toTypeString(cgField
@@ -118,10 +118,10 @@ class BlancoCgFieldDelphiSourceExpander {
                     .getType()));
         }
 
-        // デフォルト値の指定がある場合にはこれを展開します。
-//        if (BlancoStringUtil.null2Blank(cgField.getDefault()).length() > 0) {
-//            buf.append(" = " + cgField.getDefault());
-//        }
+        // If a default value is specified, this will be expanded.
+        // if (BlancoStringUtil.null2Blank(cgField.getDefault()).length() > 0) {
+        //     buf.append(" = " + cgField.getDefault());
+        // }
         buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
         argSourceLines.add(buf.toString());
     }

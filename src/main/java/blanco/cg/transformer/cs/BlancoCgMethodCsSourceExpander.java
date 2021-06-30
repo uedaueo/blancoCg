@@ -59,7 +59,7 @@ class BlancoCgMethodCsSourceExpander {
      * @param argSourceLines
      *            List of lines to output.
      * @param argIsInterface
-     *            Whether it is an instance or not. False for a class, true for an interface.
+     *            Whether it is an interface or not. False for a class, true for an interface.
      */
     public void transformMethod(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
@@ -160,7 +160,7 @@ class BlancoCgMethodCsSourceExpander {
      * @param argSourceLines
      *            Source code.
      * @param argIsInterface
-     *            Whether it is an instance or not.
+     *            Whether it is an interface or not.
      */
     private void expandMethodBody(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
@@ -359,7 +359,7 @@ class BlancoCgMethodCsSourceExpander {
      * @param cgMethod
      *            Method information.
      * @param argIsInterface
-     *            Whether it is an instance or not.
+     *            Whether it is an interface or not.
      * @return If true, a "virtual" modifier is used.
      */
     private boolean isVirtual(final BlancoCgMethod cgMethod,

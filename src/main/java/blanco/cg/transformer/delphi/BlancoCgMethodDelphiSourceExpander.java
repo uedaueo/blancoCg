@@ -39,73 +39,73 @@ import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgMethodをソースコードに展開します。
+ * Expands BlancoCgMethod into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgMethodDelphiSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.DELPHI;
 
     /**
-     * ここでメソッドを展開します。
+     * Expands a method here.
      * 
      * @param cgMethod
-     *            処理対象となるメソッド。
+     *            The method to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an instance or not. False for a class, true for an interface.
      */
     public void transformMethodDeclaration(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines,
             final boolean argIsInterface) {
         if (BlancoStringUtil.null2Blank(cgMethod.getName()).length() == 0) {
-            throw new IllegalArgumentException("メソッドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The method name is not set to an appropriate value.");
         }
         if (cgMethod.getReturn() == null) {
-            // それはありえます。voidの場合にはnullが指定されるのです。
+            // It is possible; null is specified in the case of void.
         }
 
-        // 改行を付与。
+        // Adds a line break.
         argSourceLines.add("");
 
         prepareExpand(cgMethod, argSourceFile);
 
-        // 情報が一式そろったので、ソースコードの実際の展開を行います。
+        // Now that we have a complete set of information, performs the actual expansion of the source code.
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         // new BlancoCgLangDocCsSourceExpander().transformLangDoc(cgMethod
         // .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgMethod, argSourceLines);
 
-        // メソッドの宣言部分を展開。
+        // Expands the declaration part of the method.
         expandMethodDeclaration(cgMethod, argSourceFile, argSourceLines,
                 argIsInterface);
     }
 
     /**
-     * ここでメソッドを展開します。
+     * Expands a method here.
      * 
      * @param typeName
      * 
      * @param cgMethod
-     *            処理対象となるメソッド。
+     *            The method to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of output lines.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an interface or not. False for a class, true for an interface.
      */
     public void transformMethod(String typeName, final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
@@ -113,44 +113,44 @@ class BlancoCgMethodDelphiSourceExpander {
             final boolean argIsInterface) {
 
         if (BlancoStringUtil.null2Blank(cgMethod.getName()).length() == 0) {
-            throw new IllegalArgumentException("メソッドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The method name is not set to an appropriate value.");
         }
         if (cgMethod.getReturn() == null) {
-            // それはありえます。voidの場合にはnullが指定されるのです。
+            // It is possible; null is specified in the case of void.
         }
 
-        // 改行を付与。
+        // Adds a line break.
         argSourceLines.add("");
 
         prepareExpand(cgMethod, argSourceFile);
 
-        // 情報が一式そろったので、ソースコードの実際の展開を行います。
+        // Now that we have a complete set of information, performs the actual expansion of the source code.
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         // new BlancoCgLangDocCsSourceExpander().transformLangDoc(cgMethod
         // .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgMethod, argSourceLines);
 
-        // メソッドの本体部分を展開。
+        // Expands the body part of the method.
         expandMethodBody(typeName, cgMethod, argSourceFile, argSourceLines,
                 argIsInterface);
     }
 
     /**
-     * ソースコード展開に先立ち、必要な情報の収集を行います。
+     * Before source code expansion, gathers the necessary information.
      * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      */
     private void prepareExpand(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile) {
-        // 最初にメソッド情報をLangDocに展開。
+        // First, it expands the method information into LangDoc.
         if (cgMethod.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgMethod.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgMethod.getLangDoc().getParameterList() == null) {
@@ -170,31 +170,31 @@ class BlancoCgMethodDelphiSourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(indexParameter);
 
-            // import文に型を追加。
-//            argSourceFile.getImportList().add(cgParameter.getType().getName());
+            // Adds a type to the import statement.
+            // argSourceFile.getImportList().add(cgParameter.getType().getName());
 
-            // 言語ドキュメントにパラメータを追加。
+            // Adds a parameter to the language document.
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
         if (cgMethod.getReturn() != null) {
-            // import文に型を追加。
-//            argSourceFile.getImportList().add(
-//                    cgMethod.getReturn().getType().getName());
+            // Adds a type to the import statement.
+            // argSourceFile.getImportList().add(
+            //        cgMethod.getReturn().getType().getName());
 
-            // 言語ドキュメントにreturnを追加。
+            // Adds return to the language document.
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
         }
 
-        // 例外についてLangDoc構造体に展開
+        // Expands to LangDoc structure for exceptions.
         for (int index = 0; index < cgMethod.getThrowList().size(); index++) {
             final BlancoCgException cgException = cgMethod.getThrowList().get(
                     index);
 
-            // import文に型を追加。
-//            argSourceFile.getImportList().add(cgException.getType().getName());
+            // Adds a type to the import statement.
+            // argSourceFile.getImportList().add(cgException.getType().getName());
 
-            // 言語ドキュメントに例外を追加。
+            // Adds an exception to the language document.
             cgMethod.getLangDoc().getThrowList().add(cgException);
         }
     }
@@ -211,9 +211,9 @@ class BlancoCgMethodDelphiSourceExpander {
             final BlancoCgLocalVariable cgLocalVariable = cgMethod.getLocalVariableList()
                     .get(index);
             if (cgLocalVariable.getType() == null) {
-                throw new IllegalArgumentException("メソッド[" + cgMethod.getName()
-                        + "]のローカル変数[" + cgLocalVariable.getName()
-                        + "]に型がnullが与えられました。");
+                throw new IllegalArgumentException("The local variable [" + cgLocalVariable.getName()
+                        + "] of the method [" + cgMethod.getName()
+                        + "] has been given null.");
             }
 
             buf.append(cgLocalVariable.getName());
@@ -226,17 +226,17 @@ class BlancoCgMethodDelphiSourceExpander {
     }
 
 
-            /**
-     * メソッドの本体部分を展開します。
+     /**
+     * Expands the body part of the method.
      * 
      * @param typeName
      * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      * @param argIsInterface
-     *            インタフェースとして展開するかどうか。
+     *            Whether it is an interface or not.
      */
     private void expandMethodBody(String typeName,
             final BlancoCgMethod cgMethod,
@@ -247,39 +247,38 @@ class BlancoCgMethodDelphiSourceExpander {
 
         // if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
         // if (argIsInterface && cgMethod.getAccess().equals("public")) {
-        // // インタフェース且つpublicの場合には出力を抑制します。
-        // // Javaと同様に C#でも出力は抑制します。
+        // // If it's an interface and public, the output is suppressed.
+        // // The output is suppressed in C#.NET as well as in Java.
         // } else {
         // buf.append(cgMethod.getAccess() + " ");
         // }
         // }
 
         if (cgMethod.getAbstract() && argIsInterface == false) {
-            // ※インタフェースの場合には abstractは付与しません。
+            // Note: "abstract" is not given in the case of interface.
             buf.append("abstract ");
         }
         if (cgMethod.getOverride()) {
-            // C#.NETには override 修飾が存在します。
+            // Delphi has an override modifier.
             buf.append("override ");
         }
         // if (isVirtual(cgMethod, argIsInterface)) {
-        // // ※koyak さんの貢献箇所。
-        // // C#.NET では、継承クラスでメソッドをオーバーライドするには必ず基底クラスのメソッドが virtual
-        // // 修飾されている必要があります。
-        // // このため、メソッドが override でなければ virtual とします。
+        // // Note: koyak's contribution.
+        // // In C#.NET, in order to override a method in an inherited class, the method in the base class must be "virtual" qualified.
+        // // For this reason, it is assumed to be "virtual" if a method is not override.
         // buf.append("virtual ");
         // }
         if (cgMethod.getStatic()) {
             buf.append("static ");
         }
         if (cgMethod.getFinal() && argIsInterface == false) {
-            // ※インタフェースの場合には finalは付与しません。
+            // In the case of an interface, "final" is not given.
             buf.append("final ");
         }
 
         if (cgMethod.getConstructor()) {
-            // コンストラクタの場合には、戻り値は存在しません。
-            // このため、ここでは何も出力しません。
+            // In the case of the constructor, there is no return value.
+            // For this reason, it will not output anything here.
         } else {
             if (cgMethod.getReturn() != null
                     && cgMethod.getReturn().getType() != null) {
@@ -291,7 +290,7 @@ class BlancoCgMethodDelphiSourceExpander {
 
         buf.append(typeName + "." + cgMethod.getName());
 
-        // 引数がない場合、括弧は不要です。
+        // If there are no arguments, the parentheses are unnecessary.
         if (cgMethod.getParameterList().size() > 0) {
             buf.append("(");
         }
@@ -300,30 +299,30 @@ class BlancoCgMethodDelphiSourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(index);
             if (cgParameter.getType() == null) {
-                throw new IllegalArgumentException("メソッド[" + cgMethod.getName()
-                        + "]のパラメータ[" + cgParameter.getName()
-                        + "]に型がnullが与えられました。");
+                throw new IllegalArgumentException("The parameter [" + cgParameter.getName()
+                        + "] of the method [" + cgMethod.getName()
+                        + "] has been given a null.");
             }
 
             if (index != 0) {
                 buf.append("; ");
             }
 
-            // パラメータのアノテーションを展開。
+            // Expands the parameter annotation.
             // if (cgParameter.getAnnotationList() != null) {
             // for (int indexAnnotation = 0; indexAnnotation < cgParameter
             // .getAnnotationList().size(); indexAnnotation++) {
-            // // C#.NET言語のAnnotationは []で記述します。
+            // // Annotation in C#.NET is written with "[]".
             // final String strAnnotation = cgParameter
             // .getAnnotationList().get(indexAnnotation);
             //	
-            // // C#.NET言語のAnnotationは []で記述します。
+            // // Annotation in C#.NET is written with "[]".
             // buf.append("[" + strAnnotation + "] ");
             // }
             // }
 
             if (cgParameter.getFinal()) {
-                // C#.NETにおけるfinalはreadonly表現となります。ただし限定的なので、現時点では展開を抑制します。
+                // "final" in C#.NET is a readonly expression. However, since it is limited, it will restrain expansion at this time.
                 // buf.append("readonly ");
             }
             buf.append(cgParameter.getName());
@@ -336,7 +335,7 @@ class BlancoCgMethodDelphiSourceExpander {
             buf.append(")");
         }
 
-        // 戻り型はここで出力すること
+        // The return type should be output here.
         if (cgMethod.getReturn() != null
                 && cgMethod.getReturn().getType() != null) {
             buf.append(": " + BlancoCgTypeDelphiSourceExpander.toTypeString(cgMethod
@@ -347,51 +346,51 @@ class BlancoCgMethodDelphiSourceExpander {
         //
         buf.append(";");
 
-        // C#.NETには base()記述が存在します。
+        // There is a base() description in C#.NET.
         // if (BlancoStringUtil.null2Blank(cgMethod.getSuperclassInvocation())
         // .length() > 0) {
-        // // getSuperclassInvocationには base(message)などのような記載がおこなわれます。
-        // // TODO C#.NETでこの記載が可能なのはコンストラクタだけである模様です。
+        // // In getSuperclassInvocation, something like "base (message)" is used.
+        // // TODO: In C#.NET, it seems that only constructors can be described in this way.
         // buf.append(" : " + cgMethod.getSuperclassInvocation());
         // }
 
-        // C#.NETには例外スローのメソッド修飾はありません。
-        // TODO 例外スロー情報を 言語ドキュメントに出力することには意義があると考えます。
+        // C#.NET does not have a method modifier for exception throwing.
+        // TODO: We think it is worthwhile to output the exception throwing information to the language document.
 
         if (cgMethod.getAbstract() || argIsInterface) {
-            // 抽象メソッドまたはインタフェースの場合には、メソッドの本体を展開しません。
+            // In the case of an abstract method or interface, the body of the method is not expanded.
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
-            // ここでいったん、行を確定。
+            // Fixes the line.
             argSourceLines.add(buf.toString());
 
-            // ローカル変数定義を展開します。 
+            // Expands the local variable definition.
             expandMethodLocalVariableDeclaration(cgMethod, argSourceLines);
             
-            // メソッドブロックの開始。
+            // The start of a method block.
             argSourceLines.add("begin");
 
-            // パラメータの非null制約の展開。
+            // Expands non-null constraints on parameters.
             expandParameterCheck(cgMethod, argSourceFile, argSourceLines);
 
-            // 行を展開します。
+            // Expands a line.
             expandLineList(cgMethod, argSourceLines);
 
-            // メソッドブロックの終了。
+            // The end of a method block.
             argSourceLines.add("end;");
         }
     }
 
     /**
-     * メソッドの本体部分を展開します。
+     * Expands the body part of the method.
      * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      * @param argIsInterface
-     *            インタフェースとして展開するかどうか。
+     *            Whether it is an interface or not.
      */
     private void expandMethodDeclaration(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
@@ -401,39 +400,38 @@ class BlancoCgMethodDelphiSourceExpander {
 
         // if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
         // if (argIsInterface && cgMethod.getAccess().equals("public")) {
-        // // インタフェース且つpublicの場合には出力を抑制します。
-        // // Javaと同様に C#でも出力は抑制します。
+        // // If it's an interface and public, the output is suppressed.
+        // // The output is suppressed in C# as well as in Java.
         // } else {
         // buf.append(cgMethod.getAccess() + " ");
         // }
         // }
 
         if (cgMethod.getAbstract() && argIsInterface == false) {
-            // ※インタフェースの場合には abstractは付与しません。
+            // Note: "abstract" is not given in the case of interface.
             buf.append("abstract ");
         }
         if (cgMethod.getOverride()) {
-            // C#.NETには override 修飾が存在します。
+            // Delphi has an override modifier.
             buf.append("override ");
         }
         // if (isVirtual(cgMethod, argIsInterface)) {
-        // // ※koyak さんの貢献箇所。
-        // // C#.NET では、継承クラスでメソッドをオーバーライドするには必ず基底クラスのメソッドが virtual
-        // // 修飾されている必要があります。
-        // // このため、メソッドが override でなければ virtual とします。
+        // // Note: koyak's contribution.
+        // // In C#.NET, in order to override a method in an inherited class, the method in the base class must be "virtual" qualified.
+        // // For this reason, it is assumed to be "virtual" if a method is not override.
         // buf.append("virtual ");
         // }
         if (cgMethod.getStatic()) {
             buf.append("static ");
         }
         if (cgMethod.getFinal() && argIsInterface == false) {
-            // ※インタフェースの場合には finalは付与しません。
+            // In the case of an interface, "final" is not given.
             buf.append("final ");
         }
 
         if (cgMethod.getConstructor()) {
-            // コンストラクタの場合には、戻り値は存在しません。
-            // このため、ここでは何も出力しません。
+            // In the case of the constructor, there is no return value.
+            // For this reason, it will not output anything here.
         } else {
             if (cgMethod.getReturn() != null
                     && cgMethod.getReturn().getType() != null) {
@@ -445,7 +443,7 @@ class BlancoCgMethodDelphiSourceExpander {
 
         buf.append(cgMethod.getName());
 
-        // 引数がない場合、括弧は不要です。
+        // If there are no arguments, the parentheses are unnecessary.
         if (cgMethod.getParameterList().size() > 0) {
             buf.append("(");
         }
@@ -454,30 +452,30 @@ class BlancoCgMethodDelphiSourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(index);
             if (cgParameter.getType() == null) {
-                throw new IllegalArgumentException("メソッド[" + cgMethod.getName()
-                        + "]のパラメータ[" + cgParameter.getName()
-                        + "]に型がnullが与えられました。");
+                throw new IllegalArgumentException("The parameter [" + cgParameter.getName()
+                        + "] of the method [" + cgMethod.getName()
+                        + "] has been given a null.");
             }
 
             if (index != 0) {
                 buf.append("; ");
             }
 
-            // パラメータのアノテーションを展開。
+            // Expands the parameter annotation.
             if (cgParameter.getAnnotationList() != null) {
                 for (int indexAnnotation = 0; indexAnnotation < cgParameter
                         .getAnnotationList().size(); indexAnnotation++) {
-                    // C#.NET言語のAnnotationは []で記述します。
+                    // Annotation in Delphi is written with "[]".
                     final String strAnnotation = cgParameter
                             .getAnnotationList().get(indexAnnotation);
 
-                    // C#.NET言語のAnnotationは []で記述します。
+                    // Annotation in Delphi is written with "[]".
                     buf.append("[" + strAnnotation + "] ");
                 }
             }
 
             if (cgParameter.getFinal()) {
-                // C#.NETにおけるfinalはreadonly表現となります。ただし限定的なので、現時点では展開を抑制します。
+                // "final" in C#.NET is a readonly expression. However, since it is limited, it will restrain expansion at this time.
                 // buf.append("readonly ");
             }
             buf.append(cgParameter.getName());
@@ -490,7 +488,7 @@ class BlancoCgMethodDelphiSourceExpander {
             buf.append(")");
         }
 
-        // 戻り型はここで出力すること
+        // The return type should be output here.
         if (cgMethod.getReturn() != null
                 && cgMethod.getReturn().getType() != null) {
             buf.append(": " + BlancoCgTypeDelphiSourceExpander.toTypeString(cgMethod
@@ -500,34 +498,34 @@ class BlancoCgMethodDelphiSourceExpander {
         //
         buf.append(";");
 
-        // C#.NETには base()記述が存在します。
+        // There is a base() description in C#.NET.
         // if (BlancoStringUtil.null2Blank(cgMethod.getSuperclassInvocation())
         // .length() > 0) {
-        // // getSuperclassInvocationには base(message)などのような記載がおこなわれます。
-        // // TODO C#.NETでこの記載が可能なのはコンストラクタだけである模様です。
+        // // In getSuperclassInvocation, something like "base (message)" is used.
+        // // TODO: In C#.NET, it seems that only constructors can be described in this way.
         // buf.append(" : " + cgMethod.getSuperclassInvocation());
         // }
 
-        // C#.NETには例外スローのメソッド修飾はありません。
-        // TODO 例外スロー情報を 言語ドキュメントに出力することには意義があると考えます。
+        // C#.NET does not have a method modifier for exception throwing.
+        // TODO: We think it is worthwhile to output the exception throwing information to the language document.
 
         if (cgMethod.getAbstract() || argIsInterface) {
-            // 抽象メソッドまたはインタフェースの場合には、メソッドの本体を展開しません。
+            // In the case of an abstract method or interface, the body of the method is not expanded.
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
-            // ここでいったん、行を確定。
+            // Fixes the line.
             argSourceLines.add(buf.toString());
         }
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
@@ -535,18 +533,18 @@ class BlancoCgMethodDelphiSourceExpander {
             final String strAnnotation = cgMethod.getAnnotationList()
                     .get(index);
 
-            // C#.NET言語のAnnotationは []で記述します。
+            // Annotation in Delphi is written with "[]".
             argSourceLines.add("[" + strAnnotation + "]");
         }
     }
 
     /**
-     * パラメータの非null制約の展開。
+     * Expands non-null constraints on parameters.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandParameterCheck(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
@@ -557,39 +555,38 @@ class BlancoCgMethodDelphiSourceExpander {
                     .get(index);
             if (cgParameter.getNotnull() && isNullableType(cgParameter.getType())) {
                 isProcessed = true;
-//                argSourceFile.getImportList().add("System.ArgumentException");
+                // argSourceFile.getImportList().add("System.ArgumentException");
 
                 argSourceLines.add(BlancoCgLineUtil.getIfBegin(TARGET_LANG,
                         cgParameter.getName() + " = nil"));
-                argSourceLines.add("throw new ArgumentException(\"メソッド["
-                        + cgMethod.getName() + "]のパラメータ["
-                        + cgParameter.getName()
-                        + "]にnullが与えられました。しかし、このパラメータにnullを与えることはできません。\");");
+                argSourceLines.add("throw new ArgumentException(\"The parameter ["
+                        + cgParameter.getName() + "] of the method ["
+                        + cgMethod.getName() + "] has been given null. However, null cannot be given to this parameter.\");");
                 argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
             }
         }
 
         if (isProcessed) {
-            // パラメータチェックが展開された場合には空行を挿入します。
+            // Inserts a blank line if the parameter check is expanded.
             argSourceLines.add("");
         }
     }
 
     private boolean isNullableType(BlancoCgType type) {
         if("string".equals(type.getName().toLowerCase())){
-            // Delphiでは、Stringはnilをとりません。
+            // In Delphi, String will not be nil.
             return false;
         }
         return true;
     }
 
     /**
-     * 行を展開します。
+     * Expands the line.
      * 
      * @param cgMethod
-     *            メソッド情報。
+     *            Method information.
      * @param argSourceLines
-     *            出力行リスト。
+     *            List of output lines.
      */
     private void expandLineList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
@@ -600,13 +597,13 @@ class BlancoCgMethodDelphiSourceExpander {
     }
 
     /**
-     * メソッドを virtual 修飾するかどうかを判断する。
+     * Determines if the method should be "virtual" modified or not.
      * 
      * @param cgMethod
-     *            メソッド情報。
+     *            Method information.
      * @param argIsInterface
-     *            インタフェースかどうか。
-     * @return trueの場合には virtual 修飾をおこなう。
+     *            Whether it is an interface or not.
+     * @return If true, a "virtual" modifier is used.
      */
     private boolean isVirtual(final BlancoCgMethod cgMethod,
             final boolean argIsInterface) {
