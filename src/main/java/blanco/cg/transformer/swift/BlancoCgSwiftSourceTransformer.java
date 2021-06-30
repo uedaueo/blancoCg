@@ -32,10 +32,10 @@ import blanco.cg.transformer.AbstractBlancoCgJavaStyleTransformer;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
- * blancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーのエントリポイントです。
+ * An entry point of the transformer that auto-generates source code from blancoCg value objects.
  * 
- * BlancoCgTransformerFactoryを経由して生成することを推奨します。<br>
- * このトランスフォーマーではバリューオブジェクトをC#.NETソースコードへと変換します。
+ * It is recommended to generate them via BlancoCgTransformerFactory.<br>
+ * This transformer converts a value object into Swift source code.
  * 
  * @author IGA Tosiki
  */
@@ -43,42 +43,42 @@ public class BlancoCgSwiftSourceTransformer extends
         AbstractBlancoCgJavaStyleTransformer {
 
     /**
-     * ソースファイル・バリューオブジェクトをC#.NETソースコードに変換してライターに出力します。
+     * Converts the source file value object to Swift source code and outputs it to the writer.
      * 
-     * このAPIではパッケージ構造をディレクトリ構造とは考慮しません。この処理の中ではライターに向けて出力するだけです。
+     * Does not consider the package structure to be a directory structure in this API. In this process, it just outputs to the writer.
      * 
      * @param argSourceFile
-     *            ソースファイル・バリューオブジェクト。
+     *            A source file value object.
      * @param argWriter
-     *            出力先のライター。
-     * @throws IOException 入出力例外が発生した場合
+     *            A writer for output.
+     * @throws IOException If an I/O exception occurs.
      */
     public void transform(final BlancoCgSourceFile argSourceFile,
             final BufferedWriter argWriter) throws IOException {
         if (argSourceFile == null) {
-            throw new IllegalArgumentException("ソースファイルにnullが与えられました。処理中断します。");
+            throw new IllegalArgumentException("A source file was given as a null value. Aborts the process.");
         }
         if (argWriter == null) {
-            throw new IllegalArgumentException("出力先ライターにnullが与えられました。処理中断します。");
+            throw new IllegalArgumentException("A writer for output was given as a null value. Aborts the process.");
         }
 
         final List<java.lang.String> sourceLines = new BlancoCgSourceFileSwiftSourceExpander()
                 .transformSourceFile(argSourceFile);
 
-        // ソースコードを整形します。
+        // Formats the source code.
         formatSource(sourceLines);
 
-        // ソースコードをライタへと出力します。
+        // Outputs the source code to the writer.
         source2Writer(sourceLines, argWriter);
 
-        // 念のためフラッシュを実施。
+        // Performs a flush to be sure.
         argWriter.flush();
     }
 
     /**
-     * ソースコードに付けられる拡張子を取得します。
+     * Gets the extension to be attached to the source code.
      * 
-     * @return ソースコードに付けられる拡張子。
+     * @return An extension to attach to the source code.
      */
     protected String getSourceFileExt() {
         return ".swift";
