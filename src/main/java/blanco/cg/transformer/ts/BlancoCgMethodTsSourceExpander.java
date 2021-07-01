@@ -33,72 +33,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * BlancoCgMethodをソースコードに展開します。
- *
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * Expands BlancoCgMethod into source code.
+ * 
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
  */
 class BlancoCgMethodTsSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.TS;
 
     /**
-     * ここでメソッドを展開します。
-     *
+     * Expands a method here.
+     * 
      * @param cgMethod
-     *            処理対象となるメソッド。
+     *            The method to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an instance or not. False for a class, true for an interface.
      */
     public void transformMethod(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
             final List<String> argSourceLines,
             final boolean argIsInterface) {
         if (BlancoStringUtil.null2Blank(cgMethod.getName()).length() == 0) {
-            throw new IllegalArgumentException("メソッドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The method name is not set to an appropriate value.");
         }
         if (cgMethod.getReturn() == null) {
-            // それはありえます。voidの場合にはnullが指定されるのです。
+            // It is possible; null is specified in the case of void.
         }
 
-        // 改行を付与。
+        // Adds a line break.
         argSourceLines.add("");
 
         prepareExpand(cgMethod, argSourceFile);
 
-        // 情報が一式そろったので、ソースコードの実際の展開を行います。
+        // Now that we have a complete set of information, performs the actual expansion of the source code.
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocTsSourceExpander().transformLangDoc(cgMethod
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgMethod, argSourceLines);
 
-        // メソッドの本体部分を展開。
+        // Expands the body part of the method.
         expandMethodBody(cgMethod, argSourceLines, argIsInterface);
     }
 
     /**
-     * ソースコード展開に先立ち、必要な情報の収集を行います。
-     *
+     * Before source code expansion, gathers the necessary information.
+     * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      */
     private void prepareExpand(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile) {
-        // 最初にメソッド情報をLangDocに展開。
+        // First, it expands the method information into LangDoc.
         if (cgMethod.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgMethod.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgMethod.getLangDoc().getParameterList() == null) {
@@ -114,41 +114,41 @@ class BlancoCgMethodTsSourceExpander {
         }
 
         for (BlancoCgParameter cgParameter : cgMethod.getParameterList()) {
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgParameter.getType().getName());
 
-            // 言語ドキュメントにパラメータを追加。
+            // Adds a parameter to the language document.
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
         if (cgMethod.getReturn() != null) {
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(
                     cgMethod.getReturn().getType().getName());
 
-            // 言語ドキュメントにreturnを追加。
+            // Adds return to the language document.
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
         }
 
-        // 例外についてLangDoc構造体に展開
+        // Expands to LangDoc structure for exceptions.
         for (BlancoCgException cgException : cgMethod.getThrowList()) {
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgException.getType().getName());
 
-            // 言語ドキュメントに例外を追加。
+            // Adds an exception to the language document.
             cgMethod.getLangDoc().getThrowList().add(cgException);
         }
     }
 
     /**
-     * メソッドの本体部分を展開します。
-     *
+     * Expands the body part of the method.
+     * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      * @param argIsInterface
-     *            インタフェースとして展開するかどうか。
+     *            Whether it is an instance or not.
      */
     private void expandMethodBody(final BlancoCgMethod cgMethod,
             final List<String> argSourceLines,
@@ -158,14 +158,14 @@ class BlancoCgMethodTsSourceExpander {
         final StringBuffer buf = new StringBuffer();
 
         if (cgMethod.getAbstract() && argIsInterface == false) {
-            // ※インタフェースの場合には abstractは付与しません。
+            // Note: "abstract" is not given in the case of interface.
             buf.append("abstract ");
         }
         if (cgMethod.getStatic()) {
             buf.append("static ");
         }
         if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
-            // TypeScript ではデフォルトでpublicとなります。
+            // In TypeScript, it defaults public.
             if (!cgMethod.getAccess().equals("public")) {
                 buf.append(cgMethod.getAccess() + " ");
                 if (cgMethod.getAccess().equals("set")) {
@@ -179,9 +179,9 @@ class BlancoCgMethodTsSourceExpander {
             final BlancoCgParameter cgParameter = cgMethod
                     .getParameterList().get(index);
             if (cgParameter.getType() == null) {
-                throw new IllegalArgumentException("メソッド["
-                        + cgMethod.getName() + "]のパラメータ["
-                        + cgParameter.getName() + "]に型がnullが与えられました。");
+                throw new IllegalArgumentException("The parameter [" + cgParameter.getName()
+                        + "] of the method [" + cgMethod.getName()
+                        + "] has been given a null.");
             }
 
             if (index != 0) {
@@ -194,8 +194,8 @@ class BlancoCgMethodTsSourceExpander {
                     .toTypeString(cgParameter.getType()));
 
             /*
-             * TypeScript では複数の型が指定できるが、現時点では対応しない。
-             * Nullable に対しては、undefined を追加する。
+             * TypeScript allows multiple types, but does not support them at this time.
+             * Adds undefiend for Nullable.
              * by tueda, 2020/03/15
              */
             if (!cgParameter.getNotnull()) {
@@ -203,7 +203,7 @@ class BlancoCgMethodTsSourceExpander {
                 buf.append(" | undefined");
             }
 
-            // デフォルト値の指定がある場合にはこれを展開します。
+            // If a default value is specified, this will be expanded.
             if (BlancoStringUtil.null2Blank(cgParameter.getDefault()).length() > 0) {
                 buf.append(" = " + cgParameter.getDefault());
             }
@@ -211,16 +211,16 @@ class BlancoCgMethodTsSourceExpander {
         buf.append(")");
 
         if (cgMethod.getConstructor()) {
-            // コンストラクタの場合には、戻り値は存在しません。
-            // このため、ここでは何も出力しません。
+                // In the case of constructor, there is no return value.
+                // For this reason, it will not output anything here.
         } else {
             if (cgMethod.getReturn() != null
                     && cgMethod.getReturn().getType() != null) {
                 buf.append(": " + BlancoCgTypeTsSourceExpander.toTypeString(cgMethod
                         .getReturn().getType()));
                 /*
-                 * TypeScript では複数の型が指定できるが、現時点では対応しない。
-                 * Nullable に対しては、undefined を追加する。
+                 * TypeScript allows multiple types, but does not support them at this time.
+                 * Adds undefiend for Nullable.
                  * by tueda, 2020/03/15
                  */
                 if (!cgMethod.getNotnull()) {
@@ -229,7 +229,7 @@ class BlancoCgMethodTsSourceExpander {
                 }
             } else {
                 /*
-                 * Setter には void は指定できません。
+                 * void cannot be specified for Setter.
                  */
                 if (!isSetter) {
                     buf.append(": void");
@@ -237,61 +237,61 @@ class BlancoCgMethodTsSourceExpander {
             }
         }
 
-        // TypeScript では throws 節は不要です。
+        // The throws clause is not necessary in TypeScript.
 
         if (cgMethod.getAbstract() || argIsInterface) {
-            // 抽象メソッドの場合には、メソッドの本体を展開しません。
+            // In the case of an abstract method or interface, the body of the method is not expanded.
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
-            // メソッドブロックの開始。
+            // The start of a method block.
             buf.append(" {");
 
-            // ここでいったん、行を確定。
+            // Fixes the line.
             argSourceLines.add(buf.toString());
 
-            // 親クラスメソッド実行機能の展開。
+            // Expands parent class method execution function.
             if (BlancoStringUtil.null2Blank(cgMethod.getSuperclassInvocation())
                     .length() > 0) {
-                // super(引数) などが含まれます。
+                // This includes super(argument), etc.
                 argSourceLines.add(cgMethod.getSuperclassInvocation()
                         + BlancoCgLineUtil.getTerminator(TARGET_LANG));
             }
 
-            // typescript ではパラメータの非null制約はコンパイル時にcheckされるので、例外処理を実装する必要はありません。
+            // In TypeScript, non-null constraints on parameters are checked at compiling, so there is no need to implement exception handling.
 
-            // 行を展開します。
+            // Expands a line.
             expandLineList(cgMethod, argSourceLines);
 
-            // メソッドブロックの終了。
+            // The end of a method block.
             argSourceLines.add("}");
         }
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      *
      * @param cgMethod
-     *            メソッド。
+     *            The method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgMethod cgMethod,
             final List<String> argSourceLines) {
 
         for (String strAnnotation : cgMethod.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
+            // Annotation in Java is written starting with "@".
             argSourceLines.add("@" + strAnnotation);
         }
     }
 
     /**
-     * 行を展開します。
-     *
+     * Expands the line.
+     * 
      * @param cgMethod
-     *            メソッド情報。
+     *            Method information.
      * @param argSourceLines
-     *            出力行リスト。
+     *            List of output lines.
      */
     private void expandLineList(final BlancoCgMethod cgMethod,
             final List<String> argSourceLines) {

@@ -111,7 +111,7 @@ class BlancoCgLangDocKotlinSourceExpander {
         // Flag to check if a blank line has already been inserted.
         boolean isLangDocTagStarted = false;
 
-        // authorなど付加情報を展開。
+        // Expands additional information such as author.
         if (langDoc.getTagList() != null) {
             for (BlancoCgLangDocTag langDocTag : langDoc.getTagList()) {
                 // Inserts a blank line.

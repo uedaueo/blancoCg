@@ -35,67 +35,68 @@ import blanco.commons.util.BlancoStringUtil;
 import java.util.List;
 
 /**
- * BlancoCgFieldをソースコードへと展開します。
- *
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * Expands BlancoCgField into source code.
+ * 
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
  */
 class BlancoCgFieldTsSourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.TS;
 
     /**
-     * ここでフィールドを展開します。
-     *
+     * Expands a field here.
+     * 
      * @param cgField
-     *            処理対象となるフィールド。
+     *            The field to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an instance or not. False for a class, true for an interface.
      */
     public void transformField(final BlancoCgField cgField, final BlancoCgSourceFile argSourceFile,
                                final List<String> argSourceLines, final boolean argIsInterface) {
         if (BlancoStringUtil.null2Blank(cgField.getName()).length() == 0) {
-            throw new IllegalArgumentException("フィールドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The field name is not set to an appropriate value.");
         }
         if (BlancoStringUtil.null2Blank(cgField.getType().getName()).length() == 0) {
-            throw new IllegalArgumentException("フィールド[" + cgField.getName() + "]の型が適切な値が設定されていません。");
+            throw new IllegalArgumentException("The type of the field [" + cgField.getName()
+                       + "] is not set to an appropriate value.");
         }
 
-        // 有無をいわさず改行を付与します。
+        // Adds a line break inevitably.
         argSourceLines.add("");
 
-        // 最初にフィールド情報をLangDocに展開。
+        // First, it expands the field information into LangDoc.
         if (cgField.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgField.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgField.getLangDoc().getTitle() == null) {
             cgField.getLangDoc().setTitle(cgField.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocTsSourceExpander().transformLangDoc(cgField.getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgField, argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
         String access = cgField.getAccess();
         if (BlancoStringUtil.null2Blank(access).length() > 0) {
-            // TypeScript ではデフォルトで public となります。
+            // In TypeScript, it defaults to public.
             if (!access.equals("public")) {
                 if (!argIsInterface) {
                     buf.append(cgField.getAccess() + " ");
                 } else {
-                    throw new IllegalArgumentException("TypeScript では Interface にはアクセサを設定できません（フィールド[" + cgField.getName() + "]）。");
+                    throw new IllegalArgumentException("TypeScript does not allow to set accessors on Interface (field [" + cgField.getName() + "]).");
                 }
             }
         }
@@ -104,27 +105,26 @@ class BlancoCgFieldTsSourceExpander {
             if (!argIsInterface) {
                 buf.append("static ");
             } else {
-                throw new IllegalArgumentException("TypeScript では Interface には static field を設定できません（フィールド[" + cgField.getName() + "]）。");
+                throw new IllegalArgumentException("TypeScript does not allow to set static field on Interface (field [" + cgField.getName() + "]).");
             }
         }
 
         /*
          * final:
-         * Java では class field として定数を定義したい時に final を宣言する。
-         * TypeScript で同様の事を実現するのは readonly。
+         * In Java, when you want to define a constant as a class field, you declare final.
+         * The same thing can be achieved in TypeScript with readonly.
          */
         if (cgField.getFinal() || cgField.getConst()) {
             buf.append("readonly ");
         }
 
         /*
-         * import文に型を追加。ただし TypeScript ではこの import 文は使用されません。
+         * Adds the type to the import statement. However, this import statement is not used in TypeScript.
          */
         argSourceFile.getImportList().add(cgField.getType().getName());
 
         /*
-         * Nullable が設定されている、または
-         * Interface でないのにデフォルト値が設定されていない場合
+         * If Nullable is set, or if it is not an interface but the default value is not set.
          */
         if (!cgField.getNotnull() ||
                 (!argIsInterface && BlancoStringUtil.null2Blank(cgField.getDefault()).length() == 0)) {
@@ -135,13 +135,13 @@ class BlancoCgFieldTsSourceExpander {
         }
         buf.append(BlancoCgTypeTsSourceExpander.toTypeString(cgField.getType()));
 
-        // デフォルト値の指定がある場合にはこれを展開します。
+        // If a default value is specified, this will be expanded.
         if (BlancoStringUtil.null2Blank(cgField.getDefault()).length() > 0) {
-            // TypeScript の Interface はデフォルト値を持てません。
+            // Interface in TypeScript cannot have a default value.
             if (!argIsInterface) {
                 buf.append(" = " + cgField.getDefault());
             } else {
-                throw new IllegalArgumentException("TypeScript では Interface にはデフォルト値を設定できません（フィールド[" + cgField.getName() + "]）。");
+                throw new IllegalArgumentException("TypeScript does not allow to set default values on Interface (field [" + cgField.getName() + "]).");
             }
         }
         buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
@@ -149,16 +149,16 @@ class BlancoCgFieldTsSourceExpander {
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      *
      * @param cgField
-     *            フィールド。
+     *            The field.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgField cgField, final List<String> argSourceLines) {
         for (String strAnnotation : cgField.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
+            // Annotasion in Java is written starting with "@".
             argSourceLines.add("@" + strAnnotation);
         }
     }

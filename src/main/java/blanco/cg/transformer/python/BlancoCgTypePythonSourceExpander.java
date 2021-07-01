@@ -46,7 +46,7 @@ class BlancoCgTypePythonSourceExpander {
      * Converts blancoCg type to a concrete string.
      * 
      * It also expands "[]", which indicates arrays, and generics.<br>
-     * TODO: The same class name of multiple packages (e.g., java.util.Dateとjava.sql.Date) is not considered.
+     * TODO: The same class name of multiple packages (e.g., java.util.Date and java.sql.Date) is not considered.
      * The feature to use the same class name of multiple packages in a single source file is not provided.
      * 
      * @param argType

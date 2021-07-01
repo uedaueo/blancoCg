@@ -30,52 +30,50 @@ import blanco.commons.util.BlancoStringUtil;
 import java.util.List;
 
 /**
- * BlancoCgInterfaceをソースコードに展開します。
- *
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * Expands BlancoCgInterface into source code.
+ * 
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
  */
 class BlancoCgInterfaceTsSourceExpander {
 
     /**
-     * ここでinterfaceを展開します。
-     *
+     * Expands the interface here.
+     * 
      * @param cgInterface
-     *            処理対象となるインタフェース。
+     *            The interface to be processed.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     public void transformInterface(final BlancoCgInterface cgInterface,
             final BlancoCgSourceFile argSourceFile,
             final List<String> argSourceLines) {
-        // インタフェースの場合には フィールドやメソッドからpublicが除外されます。
+        // In the case of an interface, "public" is excluded from fields and methods.
 
-        // 最初にインタフェース情報をLangDocに展開。
+        // First, it expands the interface information into LangDoc.
         if (cgInterface.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // If LangDoc is not specified, creates an instance here.
             cgInterface.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgInterface.getLangDoc().getTitle() == null) {
             cgInterface.getLangDoc().setTitle(cgInterface.getDescription());
         }
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocTsSourceExpander().transformLangDoc(cgInterface
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgInterface, argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 
         if (BlancoStringUtil.null2Blank(cgInterface.getAccess()).length() > 0) {
             /*
-             * TypeScript ではデフォルトでpublicです。
-             * public が明記されている場合は export と読み替えます。
-             * blanco では 1 ファイルに 1 クラスを想定していること、
-             * class には名前をつけることを前提としているので、
-             * export default は使用しないこととします。
+             * In TypeScript, it defaults public.
+             * If "public" is specified, replaces it with "export".
+             * Since blanco expects one class per file, and class is assumed to be named, we will not use export default.
              *
              * by tueda, 2020/03/11
              */
@@ -83,32 +81,32 @@ class BlancoCgInterfaceTsSourceExpander {
                 buf.append("export ");
             }
         }
-        // staticやfinalは展開しません。
+        // static and final are not expanded.
         buf.append("interface " + cgInterface.getName());
 
-        // ここで親クラスを展開。
+        // Expands the parent class here.
         expandExtendClassList(cgInterface, argSourceFile, buf);
 
-        // ※ポイント: 親インタフェース展開は interfaceには存在しません。
+        // Point: The parent interface expansion does not exist in interface.
 
         buf.append(" {");
 
         argSourceLines.add(buf.toString());
 
-        // ここで PlainText を展開
+        // Expands PlainText here.
         expandPlainText(cgInterface, argSourceLines);
 
-        // ここでフィールドを展開。
+        // Expands the field here.
         expandFieldList(cgInterface, argSourceFile, argSourceLines);
 
-        // ここでメソッドを展開。
+        // Expands the method here.
         expandMethodList(cgInterface, argSourceFile, argSourceLines);
 
         argSourceLines.add("}");
     }
 
     /**
-     * Plain Text を展開します。
+     * Expands Plain Text.
      *
      * @param cgInterface
      * @param argSourceLines
@@ -118,7 +116,7 @@ class BlancoCgInterfaceTsSourceExpander {
             final List<String> argSourceLines) {
         List<String> plainTextList = cgInterface.getPlainTextList();
 
-        // 有無を言わさず改行を入れます
+        // Adds a line break inevitably.
         argSourceLines.add("");
 
         for (String planText : plainTextList) {
@@ -127,23 +125,23 @@ class BlancoCgInterfaceTsSourceExpander {
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      *
      * @param cgInterface
-     *            インタフェース。
+     *            The interface.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgInterface cgInterface,
             final List<String> argSourceLines) {
         for (String strAnnotation : cgInterface.getAnnotationList()) {
-            // Java言語のAnnotationは @ から記述します。
+            // Annotation in Java is written starting with "@".
             argSourceLines.add("@" + strAnnotation);
         }
     }
 
     /**
-     * 親クラスを展開します。
+     * Expands the parent class.
      *
      * @param cgClass
      * @param argSourceFile
@@ -156,10 +154,9 @@ class BlancoCgInterfaceTsSourceExpander {
             final BlancoCgType type = cgClass.getExtendClassList().get(index);
 
             /*
-             * import 文に型を追加。
-             * ここでは Java 形式（ . 区切り）で型が指定されている想定です。
-             * Transform 時にパッケージ部分を定義ファイル配置場所情報として解釈し
-             * import 文を作成します。
+             * Adds a type to the import statement.
+             * We assume that the type is specified in Java format ("." delimited) here.
+             * At the time of Transform, the package part is interpreted as information of the location of the definition file, and an import statement is created.
              */
             argSourceFile.getImportList().add(type.getName());
 
@@ -168,8 +165,8 @@ class BlancoCgInterfaceTsSourceExpander {
                         + BlancoCgTypeTsSourceExpander.toTypeString(type));
             } else {
                 /*
-                 * TypeScript Interface では、複数のクラスを拡張することができるように見えます。
-                 * TODO: 多重継承がちゃんと動作するのかは謎
+                 * Interface in TypeScript looks like we can extend multiple classes.
+                 * TODO: Not sure if multiple inheritance will work properly.
                  */
                 argBuf.append(", " + BlancoCgTypeTsSourceExpander.toTypeString(type));
             }
@@ -177,7 +174,7 @@ class BlancoCgInterfaceTsSourceExpander {
     }
 
     /**
-     * 含まれる各々のフィールドを展開します。
+     * Expands each of the included fields.
      *
      * @param cgInterface
      * @param argSourceFile
@@ -187,9 +184,9 @@ class BlancoCgInterfaceTsSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<String> argSourceLines) {
         if (cgInterface.getFieldList() == null) {
-            // フィールドのリストにnullが与えられました。
-            // かならずフィールドのリストにはListをセットしてください。
-            throw new IllegalArgumentException("フィールドのリストにnullが与えられました。");
+            // A null was given for the list of fields.
+            // Make sure to set the list of fields to List.
+            throw new IllegalArgumentException("A null was given for the list of fields.");
         }
 
         for (BlancoCgField cgField : cgInterface.getFieldList()) {
@@ -199,7 +196,7 @@ class BlancoCgInterfaceTsSourceExpander {
     }
 
     /**
-     * 含まれる各々のメソッドを展開します。
+     * Expands each of the included methods.
      *
      * @param cgInterface
      * @param argSourceFile
@@ -209,7 +206,7 @@ class BlancoCgInterfaceTsSourceExpander {
             final BlancoCgSourceFile argSourceFile,
             final List<String> argSourceLines) {
         if (cgInterface.getMethodList() == null) {
-            throw new IllegalArgumentException("メソッドのリストにnullが与えられました。");
+            throw new IllegalArgumentException("A null was given for the list of method.");
         }
         for (BlancoCgMethod cgMethod : cgInterface.getMethodList()) {
             new BlancoCgMethodTsSourceExpander().transformMethod(cgMethod,
