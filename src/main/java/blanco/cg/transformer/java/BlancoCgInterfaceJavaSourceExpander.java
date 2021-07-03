@@ -114,7 +114,7 @@ class BlancoCgInterfaceJavaSourceExpander {
     private void expandAnnotationList(final BlancoCgInterface cgInterface,
             final List<java.lang.String> argSourceLines) {
         for (String strAnnotation : cgInterface.getAnnotationList()) {
-            // Annotasion in Java is written starting with @.
+            // Annotasion in Java is written starting with "@".
             argSourceLines.add("@" + strAnnotation);
         }
     }

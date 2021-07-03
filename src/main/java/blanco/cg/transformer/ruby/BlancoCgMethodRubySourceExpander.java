@@ -38,72 +38,72 @@ import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
- * BlancoCgMethodをソースコードに展開します。
+ * Expands BlancoCgMethod into source code.
  * 
- * このクラスはblancoCgのバリューオブジェクトからソースコードを自動生成するトランスフォーマーの個別の展開機能です。
+ * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  * 
  * @author IGA Tosiki
  */
 class BlancoCgMethodRubySourceExpander {
     /**
-     * このクラスが処理対象とするプログラミング言語。
+     * The programming language to be processed by this class.
      */
     protected static final int TARGET_LANG = BlancoCgSupportedLang.RUBY;
 
     /**
-     * ここでメソッドを展開します。
+     * Expands a method here.
      * 
      * @param cgMethod
-     *            処理対象となるメソッド。
+     *            The method to be processed.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      * @param argSourceLines
-     *            出力先行リスト。
+     *            List of lines to output.
      * @param argIsInterface
-     *            インタフェースかどうか。クラスの場合にはfalse。インタフェースの場合にはtrue。
+     *            Whether it is an interface or not. False for a class, true for an interface.
      */
     public void transformMethod(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines,
             final boolean argIsInterface) {
         if (BlancoStringUtil.null2Blank(cgMethod.getName()).length() == 0) {
-            throw new IllegalArgumentException("メソッドの名前に適切な値が設定されていません。");
+            throw new IllegalArgumentException("The method name is not set to an appropriate value.");
         }
         if (cgMethod.getReturn() == null) {
-            // それはありえます。voidの場合にはnullが指定されるのです。
+            // It is possible; null is specified in the case of void.
         }
 
-        // 改行を付与。
+        // Adds a line break.
         argSourceLines.add("");
 
         prepareExpand(cgMethod, argSourceFile);
 
-        // 情報が一式そろったので、ソースコードの実際の展開を行います。
+        // Now that we have a complete set of information, performs the actual expansion of the source code.
 
-        // 次に LangDocをソースコード形式に展開。
+        // Next, it expands LangDoc into source code format.
         new BlancoCgLangDocRubySourceExpander().transformLangDoc(cgMethod
                 .getLangDoc(), argSourceLines);
 
-        // アノテーションを展開。
+        // Expands annotations.
         expandAnnotationList(cgMethod, argSourceLines);
 
-        // メソッドの本体部分を展開。
+        // Expands the body part of the method.
         expandMethodBody(cgMethod, argSourceLines, argIsInterface);
     }
 
     /**
-     * ソースコード展開に先立ち、必要な情報の収集を行います。
+     * Before source code expansion, gathers the necessary information.
      * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceFile
-     *            ソースファイル。
+     *            A source file.
      */
     private void prepareExpand(final BlancoCgMethod cgMethod,
             final BlancoCgSourceFile argSourceFile) {
-        // 最初にメソッド情報をLangDocに展開。
+        // First, it expands the method information into LangDoc.
         if (cgMethod.getLangDoc() == null) {
-            // LangDoc未指定の場合にはこちら側でインスタンスを生成。
+            // Creates an instance here if LangDoc is not specified.
             cgMethod.setLangDoc(new BlancoCgLangDoc());
         }
         if (cgMethod.getLangDoc().getParameterList() == null) {
@@ -123,44 +123,44 @@ class BlancoCgMethodRubySourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(indexParameter);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgParameter.getType().getName());
 
-            // 言語ドキュメントにパラメータを追加。
+            // Adds a parameter to the language document.
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
         if (cgMethod.getReturn() != null) {
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(
                     cgMethod.getReturn().getType().getName());
 
-            // 言語ドキュメントにreturnを追加。
+            // Adds return to the language document.
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
         }
 
-        // 例外についてLangDoc構造体に展開
+        // Expands to LangDoc structure for exceptions.
         for (int index = 0; index < cgMethod.getThrowList().size(); index++) {
             final BlancoCgException cgException = cgMethod.getThrowList().get(
                     index);
 
-            // import文に型を追加。
+            // Adds a type to the import statement.
             argSourceFile.getImportList().add(cgException.getType().getName());
 
-            // 言語ドキュメントに例外を追加。
+            // Adds an exception to the language document.
             cgMethod.getLangDoc().getThrowList().add(cgException);
         }
     }
 
     /**
-     * メソッドの本体部分を展開します。
+     * Expands the body part of the method.
      * 
      * @param cgMethod
-     *            メソッドオブジェクト。
+     *            A method object.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      * @param argIsInterface
-     *            インタフェースとして展開するかどうか。
+     *            Whether it is an interface or not.
      */
     private void expandMethodBody(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines,
@@ -169,31 +169,31 @@ class BlancoCgMethodRubySourceExpander {
 
         // if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
         // if (argIsInterface && cgMethod.getAccess().equals("public")) {
-        // // インタフェース且つpublicの場合には出力を抑制します。
-        // // これはCheckstyle対策となります。
+        // // If it's an interface and public, the output is suppressed.
+        // // This is a countermeasure to Checkstyle.
         // } else {
         // buf.append(cgMethod.getAccess() + " ");
         // }
         // }
         //
         // if (cgMethod.getAbstract() && argIsInterface == false) {
-        // // ※インタフェースの場合には abstractは付与しません。
+        // // Note: "abstract" is not given in the case of interface.
         // buf.append("abstract ");
         // }
         // if (cgMethod.getStatic()) {
         // buf.append("static ");
         // }
         // if (cgMethod.getFinal() && argIsInterface == false) {
-        // // ※インタフェースの場合には finalは付与しません。
+        // // In the case of an interface, "final" is not given.
         // buf.append("final ");
         // }
 
-        // メソッドの開始
+        // The start of a method.
         buf.append("def ");
 
         if (cgMethod.getConstructor()) {
-            // コンストラクタの場合には、戻り値は存在しません。
-            // このため、ここでは何も出力しません。
+            // In the case of the constructor, there is no return value.
+            // For this reason, it will not output anything here.
         } else {
             // if (cgMethod.getReturn() != null
             // && cgMethod.getReturn().getType() != null) {
@@ -210,9 +210,9 @@ class BlancoCgMethodRubySourceExpander {
             final BlancoCgParameter cgParameter = cgMethod.getParameterList()
                     .get(index);
             if (cgParameter.getType() == null) {
-                throw new IllegalArgumentException("メソッド[" + cgMethod.getName()
-                        + "]のパラメータ[" + cgParameter.getName()
-                        + "]に型がnullが与えられました。");
+                throw new IllegalArgumentException("The parameter [" + cgParameter.getName()
+                        + "] of the method [" + cgMethod.getName()
+                        + "] has been given a null.");
             }
 
             if (index != 0) {
@@ -229,46 +229,46 @@ class BlancoCgMethodRubySourceExpander {
         }
         buf.append(")");
 
-        // 例外スローを展開。
+        // Expands the exception throw.
         expandThrowList(cgMethod, buf);
 
         if (cgMethod.getAbstract() || argIsInterface) {
-            // 抽象メソッドまたはインタフェースの場合には、メソッドの本体を展開しません。
+            // In the case of an abstract method or interface, the body of the method is not expanded.
             buf.append(BlancoCgLineUtil.getTerminator(TARGET_LANG));
             argSourceLines.add(buf.toString());
         } else {
-            // メソッドブロックの開始。
+            // The start of a method block.
             // buf.append(" {");
 
-            // ここでいったん、行を確定。
+            // Fixes the line.
             argSourceLines.add(buf.toString());
 
-            // 親クラスメソッド実行機能の展開。
+            // Expands parent class method execution function.
             if (BlancoStringUtil.null2Blank(cgMethod.getSuperclassInvocation())
                     .length() > 0) {
-                // super(引数) などが含まれます。
+                // This includes super(argument), etc.
                 argSourceLines.add(cgMethod.getSuperclassInvocation()
                         + BlancoCgLineUtil.getTerminator(TARGET_LANG));
             }
 
-            // パラメータの非null制約の展開。
+            // Expands non-null constraints on parameters.
             expandParameterCheck(cgMethod, argSourceLines);
 
-            // 行を展開します。
+            // Expands a line.
             expandLineList(cgMethod, argSourceLines);
 
-            // メソッドブロックの終了。
+            // The end of a method block.
             argSourceLines.add("end");
         }
     }
 
     /**
-     * 例外スローを展開します。
+     * Expands the exception throw.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param buf
-     *            出力バッファ。
+     *            Output buffer.
      */
     private void expandThrowList(final BlancoCgMethod cgMethod,
             final StringBuffer buf) {
@@ -281,25 +281,25 @@ class BlancoCgMethodRubySourceExpander {
             } else {
                 buf.append(", ");
             }
-            // 言語ドキュメント処理においては、blancoCgのTypeに関する共通処理を利用することはできません。
-            // 個別に記述を行います。
+            // For language document processing, common processing for Type of blancoCg cannot be used. 
+            // Describes individually.
             buf.append(BlancoNameUtil.trimJavaPackage(cgException.getType()
                     .getName()));
         }
     }
 
     /**
-     * アノテーションを展開します。
+     * Expands annotations.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandAnnotationList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
         if (cgMethod.getOverride()) {
-            // Java言語では overrideはアノテーションで表現します。
+            // In Java, override is represented by the annotation.
             argSourceLines.add("@Override");
         }
 
@@ -307,18 +307,18 @@ class BlancoCgMethodRubySourceExpander {
             final String strAnnotation = cgMethod.getAnnotationList()
                     .get(index);
 
-            // Java言語のAnnotationは @ から記述します。
+            // Annotasion in Java is written starting with "@".
             argSourceLines.add("@" + strAnnotation);
         }
     }
 
     /**
-     * パラメータの非null制約の展開。
+     * Expands non-null constraints on parameters.
      * 
      * @param cgMethod
-     *            メソッド。
+     *            A method.
      * @param argSourceLines
-     *            ソースコード。
+     *            Source code.
      */
     private void expandParameterCheck(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {
@@ -331,27 +331,26 @@ class BlancoCgMethodRubySourceExpander {
 
                 argSourceLines.add(BlancoCgLineUtil.getIfBegin(TARGET_LANG,
                         cgParameter.getName() + ".nil?"));
-                argSourceLines.add("raise ArgumentError, \"メソッド["
-                        + cgMethod.getName() + "]のパラメータ["
-                        + cgParameter.getName()
-                        + "]にnilが与えられました。しかし、このパラメータにnilを与えることはできません\"");
+                argSourceLines.add("raise ArgumentError, \"The parameter ["
+                        + cgParameter.getName() + "] of the method ["
+                        + cgMethod.getName() + "] has been given null. However, null cannot be given to this parameter.\"");
                 argSourceLines.add(BlancoCgLineUtil.getIfEnd(TARGET_LANG));
             }
         }
 
         if (isProcessed) {
-            // パラメータチェックが展開された場合には空行を挿入します。
+            // Inserts a blank line if the parameter check is expanded.
             argSourceLines.add("");
         }
     }
 
     /**
-     * 行を展開します。
+     * Expands the line.
      * 
      * @param cgMethod
-     *            メソッド情報。
+     *            Method information.
      * @param argSourceLines
-     *            出力行リスト。
+     *            List of output lines.
      */
     private void expandLineList(final BlancoCgMethod cgMethod,
             final List<java.lang.String> argSourceLines) {

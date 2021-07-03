@@ -48,7 +48,7 @@ public abstract class AbstractBlancoCgRubyStyleTransformer extends
     private static final boolean IS_DEBUG = false;
 
     /**
-     * Converts the source file value object to Java source code and outputs it to the destination directory.
+     * Converts the source file value object to Ruby source code and outputs it to the destination directory.
      * 
      * Considers the package structure as a directory structure in this API.
      * 
