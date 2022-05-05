@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * Expands BlancoCgClass into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -41,7 +41,7 @@ class BlancoCgClassTsSourceExpander {
 
     /**
      * Expands the class here.
-     * 
+     *
      * @param cgClass
      *            A class to be processed.
      * @param argSourceLines
@@ -68,7 +68,10 @@ class BlancoCgClassTsSourceExpander {
 
         final StringBuffer buf = new StringBuffer();
 
-        if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0) {
+
+        // Check class style or not
+        boolean isClassStyle = !cgClass.getNoClassDeclare();
+        if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0 && isClassStyle) {
             /*
              * In TypeScript, it defaults public.
              * If "public" is specified, replaces it with "export".
@@ -84,12 +87,14 @@ class BlancoCgClassTsSourceExpander {
                 buf.append("export default ");
             }
         }
-        if (cgClass.getAbstract()) {
+        if (cgClass.getAbstract() && isClassStyle) {
             buf.append("abstract ");
         }
-        // TypeScript does not seem to have a final class.
 
-        buf.append("class " + cgClass.getName());
+        // TypeScript does not seem to have a final class.
+        if (isClassStyle) {
+            buf.append("class " + cgClass.getName());
+        }
 
         // Expands a parent class.
         expandExtendClassList(cgClass, argSourceFile, buf);
@@ -98,7 +103,9 @@ class BlancoCgClassTsSourceExpander {
         expandImplementInterfaceList(cgClass, argSourceFile, buf);
 
         // The start of a class block.
-        buf.append(" {");
+        if (isClassStyle) {
+            buf.append(" {");
+        }
 
         // Finalizes the line and performs the export.
         argSourceLines.add(buf.toString());
@@ -115,7 +122,9 @@ class BlancoCgClassTsSourceExpander {
         expandMethodList(cgClass, argSourceFile, argSourceLines);
 
         // The end of a class block.
-        argSourceLines.add("}");
+        if (isClassStyle) {
+            argSourceLines.add("}");
+        }
     }
 
     /**
@@ -232,10 +241,10 @@ class BlancoCgClassTsSourceExpander {
 
     /**
      * Expands each field contained in the class.
-     * 
+     *
      * TODO: It is necessary to give priority to constant declarations, and then expands variable declarations.<br>
      * Currently, the source code is expanded in the order of registration.
-     * 
+     *
      * @param cgClass
      *            The class being processed.
      * @param argSourceFile

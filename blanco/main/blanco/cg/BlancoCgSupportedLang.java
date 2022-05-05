@@ -65,15 +65,15 @@ public class BlancoCgSupportedLang {
     public static final int TS = 12;
 
     /**
-     * 未定義。文字列グループ以外の文字列または定数が未定義のもの。
+     * Undefined. A string or constant other than a string group that is undefined.
      */
     public static final int NOT_DEFINED = -1;
 
     /**
-     * 文字列グループに含まれる文字列であるかどうかを判定します。
+     * Determines if a string is part of a string group.
      *
-     * @param argCheck チェックを行いたい文字列。
-     * @return 文字列グループに含まれていればture。グループに含まれない文字列であればfalse。
+     * @param argCheck A string to be checked.
+     * @return true is the string is part of a string group, false otherwise.
      */
     public boolean match(final String argCheck) {
         // No.1
@@ -140,10 +140,10 @@ public class BlancoCgSupportedLang {
     }
 
     /**
-     * 文字列グループに含まれる文字列であるかどうかを、大文字小文字を区別せず判定します。
+     * Determines if a string is part of a string group in a case-insentive manner.
      *
-     * @param argCheck チェックを行いたい文字列。
-     * @return 文字列グループに含まれていればture。グループに含まれない文字列であればfalse。
+     * @param argCheck A string to be checked.
+     * @return true is the string is part of a string group, false otherwise.
      */
     public boolean matchIgnoreCase(final String argCheck) {
         // No.1
@@ -210,12 +210,12 @@ public class BlancoCgSupportedLang {
     }
 
     /**
-     * 文字列から定数に変換します。
+     * Converts a string to a constant.
      *
-     * 定数が未定義の場合や 与えられた文字列が文字列グループ外の場合には NOT_DEFINED を戻します。
+     * Returns NOT_DEFINED if the constant is undefined or if the given string is outside the string group.
      *
-     * @param argCheck 変換を行いたい文字列。
-     * @return 定数に変換後の値。
+     * @param argCheck A string to be converted.
+     * @return The value after conversion to a constant.
      */
     public int convertToInt(final String argCheck) {
         // No.1
@@ -279,17 +279,17 @@ public class BlancoCgSupportedLang {
             return TS;
         }
 
-        // 該当する定数が見つかりませんでした。
+        // No matching constants were found.
         return NOT_DEFINED;
     }
 
     /**
-     * 定数から文字列に変換します。
+     * Converts a constant to a string.
      *
-     * 定数と対応づく文字列に変換します。
+     * Converts to a string corresponding to a constant.
      *
-     * @param argCheck 変換を行いたい文字定数。
-     * @return 文字列に変換後の値。NOT_DEFINEDの場合には長さ0の文字列。
+     * @param argCheck A constant to be converted.
+     * @return The value after conversion to a string, or a zero-length string if NOT_DEFINED.
      */
     public String convertToString(final int argCheck) {
         // No.1
@@ -352,12 +352,12 @@ public class BlancoCgSupportedLang {
         if (argCheck == TS) {
             return "ts";
         }
-        // 未定義。
+        // Undefined.
         if (argCheck == NOT_DEFINED) {
             return "";
         }
 
-        // いずれにも該当しませんでした。
-        throw new IllegalArgumentException("与えられた値(" + argCheck + ")は文字列グループ[BlancoCgSupportedLang]では定義されない値です。");
+        // None of them were applicable.
+        throw new IllegalArgumentException("The given value (" + argCheck + ") is a value that is not defined in the string group [BlancoCgSupportedLang].");
     }
 }

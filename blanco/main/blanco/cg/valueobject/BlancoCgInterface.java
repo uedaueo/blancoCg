@@ -349,15 +349,15 @@ public class BlancoCgInterface {
     }
 
     /**
-     * このバリューオブジェクトの文字列表現を取得します。
+     * Gets the string representation of this value object.
      *
-     * <P>使用上の注意</P>
+     * <P>Precautions for use</P>
      * <UL>
-     * <LI>オブジェクトのシャロー範囲のみ文字列化の処理対象となります。
-     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * <LI>Only the shallow range of the object will be subject to the stringification process.
+     * <LI>Do not use this method if the object has a circular reference.
      * </UL>
      *
-     * @return バリューオブジェクトの文字列表現。
+     * @return String representation of a value object.
      */
     @Override
     public String toString() {

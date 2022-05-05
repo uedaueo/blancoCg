@@ -114,6 +114,14 @@ public class BlancoCgClass {
     private List<BlancoCgMethod> fMethodList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgMethod>();
 
     /**
+     * trueの場合、クラス宣言を省略します。
+     *
+     * フィールド: [noClassDeclare]。
+     * デフォルト: [false]。
+     */
+    private boolean fNoClassDeclare = false;
+
+    /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。
      *
      * フィールド: [langDoc]。
@@ -437,6 +445,29 @@ public class BlancoCgClass {
     }
 
     /**
+     * フィールド [noClassDeclare] の値を設定します。
+     *
+     * フィールドの説明: [trueの場合、クラス宣言を省略します。]。
+     *
+     * @param argNoClassDeclare フィールド[noClassDeclare]に設定する値。
+     */
+    public void setNoClassDeclare(final boolean argNoClassDeclare) {
+        fNoClassDeclare = argNoClassDeclare;
+    }
+
+    /**
+     * フィールド [noClassDeclare] の値を取得します。
+     *
+     * フィールドの説明: [trueの場合、クラス宣言を省略します。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[noClassDeclare]から取得した値。
+     */
+    public boolean getNoClassDeclare() {
+        return fNoClassDeclare;
+    }
+
+    /**
      * フィールド [langDoc] の値を設定します。
      *
      * フィールドの説明: [言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。]。
@@ -505,15 +536,15 @@ public class BlancoCgClass {
     }
 
     /**
-     * このバリューオブジェクトの文字列表現を取得します。
+     * Gets the string representation of this value object.
      *
-     * <P>使用上の注意</P>
+     * <P>Precautions for use</P>
      * <UL>
-     * <LI>オブジェクトのシャロー範囲のみ文字列化の処理対象となります。
-     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * <LI>Only the shallow range of the object will be subject to the stringification process.
+     * <LI>Do not use this method if the object has a circular reference.
      * </UL>
      *
-     * @return バリューオブジェクトの文字列表現。
+     * @return String representation of a value object.
      */
     @Override
     public String toString() {
@@ -532,6 +563,7 @@ public class BlancoCgClass {
         buf.append(",enumList=" + fEnumList);
         buf.append(",fieldList=" + fFieldList);
         buf.append(",methodList=" + fMethodList);
+        buf.append(",noClassDeclare=" + fNoClassDeclare);
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",constructorArgList=" + fConstructorArgList);
         buf.append(",plainTextList=" + fPlainTextList);
@@ -596,6 +628,9 @@ public class BlancoCgClass {
         // Name: fMethodList
         // Type: java.util.List
         // フィールド[fMethodList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgMethod]です。
+        // Name: fNoClassDeclare
+        // Type: boolean
+        target.fNoClassDeclare = this.fNoClassDeclare;
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。
