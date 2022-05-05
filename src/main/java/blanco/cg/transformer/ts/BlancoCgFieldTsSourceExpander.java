@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * Expands BlancoCgField into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -49,7 +49,7 @@ class BlancoCgFieldTsSourceExpander {
 
     /**
      * Expands a field here.
-     * 
+     *
      * @param cgField
      *            The field to be processed.
      * @param argSourceFile
@@ -123,17 +123,20 @@ class BlancoCgFieldTsSourceExpander {
          */
         argSourceFile.getImportList().add(cgField.getType().getName());
 
+        /* Set field name. */
+        buf.append(cgField.getName());
         /*
          * If Nullable is set, or if it is not an interface but the default value is not set.
          */
         if (!cgField.getNotnull() ||
                 (!argIsInterface && BlancoStringUtil.null2Blank(cgField.getDefault()).length() == 0)) {
             // nullable
-            buf.append(cgField.getName() + "?: ");
-        } else {
-            buf.append(cgField.getName() + ": ");
+            buf.append("?");
         }
-        buf.append(BlancoCgTypeTsSourceExpander.toTypeString(cgField.getType()));
+        /* type inference (omit type declaration) */
+        if (!cgField.getTypeInference()) {
+            buf.append(": " + BlancoCgTypeTsSourceExpander.toTypeString(cgField.getType()));
+        }
 
         // If a default value is specified, this will be expanded.
         if (BlancoStringUtil.null2Blank(cgField.getDefault()).length() > 0) {

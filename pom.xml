@@ -4,7 +4,7 @@
     <groupId>blanco.cg</groupId>
     <artifactId>blanco-cg</artifactId>
     <packaging>jar</packaging>
-    <version>2.3.10</version>
+    <version>2.3.11</version>
 
     <name>blanco-cg</name>
     <description>blancoCg is a simple code generator library. blancoCg supports Java/C#/JavaScript/VB.NET/PHP/Ruby/Python/Delphi/Swift/C++11/Kotlin.</description>

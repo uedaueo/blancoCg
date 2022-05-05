@@ -73,13 +73,28 @@ public class BlancoCgTransformerTsncTest extends TestCase {
         cgClass.getFieldList().add(cgField);
         cgField.setAccess("export const");
         String arrowFunc =
-                "\nd() => {\n" +
-                        "return {\n" +
-                        "dummy++;\n" +
-                        "}\n" +
+                "() => {\n" +
+                        "\treturn {\n" +
+                        "\t\tdummy++;\n" +
+                        "\t}\n" +
                         "}";
         cgField.setDefault(arrowFunc);
         cgField.setNotnull(true);
+        cgField.setTypeInference(true);
+
+        // Generate a type
+        final BlancoCgField cgDeclType = cgFactory.createField("HelloInputEmitsOptions",
+                "dummy", "Testing a string field.");
+        cgClass.getFieldList().add(cgDeclType);
+        cgDeclType.setAccess("export declare type");
+        String typeDefine =
+                "{\n" +
+                        "\t'update': (value: string) => boolean,\n" +
+                        "\t'downgrade': (value: number) => boolean\n" +
+                        "} | ObjectEmitsOptions";
+        cgDeclType.setDefault(typeDefine);
+        cgDeclType.setNotnull(true);
+        cgDeclType.setTypeInference(true);
 
         // Generates a function.
         final BlancoCgMethod cgFunction = cgFactory.createMethod("defineStoreOptions<Id extends string, S extends StateTree = {}, G extends _GettersTree<S> = {}, A = {}>",

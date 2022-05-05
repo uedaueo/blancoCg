@@ -103,6 +103,14 @@ public class BlancoCgField {
     private BlancoCgLangDoc fLangDoc;
 
     /**
+     * 型推論（型宣言の省略）をする場合はtrue
+     *
+     * フィールド: [typeInference]。
+     * デフォルト: [false]。
+     */
+    private boolean fTypeInference = false;
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [このフィールドの名前です。]。
@@ -378,6 +386,29 @@ public class BlancoCgField {
     }
 
     /**
+     * フィールド [typeInference] の値を設定します。
+     *
+     * フィールドの説明: [型推論（型宣言の省略）をする場合はtrue]。
+     *
+     * @param argTypeInference フィールド[typeInference]に設定する値。
+     */
+    public void setTypeInference(final boolean argTypeInference) {
+        fTypeInference = argTypeInference;
+    }
+
+    /**
+     * フィールド [typeInference] の値を取得します。
+     *
+     * フィールドの説明: [型推論（型宣言の省略）をする場合はtrue]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[typeInference]から取得した値。
+     */
+    public boolean getTypeInference() {
+        return fTypeInference;
+    }
+
+    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -404,6 +435,7 @@ public class BlancoCgField {
         buf.append(",default=" + fDefault);
         buf.append(",annotationList=" + fAnnotationList);
         buf.append(",langDoc=" + fLangDoc);
+        buf.append(",typeInference=" + fTypeInference);
         buf.append("]");
         return buf.toString();
     }
@@ -462,5 +494,8 @@ public class BlancoCgField {
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。
+        // Name: fTypeInference
+        // Type: boolean
+        target.fTypeInference = this.fTypeInference;
     }
 }
