@@ -66,49 +66,45 @@ class BlancoCgClassTsSourceExpander {
         // Expands annotations.
         expandAnnotationList(cgClass, argSourceLines);
 
-        final StringBuffer buf = new StringBuffer();
-
-
         // Check class style or not
         boolean isClassStyle = !cgClass.getNoClassDeclare();
-        if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0 && isClassStyle) {
-            /*
-             * In TypeScript, it defaults public.
-             * If "public" is specified, replaces it with "export".
-             * Since blanco expects one class per file, and class is assumed to be named, we will not use export default.
-             * by tueda, 2020/03/11
-             *
-             * Note: default is required in the vue component, so if default is specified, export default will be used.
-             * by tueda, 2020/06/17
-             */
-            if ("public".equals(cgClass.getAccess())) {
-                buf.append("export ");
-            } else if ("default".equals(cgClass.getAccess())) {
-                buf.append("export default ");
+        if (isClassStyle) {
+            final StringBuffer buf = new StringBuffer();
+            if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0) {
+                /*
+                 * In TypeScript, it defaults public.
+                 * If "public" is specified, replaces it with "export".
+                 * Since blanco expects one class per file, and class is assumed to be named, we will not use export default.
+                 * by tueda, 2020/03/11
+                 *
+                 * Note: default is required in the vue component, so if default is specified, export default will be used.
+                 * by tueda, 2020/06/17
+                 */
+                if ("public".equals(cgClass.getAccess())) {
+                    buf.append("export ");
+                } else if ("default".equals(cgClass.getAccess())) {
+                    buf.append("export default ");
+                }
             }
-        }
-        if (cgClass.getAbstract() && isClassStyle) {
-            buf.append("abstract ");
-        }
+            if (cgClass.getAbstract()) {
+                buf.append("abstract ");
+            }
 
-        // TypeScript does not seem to have a final class.
-        if (isClassStyle) {
+            // TypeScript does not seem to have a final class.
             buf.append("class " + cgClass.getName());
-        }
 
-        // Expands a parent class.
-        expandExtendClassList(cgClass, argSourceFile, buf);
+            // Expands a parent class.
+            expandExtendClassList(cgClass, argSourceFile, buf);
 
-        // Expands a parent interface.
-        expandImplementInterfaceList(cgClass, argSourceFile, buf);
+            // Expands a parent interface.
+            expandImplementInterfaceList(cgClass, argSourceFile, buf);
 
-        // The start of a class block.
-        if (isClassStyle) {
+            // The start of a class block.
             buf.append(" {");
-        }
 
-        // Finalizes the line and performs the export.
-        argSourceLines.add(buf.toString());
+            // Finalizes the line and performs the export.
+            argSourceLines.add(buf.toString());
+        }
 
         // Expands PlainText here.
         expandPlainText(cgClass, argSourceLines);
@@ -139,7 +135,9 @@ class BlancoCgClassTsSourceExpander {
         List<String> plainTextList = cgClass.getPlainTextList();
 
         // Adds a line break inevitably.
-        argSourceLines.add("");
+        if (!cgClass.getNoClassDeclare()) {
+            argSourceLines.add("");
+        }
 
         for (String planText : plainTextList) {
             argSourceLines.add(planText);
