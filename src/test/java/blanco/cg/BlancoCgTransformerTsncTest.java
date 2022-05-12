@@ -63,7 +63,9 @@ public class BlancoCgTransformerTsncTest extends TestCase {
         plainTextList.add("export default defineComponent({");
         plainTextList.add("name: 'MyTestComponent',");
         plainTextList.add("props: myTestComponentPropsOptions,");
-        plainTextList.add("setup: myTestComponentSetupOptions");
+        plainTextList.add("setup: (props, context) => {");
+        plainTextList.add("\t\treturn myTestComponentSetupOptions(props, context);\n");
+        plainTextList.add("\t}");
         plainTextList.add("});");
         cgClass.setPlainTextList(plainTextList);
 

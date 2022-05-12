@@ -50,25 +50,25 @@ class BlancoCgClassTsSourceExpander {
     public void transformClass(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<String> argSourceLines) {
-        // First, it expands the class information into a LangDoc.
-        if (cgClass.getLangDoc() == null) {
-            // If LangDoc is not specified, creates an instance here.
-            cgClass.setLangDoc(new BlancoCgLangDoc());
-        }
-        if (cgClass.getLangDoc().getTitle() == null) {
-            cgClass.getLangDoc().setTitle(cgClass.getDescription());
-        }
-
-        // Next, it expands LangDoc into source code format.
-        new BlancoCgLangDocTsSourceExpander().transformLangDoc(cgClass
-                .getLangDoc(), argSourceLines);
-
-        // Expands annotations.
-        expandAnnotationList(cgClass, argSourceLines);
-
         // Check class style or not
         boolean isClassStyle = !cgClass.getNoClassDeclare();
         if (isClassStyle) {
+            // First, it expands the class information into a LangDoc.
+            if (cgClass.getLangDoc() == null) {
+                // If LangDoc is not specified, creates an instance here.
+                cgClass.setLangDoc(new BlancoCgLangDoc());
+            }
+            if (cgClass.getLangDoc().getTitle() == null) {
+                cgClass.getLangDoc().setTitle(cgClass.getDescription());
+            }
+
+            // Next, it expands LangDoc into source code format.
+            new BlancoCgLangDocTsSourceExpander().transformLangDoc(cgClass
+                    .getLangDoc(), argSourceLines);
+
+            // Expands annotations.
+            expandAnnotationList(cgClass, argSourceLines);
+
             final StringBuffer buf = new StringBuffer();
             if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0) {
                 /*
@@ -135,9 +135,7 @@ class BlancoCgClassTsSourceExpander {
         List<String> plainTextList = cgClass.getPlainTextList();
 
         // Adds a line break inevitably.
-        if (!cgClass.getNoClassDeclare()) {
-            argSourceLines.add("");
-        }
+        argSourceLines.add("");
 
         for (String planText : plainTextList) {
             argSourceLines.add(planText);
