@@ -118,12 +118,12 @@ public class BlancoCgReturn {
     }
 
     /**
-     * このバリューオブジェクトを指定のターゲットに複写します。
+     * Copies this value object to the specified target.
      *
-     * <P>使用上の注意</P>
+     * <P>Cautions for use</P>
      * <UL>
-     * <LI>オブジェクトのシャロー範囲のみ複写処理対象となります。
-     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * <LI>Only the shallow range of the object will be subject to the copying process.
+     * <LI>Do not use this method if the object has a circular reference.
      * </UL>
      *
      * @param target target value object.
@@ -140,7 +140,7 @@ public class BlancoCgReturn {
         target.fDescription = this.fDescription;
         // Name: fType
         // Type: blanco.cg.valueobject.BlancoCgType
-        // フィールド[fType]はサポート外の型[blanco.cg.valueobject.BlancoCgType]です。
+        // Field[fType] is an unsupported type[blanco.cg.valueobject.BlancoCgType].
         // Name: fNullable
         // Type: java.lang.Boolean
         target.fNullable = this.fNullable;

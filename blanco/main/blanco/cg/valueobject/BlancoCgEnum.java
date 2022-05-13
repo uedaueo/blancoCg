@@ -178,12 +178,12 @@ public class BlancoCgEnum {
     }
 
     /**
-     * このバリューオブジェクトを指定のターゲットに複写します。
+     * Copies this value object to the specified target.
      *
-     * <P>使用上の注意</P>
+     * <P>Cautions for use</P>
      * <UL>
-     * <LI>オブジェクトのシャロー範囲のみ複写処理対象となります。
-     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * <LI>Only the shallow range of the object will be subject to the copying process.
+     * <LI>Do not use this method if the object has a circular reference.
      * </UL>
      *
      * @param target target value object.
@@ -206,9 +206,9 @@ public class BlancoCgEnum {
         target.fAccess = this.fAccess;
         // Name: fElementList
         // Type: java.util.List
-        // フィールド[fElementList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgEnumElement]です。
+        // Field[fElementList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgEnumElement].
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
-        // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。
+        // Field[fLangDoc] is an unsupported type[blanco.cg.valueobject.BlancoCgLangDoc].
     }
 }

@@ -572,12 +572,12 @@ public class BlancoCgClass {
     }
 
     /**
-     * このバリューオブジェクトを指定のターゲットに複写します。
+     * Copies this value object to the specified target.
      *
-     * <P>使用上の注意</P>
+     * <P>Cautions for use</P>
      * <UL>
-     * <LI>オブジェクトのシャロー範囲のみ複写処理対象となります。
-     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * <LI>Only the shallow range of the object will be subject to the copying process.
+     * <LI>Do not use this method if the object has a circular reference.
      * </UL>
      *
      * @param target target value object.
@@ -600,10 +600,10 @@ public class BlancoCgClass {
         target.fGenerics = this.fGenerics;
         // Name: fExtendClassList
         // Type: java.util.List
-        // フィールド[fExtendClassList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgType]です。
+        // Field[fExtendClassList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgType].
         // Name: fImplementInterfaceList
         // Type: java.util.List
-        // フィールド[fImplementInterfaceList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgType]です。
+        // Field[fImplementInterfaceList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgType].
         // Name: fAccess
         // Type: java.lang.String
         target.fAccess = this.fAccess;
@@ -615,30 +615,30 @@ public class BlancoCgClass {
         target.fFinal = this.fFinal;
         // Name: fDelegateMap
         // Type: java.util.Map
-        // フィールド[fDelegateMap]はサポート外の型[java.util.Mapjava.lang.String, java.lang.String]です。
+        // Field[fDelegateMap] is an unsupported type[java.util.Mapjava.lang.String, java.lang.String].
         // Name: fAnnotationList
         // Type: java.util.List
-        // フィールド[fAnnotationList]はサポート外の型[java.util.Listjava.lang.String]です。
+        // Field[fAnnotationList] is an unsupported type[java.util.Listjava.lang.String].
         // Name: fEnumList
         // Type: java.util.List
-        // フィールド[fEnumList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgEnum]です。
+        // Field[fEnumList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgEnum].
         // Name: fFieldList
         // Type: java.util.List
-        // フィールド[fFieldList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgField]です。
+        // Field[fFieldList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgField].
         // Name: fMethodList
         // Type: java.util.List
-        // フィールド[fMethodList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgMethod]です。
+        // Field[fMethodList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgMethod].
         // Name: fNoClassDeclare
         // Type: boolean
         target.fNoClassDeclare = this.fNoClassDeclare;
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
-        // フィールド[fLangDoc]はサポート外の型[blanco.cg.valueobject.BlancoCgLangDoc]です。
+        // Field[fLangDoc] is an unsupported type[blanco.cg.valueobject.BlancoCgLangDoc].
         // Name: fConstructorArgList
         // Type: java.util.List
-        // フィールド[fConstructorArgList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgField]です。
+        // Field[fConstructorArgList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgField].
         // Name: fPlainTextList
         // Type: java.util.List
-        // フィールド[fPlainTextList]はサポート外の型[java.util.Listjava.lang.String]です。
+        // Field[fPlainTextList] is an unsupported type[java.util.Listjava.lang.String].
     }
 }

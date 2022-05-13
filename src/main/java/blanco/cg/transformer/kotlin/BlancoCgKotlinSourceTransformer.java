@@ -30,11 +30,11 @@ import java.util.List;
 
 import blanco.cg.transformer.AbstractBlancoCgJavaStyleTransformer;
 import blanco.cg.valueobject.BlancoCgSourceFile;
-import com.facebook.ktfmt.FormatterKt;
+import com.facebook.ktfmt.format.Formatter;
 
 /**
  * An entry point of the transformer that auto-generates source code from blancoCg value objects.
- * 
+ *
  * It is recommended to generate them via BlancoCgTransformerFactory.<br>
  * This transformer converts a value object into Kotlin source code.
  *
@@ -45,9 +45,9 @@ public class BlancoCgKotlinSourceTransformer extends
 
     /**
      * Converts the source file value object to Kotlin source code and outputs it to the writer.
-     * 
+     *
      * Does not consider the package structure to be a directory structure in this API. In this process, it just outputs to the writer.
-     * 
+     *
      * @param argSourceFile
      *            A source file value object.
      * @param argWriter
@@ -82,7 +82,7 @@ public class BlancoCgKotlinSourceTransformer extends
         String strSourceLines = String.join(LF, argSourceLines);
         String strFormatted = "";
         try {
-            strFormatted = FormatterKt.format(strSourceLines);
+            strFormatted = Formatter.format(strSourceLines);
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -96,7 +96,7 @@ public class BlancoCgKotlinSourceTransformer extends
 
     /**
      * Gets the extension to be attached to the source code.
-     * 
+     *
      * @return An extension to attach to the source code.
      */
     protected String getSourceFileExt() {

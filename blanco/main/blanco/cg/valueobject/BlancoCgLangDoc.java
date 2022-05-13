@@ -285,12 +285,12 @@ public class BlancoCgLangDoc {
     }
 
     /**
-     * このバリューオブジェクトを指定のターゲットに複写します。
+     * Copies this value object to the specified target.
      *
-     * <P>使用上の注意</P>
+     * <P>Cautions for use</P>
      * <UL>
-     * <LI>オブジェクトのシャロー範囲のみ複写処理対象となります。
-     * <LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。
+     * <LI>Only the shallow range of the object will be subject to the copying process.
+     * <LI>Do not use this method if the object has a circular reference.
      * </UL>
      *
      * @param target target value object.
@@ -307,24 +307,24 @@ public class BlancoCgLangDoc {
         target.fTitle = this.fTitle;
         // Name: fDescriptionList
         // Type: java.util.List
-        // フィールド[fDescriptionList]はサポート外の型[java.util.Listjava.lang.String]です。
+        // Field[fDescriptionList] is an unsupported type[java.util.Listjava.lang.String].
         // Name: fDeprecated
         // Type: java.lang.String
         target.fDeprecated = this.fDeprecated;
         // Name: fParameterList
         // Type: java.util.List
-        // フィールド[fParameterList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgParameter]です。
+        // Field[fParameterList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgParameter].
         // Name: fVirtualParameterList
         // Type: java.util.List
-        // フィールド[fVirtualParameterList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgVirtualParameter]です。
+        // Field[fVirtualParameterList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgVirtualParameter].
         // Name: fReturn
         // Type: blanco.cg.valueobject.BlancoCgReturn
-        // フィールド[fReturn]はサポート外の型[blanco.cg.valueobject.BlancoCgReturn]です。
+        // Field[fReturn] is an unsupported type[blanco.cg.valueobject.BlancoCgReturn].
         // Name: fThrowList
         // Type: java.util.List
-        // フィールド[fThrowList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgException]です。
+        // Field[fThrowList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgException].
         // Name: fTagList
         // Type: java.util.List
-        // フィールド[fTagList]はサポート外の型[java.util.Listblanco.cg.valueobject.BlancoCgLangDocTag]です。
+        // Field[fTagList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgLangDocTag].
     }
 }
