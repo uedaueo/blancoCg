@@ -4,7 +4,7 @@
     <groupId>blanco.cg</groupId>
     <artifactId>blanco-cg</artifactId>
     <packaging>jar</packaging>
-    <version>2.3.14</version>
+    <version>2.3.15</version>
 
     <name>blanco-cg</name>
     <description>blancoCg is a simple code generator library. blancoCg supports Java/C#/JavaScript/VB.NET/PHP/Ruby/Python/Delphi/Swift/C++11/Kotlin/TypeScript.</description>
@@ -113,14 +113,6 @@
             <groupId>blanco.stringgroup</groupId>
             <artifactId>blanco-stringgroup</artifactId>
             <version>[0.0,1.0)</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans -->
-        <dependency>
-            <groupId>org.apache.xmlbeans</groupId>
-            <artifactId>xmlbeans</artifactId>
-            <version>3.1.0</version>
-<!--            <version>2.6.0</version>-->
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -237,7 +229,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <taskdef name="blancovalueobject" classname="blanco.valueobject.task.BlancoValueObjectTask" classpathref="maven.runtime.classpath">
+                                <taskdef name="blancovalueobject" classname="blanco.valueobject.task.BlancoValueObjectTask" classpathref="maven.compile.classpath">
                                 </taskdef>
                                 <blancovalueobject metadir="meta/program" encoding="${project.build.sourceEncoding}" />
                                 <!--								<blancovalueobject metadir="meta/objects" encoding="${project.build.sourceEncoding}" sheetType="php" targetdir="sample" targetStyle="maven" verbose="true" />-->
@@ -253,7 +245,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <taskdef name="blancoresourcebundle" classname="blanco.resourcebundle.task.BlancoResourceBundleTask" classpathref="maven.runtime.classpath">
+                                <taskdef name="blancoresourcebundle" classname="blanco.resourcebundle.task.BlancoResourceBundleTask" classpathref="maven.compile.classpath">
                                 </taskdef>
                                 <blancoresourcebundle metadir="meta/program" encoding="${project.build.sourceEncoding}" />
                             </target>
@@ -268,7 +260,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <taskdef name="blancostringgroup" classname="blanco.stringgroup.task.BlancoStringGroupTask" classpathref="maven.runtime.classpath">
+                                <taskdef name="blancostringgroup" classname="blanco.stringgroup.task.BlancoStringGroupTask" classpathref="maven.compile.classpath">
                                 </taskdef>
                                 <blancostringgroup metadir="meta/program" encoding="${project.build.sourceEncoding}" />
                             </target>
@@ -283,7 +275,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <java classname="blanco.cg.cg.BlancoCgCg" classpathref="maven.runtime.classpath">
+                                <java classname="blanco.cg.cg.BlancoCgCg" classpathref="maven.compile.classpath">
                                 </java>
                             </target>
                         </configuration>
