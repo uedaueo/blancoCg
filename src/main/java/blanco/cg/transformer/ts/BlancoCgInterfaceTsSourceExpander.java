@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Expands BlancoCgInterface into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -40,7 +40,7 @@ class BlancoCgInterfaceTsSourceExpander {
 
     /**
      * Expands the interface here.
-     * 
+     *
      * @param cgInterface
      *            The interface to be processed.
      * @param argSourceLines
@@ -161,7 +161,7 @@ class BlancoCgInterfaceTsSourceExpander {
             argSourceFile.getImportList().add(type.getName());
 
             if (index == 0) {
-                argBuf.append(" exntends "
+                argBuf.append(" extends "
                         + BlancoCgTypeTsSourceExpander.toTypeString(type));
             } else {
                 /*
