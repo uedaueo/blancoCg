@@ -27,6 +27,7 @@ package blanco.cg.transformer.ts;
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.valueobject.BlancoCgClass;
+import blanco.cg.valueobject.BlancoCgEnum;
 import blanco.cg.valueobject.BlancoCgInterface;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
@@ -36,7 +37,7 @@ import java.util.List;
 
 /**
  * Expands BlancoCgSourceFile into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -54,14 +55,14 @@ class BlancoCgSourceFileTsSourceExpander {
 
     /**
      * List indicating the source code to be used intermediately. java.lang.String will be stored (It is not BlancoCgLine).
-     * 
+     *
      * The unformatted source code will be stored in the interim here.
      */
     private List<String> fSourceLines = null;
 
     /**
      * Generates a list of unformatted source code from SourceFile.
-     * 
+     *
      * @param argSourceFile
      *            A value object representing the source code.
      * @return A list after expansion into source code.
@@ -103,7 +104,14 @@ class BlancoCgSourceFileTsSourceExpander {
         // Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.
         BlancoCgImportTsSourceExpander.insertAnchorString(fSourceLines);
 
-        // In Kotlin, an enumeration is defined as a class, but for the time being, it is not subject to auto-generation. (tueda)
+        // Performs enum expansion.
+        if (fCgSourceFile.getEnumList() == null) {
+            throw new IllegalArgumentException("The list of enum has been given a null value.");
+        }
+        for (BlancoCgEnum cgEnum : fCgSourceFile.getEnumList()) {
+            new BlancoCgEnumTsSourceExpander().transformEnum(
+                    cgEnum, fCgSourceFile, fSourceLines);
+        }
 
         // Performs interface expansion.
         if (fCgSourceFile.getInterfaceList() == null) {

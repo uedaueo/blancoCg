@@ -36,6 +36,14 @@ public class BlancoCgEnum {
     private List<BlancoCgEnumElement> fElementList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgEnumElement>();
 
     /**
+     * クラス内定義など必要に応じてLineTerminatorを付与します。
+     *
+     * フィールド: [lineTerminator]。
+     * デフォルト: [false]。
+     */
+    private Boolean fLineTerminator = false;
+
+    /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。なおBlancoCgObjectFactoryを経由してインスタンスを取得した際には、既にオブジェクトはセット済みです。
      *
      * フィールド: [langDoc]。
@@ -132,6 +140,29 @@ public class BlancoCgEnum {
     }
 
     /**
+     * フィールド [lineTerminator] の値を設定します。
+     *
+     * フィールドの説明: [クラス内定義など必要に応じてLineTerminatorを付与します。]。
+     *
+     * @param argLineTerminator フィールド[lineTerminator]に設定する値。
+     */
+    public void setLineTerminator(final Boolean argLineTerminator) {
+        fLineTerminator = argLineTerminator;
+    }
+
+    /**
+     * フィールド [lineTerminator] の値を取得します。
+     *
+     * フィールドの説明: [クラス内定義など必要に応じてLineTerminatorを付与します。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[lineTerminator]から取得した値。
+     */
+    public Boolean getLineTerminator() {
+        return fLineTerminator;
+    }
+
+    /**
      * フィールド [langDoc] の値を設定します。
      *
      * フィールドの説明: [言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。なおBlancoCgObjectFactoryを経由してインスタンスを取得した際には、既にオブジェクトはセット済みです。]。
@@ -172,6 +203,7 @@ public class BlancoCgEnum {
         buf.append(",description=" + fDescription);
         buf.append(",access=" + fAccess);
         buf.append(",elementList=" + fElementList);
+        buf.append(",lineTerminator=" + fLineTerminator);
         buf.append(",langDoc=" + fLangDoc);
         buf.append("]");
         return buf.toString();
@@ -207,6 +239,9 @@ public class BlancoCgEnum {
         // Name: fElementList
         // Type: java.util.List
         // Field[fElementList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgEnumElement].
+        // Name: fLineTerminator
+        // Type: java.lang.Boolean
+        target.fLineTerminator = this.fLineTerminator;
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // Field[fLangDoc] is an unsupported type[blanco.cg.valueobject.BlancoCgLangDoc].

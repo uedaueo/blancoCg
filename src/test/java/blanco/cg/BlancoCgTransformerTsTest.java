@@ -286,4 +286,63 @@ public class BlancoCgTransformerTsTest extends TestCase {
                 .getTsSourceTransformer();
         cgTransformerTs.transform(cgSourceFile, new File("./tmp/blanco"));
     }
+
+    /**
+     * Enum expansion test.
+     *
+     * @throws Exception
+     */
+    public void testTransformerEnum() throws Exception {
+        final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
+
+        // Generates a source file.
+        final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
+                "Enum for testing");
+        cgSourceFile.getImportList().add("java.text.NumberFormat");
+        // Sets to two tabs.
+        cgSourceFile.setTabs(2);
+
+        // Generates the Enum.
+        final BlancoCgEnum cgEnum = cgOf.createEnum(
+                "MyEnum", "This enum is for testing.");
+        cgSourceFile.getEnumList().add(cgEnum);
+        cgEnum.getLangDoc().getTagList().add(
+                cgOf.createLangDocTag("author", null, "blanco Framework"));
+        cgEnum.setAccess("public");
+
+        // Generates a enumerates.
+        final BlancoCgEnumElement cgEnumElement01 = cgOf.createEnumElement("ENUM01", "First Enumerate");
+        cgEnumElement01.setDefault("\"myEnumerate01\"");
+        cgEnum.getElementList().add(cgEnumElement01);
+
+        final BlancoCgEnumElement cgEnumElement02 = cgOf.createEnumElement("ENUM02", "Second Enumerate");
+        cgEnumElement02.setDefault("\"myEnumerate02\"");
+        cgEnum.getElementList().add(cgEnumElement02);
+
+        final BlancoCgEnumElement cgEnumElement03 = cgOf.createEnumElement("ENUM03", "Third Enumerate");
+        cgEnumElement03.setDefault("\"myEnumerate03\"");
+        cgEnum.getElementList().add(cgEnumElement03);
+
+        // Generates the Enum without default value.
+        final BlancoCgEnum cgEnumNoDefault = cgOf.createEnum(
+                "MyEnumNoDefault", "This enum is for testing.");
+        cgSourceFile.getEnumList().add(cgEnumNoDefault);
+        cgEnumNoDefault.getLangDoc().getTagList().add(
+                cgOf.createLangDocTag("author", null, "blanco Framework"));
+        cgEnumNoDefault.setAccess("public");
+
+        // Generates a enumerates.
+        final BlancoCgEnumElement cgEnumElement04 = cgOf.createEnumElement("ENUM01", "First Enumerate");
+        cgEnumNoDefault.getElementList().add(cgEnumElement04);
+
+        final BlancoCgEnumElement cgEnumElement05 = cgOf.createEnumElement("ENUM02", "Second Enumerate");
+        cgEnumNoDefault.getElementList().add(cgEnumElement05);
+
+        final BlancoCgEnumElement cgEnumElement06 = cgOf.createEnumElement("ENUM03", "Third Enumerate");
+        cgEnumNoDefault.getElementList().add(cgEnumElement06);
+
+        final BlancoCgTransformer cgTransformerTs = BlancoCgTransformerFactory
+                .getTsSourceTransformer();
+        cgTransformerTs.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
 }

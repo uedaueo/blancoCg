@@ -30,6 +30,7 @@ import java.util.List;
 
 import blanco.cg.BlancoCgTransformer;
 import blanco.cg.valueobject.BlancoCgClass;
+import blanco.cg.valueobject.BlancoCgEnum;
 import blanco.cg.valueobject.BlancoCgInterface;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
@@ -78,6 +79,17 @@ abstract class AbstractBlancoCgTransformer implements BlancoCgTransformer {
                         .getInterfaceList().get(index);
 
                 className = cgInterface.getName();
+                break;
+            }
+        }
+
+        if (className == null) {
+            // If the file name has not yet been determined, it will try to derive the class name from the list of Enum as well.
+            for (int index = 0; index < argSourceFile.getEnumList().size(); index++) {
+                final BlancoCgEnum cgEnum = argSourceFile
+                        .getEnumList().get(index);
+
+                className = cgEnum.getName();
                 break;
             }
         }
