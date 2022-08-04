@@ -415,4 +415,85 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
                 .getKotlinSourceTransformer();
         cgTransformerKotlin.transform(cgSourceFile, new File("./tmp/blanco"));
     }
+
+    /**
+     * enum expansion test.
+     *
+     * @throws Exception
+     */
+    public void testTransformerEnum() throws Exception {
+        final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
+
+        // Generates a source file.
+        final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
+                "enum for testing");
+        cgSourceFile.getImportList().add("java.text.NumberFormat");
+
+        // Generates the class.
+        final BlancoCgEnum cgEnum = cgOf.createEnum(
+                "MyEnum", "This enum is for testing.");
+        cgSourceFile.getEnumList().add(cgEnum);
+        cgEnum.getLangDoc().getTagList().add(
+                cgOf.createLangDocTag("author", null, "blanco Framework"));
+
+        // Testing the primary constructor.
+        BlancoCgField constParam = new BlancoCgField();
+        BlancoCgType constType = new BlancoCgType();
+        cgEnum.getConstructorArgList().add(constParam);
+        constParam.setType(constType);
+        constParam.setName("first");
+        constParam.setConst(true);
+        constParam.setFinal(true);
+        constParam.setNotnull(true);
+        constType.setName("Int");
+
+        // Testing the primary constructor.
+        constParam = new BlancoCgField();
+        constType = new BlancoCgType();
+        cgEnum.getConstructorArgList().add(constParam);
+        constParam.setType(constType);
+        constParam.setName("second");
+        constParam.setConst(true);
+        constParam.setFinal(true);
+        constParam.setNotnull(true);
+        constType.setName("String");
+        // Annotation test of the primary constructor.
+        List<String> primaryConstAnnotationList = new ArrayList<>();
+        primaryConstAnnotationList.add("hoge(\n\"fuga: boge\"\n)");
+        constParam.setAnnotationList(primaryConstAnnotationList);
+
+        // Generates a enumerates.
+        final BlancoCgEnumElement cgEnumElement01 = cgOf.createEnumElement("ENUM01", "First Enumerate");
+        cgEnumElement01.setDefault("0, \"myEnumerate01\"");
+        cgEnum.getElementList().add(cgEnumElement01);
+
+        final BlancoCgEnumElement cgEnumElement02 = cgOf.createEnumElement("ENUM02", "Second Enumerate");
+        cgEnumElement02.setDefault("1, \"myEnumerate02\"");
+        cgEnum.getElementList().add(cgEnumElement02);
+
+        final BlancoCgEnumElement cgEnumElement03 = cgOf.createEnumElement("ENUM03", "Third Enumerate");
+        cgEnumElement03.setDefault("2, \"myEnumerate03\"");
+        cgEnum.getElementList().add(cgEnumElement03);
+
+        // No default simple enumerate
+        final BlancoCgEnum cgEnum02 = cgOf.createEnum(
+                "MyEnum02", "This enum is for testing.");
+        cgSourceFile.getEnumList().add(cgEnum02);
+        cgEnum02.getLangDoc().getTagList().add(
+                cgOf.createLangDocTag("author", null, "blanco Framework"));
+
+        // enumerates
+        final BlancoCgEnumElement cgEnumElement04 = cgOf.createEnumElement("ENUM01", "First Enumerate");
+        cgEnum02.getElementList().add(cgEnumElement04);
+
+        final BlancoCgEnumElement cgEnumElement05 = cgOf.createEnumElement("ENUM02", "Second Enumerate");
+        cgEnum02.getElementList().add(cgEnumElement05);
+
+        final BlancoCgEnumElement cgEnumElement06 = cgOf.createEnumElement("ENUM03", "Third Enumerate");
+        cgEnum02.getElementList().add(cgEnumElement06);
+
+        final BlancoCgTransformer cgTransformerKotlin = BlancoCgTransformerFactory
+                .getKotlinSourceTransformer();
+        cgTransformerKotlin.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
 }

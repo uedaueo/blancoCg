@@ -51,6 +51,14 @@ public class BlancoCgEnum {
     private BlancoCgLangDoc fLangDoc;
 
     /**
+     * クラス定義に含めるコンストラクタの引数マップです。&lt;引数名, 型&gt; となります。
+     *
+     * フィールド: [constructorArgList]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgField&gt;()]。
+     */
+    private List<BlancoCgField> fConstructorArgList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgField>();
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [この列挙体の名前です。]。
@@ -185,6 +193,29 @@ public class BlancoCgEnum {
     }
 
     /**
+     * フィールド [constructorArgList] の値を設定します。
+     *
+     * フィールドの説明: [クラス定義に含めるコンストラクタの引数マップです。<引数名, 型> となります。]。
+     *
+     * @param argConstructorArgList フィールド[constructorArgList]に設定する値。
+     */
+    public void setConstructorArgList(final List<BlancoCgField> argConstructorArgList) {
+        fConstructorArgList = argConstructorArgList;
+    }
+
+    /**
+     * フィールド [constructorArgList] の値を取得します。
+     *
+     * フィールドの説明: [クラス定義に含めるコンストラクタの引数マップです。<引数名, 型> となります。]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgField&gt;()]。
+     *
+     * @return フィールド[constructorArgList]から取得した値。
+     */
+    public List<BlancoCgField> getConstructorArgList() {
+        return fConstructorArgList;
+    }
+
+    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -205,6 +236,7 @@ public class BlancoCgEnum {
         buf.append(",elementList=" + fElementList);
         buf.append(",lineTerminator=" + fLineTerminator);
         buf.append(",langDoc=" + fLangDoc);
+        buf.append(",constructorArgList=" + fConstructorArgList);
         buf.append("]");
         return buf.toString();
     }
@@ -245,5 +277,8 @@ public class BlancoCgEnum {
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // Field[fLangDoc] is an unsupported type[blanco.cg.valueobject.BlancoCgLangDoc].
+        // Name: fConstructorArgList
+        // Type: java.util.List
+        // Field[fConstructorArgList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgField].
     }
 }

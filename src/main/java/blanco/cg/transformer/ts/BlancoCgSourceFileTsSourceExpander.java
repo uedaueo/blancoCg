@@ -25,7 +25,6 @@
 package blanco.cg.transformer.ts;
 
 import blanco.cg.BlancoCgSupportedLang;
-import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgEnum;
 import blanco.cg.valueobject.BlancoCgInterface;

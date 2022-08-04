@@ -28,7 +28,10 @@ package blanco.cg.transformer.ts;
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.util.BlancoCgSourceUtil;
-import blanco.cg.valueobject.*;
+import blanco.cg.valueobject.BlancoCgEnum;
+import blanco.cg.valueobject.BlancoCgEnumElement;
+import blanco.cg.valueobject.BlancoCgLangDoc;
+import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoStringUtil;
 
 import java.util.List;

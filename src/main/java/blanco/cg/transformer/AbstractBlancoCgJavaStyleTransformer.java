@@ -24,16 +24,12 @@
  */
 package blanco.cg.transformer;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.List;
-
 import blanco.cg.valueobject.BlancoCgSourceFile;
 import blanco.commons.util.BlancoFileUtil;
 import blanco.commons.util.BlancoStringUtil;
+
+import java.io.*;
+import java.util.List;
 
 /**
  * A Java/C#.net-style abstract transformer.
