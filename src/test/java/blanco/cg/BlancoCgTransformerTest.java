@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.valueobject.*;
 import junit.framework.TestCase;
 import blanco.cg.transformer.BlancoCgTransformerFactory;
@@ -256,6 +257,118 @@ public class BlancoCgTransformerTest extends TestCase {
 
         cgMethod.getThrowList().add(
                 cgOf.createException("java.io.IOException", "If an I/O exception occurs."));
+
+        final BlancoCgTransformer cgTransformerJava = BlancoCgTransformerFactory
+                .getJavaSourceTransformer();
+        cgTransformerJava.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
+
+    /**
+     * enum expansion test.
+     *
+     * @throws Exception
+     */
+    public void testTransformerEnum01() throws Exception {
+        final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
+
+        // Generates a source file.
+        final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
+                "enum for testing");
+        cgSourceFile.getImportList().add("java.text.NumberFormat");
+
+        // Generates the class.
+        final BlancoCgEnum cgEnum = cgOf.createEnum(
+                "MyEnum01", "This enum is for testing.");
+        cgSourceFile.getEnumList().add(cgEnum);
+        cgEnum.getLangDoc().getTagList().add(
+                cgOf.createLangDocTag("author", null, "blanco Framework"));
+        cgEnum.setAccess("public");
+
+        // Generate Constructor
+        BlancoCgMethod cgConst = cgOf.createMethod(cgEnum.getName(), "Constructor for enum.");
+        cgEnum.getMethodList().add(cgConst);
+        cgConst.setConstructor(true);
+        cgConst.setAccess("");
+        List<String> constLines = cgConst.getLineList();
+
+        // Testing the primary constructor.
+        BlancoCgField constParam = new BlancoCgField();
+        BlancoCgType constType = new BlancoCgType();
+        cgEnum.getConstructorArgList().add(constParam);
+        constParam.setType(constType);
+        constParam.setName("first");
+        constParam.setConst(true);
+        constParam.setFinal(true);
+        constParam.setNotnull(true);
+        constType.setName("Integer");
+
+        BlancoCgParameter cgParam01 = cgOf.createParameter(constParam.getName(), constParam.getType().getName(), constParam.getDescription());
+        cgConst.getParameterList().add(cgParam01);
+        cgParam01.setType(constParam.getType());
+        constLines.add("this." + constParam.getName() + " = " + constParam.getName() + ";");
+
+        // Testing the primary constructor.
+        constParam = new BlancoCgField();
+        constType = new BlancoCgType();
+        cgEnum.getConstructorArgList().add(constParam);
+        constParam.setType(constType);
+        constParam.setName("second");
+        constParam.setConst(true);
+        constParam.setFinal(true);
+        constParam.setNotnull(true);
+        constType.setName("String");
+        // Annotation test of the primary constructor.
+        List<String> primaryConstAnnotationList = new ArrayList<>();
+        primaryConstAnnotationList.add("hoge(\n\"fuga: boge\"\n)");
+        constParam.setAnnotationList(primaryConstAnnotationList);
+
+        BlancoCgParameter cgParam02 = cgOf.createParameter(constParam.getName(), constParam.getType().getName(), constParam.getDescription());
+        cgConst.getParameterList().add(cgParam02);
+        cgParam02.setType(constParam.getType());
+        constLines.add("this." + constParam.getName() + " = " + constParam.getName() + ";");
+
+        // Generates a enumerates.
+        final BlancoCgEnumElement cgEnumElement01 = cgOf.createEnumElement("ENUM01", "First Enumerate");
+        cgEnumElement01.setDefault("0, \"myEnumerate01\"");
+        cgEnum.getElementList().add(cgEnumElement01);
+
+        final BlancoCgEnumElement cgEnumElement02 = cgOf.createEnumElement("ENUM02", "Second Enumerate");
+        cgEnumElement02.setDefault("1, \"myEnumerate02\"");
+        cgEnum.getElementList().add(cgEnumElement02);
+
+        final BlancoCgEnumElement cgEnumElement03 = cgOf.createEnumElement("ENUM03", "Third Enumerate");
+        cgEnumElement03.setDefault("2, \"myEnumerate03\"");
+        cgEnum.getElementList().add(cgEnumElement03);
+
+        final BlancoCgTransformer cgTransformerJava = BlancoCgTransformerFactory
+                .getJavaSourceTransformer();
+        cgTransformerJava.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
+
+    public void testTransformerEnum02() throws Exception {
+        final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
+
+        // Generates a source file.
+        final BlancoCgSourceFile cgSourceFile = cgOf.createSourceFile("myprog",
+                "enum for testing");
+        cgSourceFile.getImportList().add("java.text.NumberFormat");
+
+        // No default simple enumerate
+        final BlancoCgEnum cgEnum02 = cgOf.createEnum(
+                "MyEnum02", "This enum is for testing.");
+        cgSourceFile.getEnumList().add(cgEnum02);
+        cgEnum02.getLangDoc().getTagList().add(
+                cgOf.createLangDocTag("author", null, "blanco Framework"));
+
+        // enumerates
+        final BlancoCgEnumElement cgEnumElement04 = cgOf.createEnumElement("ENUM01", "First Enumerate");
+        cgEnum02.getElementList().add(cgEnumElement04);
+
+        final BlancoCgEnumElement cgEnumElement05 = cgOf.createEnumElement("ENUM02", "Second Enumerate");
+        cgEnum02.getElementList().add(cgEnumElement05);
+
+        final BlancoCgEnumElement cgEnumElement06 = cgOf.createEnumElement("ENUM03", "Third Enumerate");
+        cgEnum02.getElementList().add(cgEnumElement06);
 
         final BlancoCgTransformer cgTransformerJava = BlancoCgTransformerFactory
                 .getJavaSourceTransformer();

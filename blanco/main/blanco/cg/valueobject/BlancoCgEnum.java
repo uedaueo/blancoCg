@@ -59,6 +59,14 @@ public class BlancoCgEnum {
     private List<BlancoCgField> fConstructorArgList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgField>();
 
     /**
+     * このクラスに含まれるメソッドのリストです。
+     *
+     * フィールド: [methodList]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgMethod&gt;()]。
+     */
+    private List<BlancoCgMethod> fMethodList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgMethod>();
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [この列挙体の名前です。]。
@@ -216,6 +224,29 @@ public class BlancoCgEnum {
     }
 
     /**
+     * フィールド [methodList] の値を設定します。
+     *
+     * フィールドの説明: [このクラスに含まれるメソッドのリストです。]。
+     *
+     * @param argMethodList フィールド[methodList]に設定する値。
+     */
+    public void setMethodList(final List<BlancoCgMethod> argMethodList) {
+        fMethodList = argMethodList;
+    }
+
+    /**
+     * フィールド [methodList] の値を取得します。
+     *
+     * フィールドの説明: [このクラスに含まれるメソッドのリストです。]。
+     * デフォルト: [new java.util.ArrayList&lt;blanco.cg.valueobject.BlancoCgMethod&gt;()]。
+     *
+     * @return フィールド[methodList]から取得した値。
+     */
+    public List<BlancoCgMethod> getMethodList() {
+        return fMethodList;
+    }
+
+    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -237,6 +268,7 @@ public class BlancoCgEnum {
         buf.append(",lineTerminator=" + fLineTerminator);
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",constructorArgList=" + fConstructorArgList);
+        buf.append(",methodList=" + fMethodList);
         buf.append("]");
         return buf.toString();
     }
@@ -280,5 +312,8 @@ public class BlancoCgEnum {
         // Name: fConstructorArgList
         // Type: java.util.List
         // Field[fConstructorArgList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgField].
+        // Name: fMethodList
+        // Type: java.util.List
+        // Field[fMethodList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgMethod].
     }
 }

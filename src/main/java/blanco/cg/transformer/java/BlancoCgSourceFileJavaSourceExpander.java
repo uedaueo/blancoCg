@@ -35,7 +35,7 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * Expands BlancoCgSourceFile into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -53,14 +53,14 @@ class BlancoCgSourceFileJavaSourceExpander {
 
     /**
      * List indicating the source code to be used intermediately. java.lang.String will be stored (It is not BlancoCgLine).
-     * 
+     *
      * The unformatted source code will be stored in the interim here.
      */
     private List<java.lang.String> fSourceLines = null;
 
     /**
      * Generates a list of unformatted source code from SourceFile.
-     * 
+     *
      * @param argSourceFile
      *            A value object representing the source code.
      * @return A list after expansion into source code.
@@ -89,12 +89,6 @@ class BlancoCgSourceFileJavaSourceExpander {
         // Since it will reorganize the import statement later in the process, adds an anchor string to refer to it.
         BlancoCgImportJavaSourceExpander.insertAnchorString(fSourceLines);
 
-        // Performs enumeration expansion.
-        for (BlancoCgEnum cgEnum : fCgSourceFile.getEnumList()) {
-            new BlancoCgEnumJavaSourceExpander().transformEnum(cgEnum,
-                    argSourceFile, fSourceLines);
-        }
-
         // Performs interface expansion.
         if (fCgSourceFile.getInterfaceList() == null) {
             throw new IllegalArgumentException("The list of interfaces has been given a null value.");
@@ -102,6 +96,15 @@ class BlancoCgSourceFileJavaSourceExpander {
         for (BlancoCgInterface cgInterface : fCgSourceFile.getInterfaceList()) {
             new BlancoCgInterfaceJavaSourceExpander().transformInterface(
                     cgInterface, fCgSourceFile, fSourceLines);
+        }
+
+        // Performs enumeration expansion.
+        if (fCgSourceFile.getEnumList() == null) {
+            throw new IllegalArgumentException("The list of enumeration class has been given a null value.");
+        }
+        for (BlancoCgEnum cgEnum : fCgSourceFile.getEnumList()) {
+            new BlancoCgEnumClassJavaSourceExpander().transformEnumClass(
+                    cgEnum, fCgSourceFile, fSourceLines);
         }
 
         // Performs class expansion.
