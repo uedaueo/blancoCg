@@ -171,6 +171,19 @@ class BlancoCgEnumClassJavaSourceExpander {
             return;
         }
 
+        /* constructor */
+        if (cgEnumClass.getMethodList() == null) {
+            throw new IllegalArgumentException("A null was given for the list of method.");
+        }
+        for (BlancoCgMethod cgMethod : cgEnumClass.getMethodList()) {
+            if (!cgMethod.getConstructor()) {
+                continue;
+            }
+            // Expands as a method of the class.
+            new BlancoCgMethodJavaSourceExpander().transformMethod(cgMethod,
+                    argSourceFile, argSourceLines, false);
+        }
+
         /* field */
         for (BlancoCgField cgField : constructorArgs) {
             // Expands as a field of the class.
@@ -178,13 +191,10 @@ class BlancoCgEnumClassJavaSourceExpander {
                     argSourceFile, argSourceLines, false);
         }
 
-        /* constructor */
-        if (cgEnumClass.getMethodList() == null) {
-            throw new IllegalArgumentException("A null was given for the list of method.");
-        }
+        /* expands normal methods */
         for (BlancoCgMethod cgMethod : cgEnumClass.getMethodList()) {
-            if (!cgMethod.getConstructor()) {
-                return;
+            if (cgMethod.getConstructor()) {
+                continue;
             }
             // Expands as a method of the class.
             new BlancoCgMethodJavaSourceExpander().transformMethod(cgMethod,

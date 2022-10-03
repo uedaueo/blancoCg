@@ -340,6 +340,22 @@ public class BlancoCgTransformerTest extends TestCase {
         cgEnumElement03.setDefault("2, \"myEnumerate03\"");
         cgEnum.getElementList().add(cgEnumElement03);
 
+        // Generates a method.
+        final BlancoCgMethod cgMethod = cgOf.createMethod("myMethod",
+                "Testing method.");
+        cgEnum.getMethodList().add(cgMethod);
+
+        // Adds parameters.
+        cgMethod.getParameterList().add(
+                cgOf.createParameter("argString", "java.lang.String",
+                        "String argument."));
+        cgMethod.getParameterList()
+                .add(
+                        cgOf.createParameter("argDate", "java.util.Date",
+                                "Date argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgOf.createReturn("boolean", "True if success."));
+
         final BlancoCgTransformer cgTransformerJava = BlancoCgTransformerFactory
                 .getJavaSourceTransformer();
         cgTransformerJava.transform(cgSourceFile, new File("./tmp/blanco"));
