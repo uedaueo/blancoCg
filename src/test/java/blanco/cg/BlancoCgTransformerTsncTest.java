@@ -11,11 +11,12 @@ package blanco.cg;
 
 import blanco.cg.transformer.BlancoCgTransformerFactory;
 import blanco.cg.valueobject.*;
-import junit.framework.TestCase;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Generation test for TypeScript NoClass style notation,
@@ -24,12 +25,13 @@ import java.util.List;
  * @author IGA Tosiki
  * @author tueda
  */
-public class BlancoCgTransformerTsncTest extends TestCase {
+public class BlancoCgTransformerTsncTest {
     /**
      * Expansion test of export valueobject class.
      *
      * @throws Exception
      */
+    @Test
     public void testTransformer() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();

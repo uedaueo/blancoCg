@@ -9,14 +9,21 @@
  */
 package blanco.cg;
 
-import blanco.cg.transformer.BlancoCgTransformerFactory;
-import blanco.cg.util.BlancoCgSourceUtil;
-import blanco.cg.valueobject.*;
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import blanco.cg.transformer.BlancoCgTransformerFactory;
+import blanco.cg.valueobject.BlancoCgClass;
+import blanco.cg.valueobject.BlancoCgEnum;
+import blanco.cg.valueobject.BlancoCgEnumElement;
+import blanco.cg.valueobject.BlancoCgField;
+import blanco.cg.valueobject.BlancoCgInterface;
+import blanco.cg.valueobject.BlancoCgMethod;
+import blanco.cg.valueobject.BlancoCgParameter;
+import blanco.cg.valueobject.BlancoCgSourceFile;
 
 /**
  * Generation test for TypeScript.
@@ -24,12 +31,13 @@ import java.util.List;
  * @author IGA Tosiki
  * @author tueda
  */
-public class BlancoCgTransformerTsTest extends TestCase {
+public class BlancoCgTransformerTsTest {
     /**
      * Expansion test of export valueobject class.
      *
      * @throws Exception
      */
+    @Test
     public void testTransformer() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
@@ -213,6 +221,7 @@ public class BlancoCgTransformerTsTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
@@ -292,6 +301,7 @@ public class BlancoCgTransformerTsTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testTransformerEnum() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 

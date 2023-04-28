@@ -11,11 +11,10 @@ package blanco.cg;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import blanco.cg.transformer.BlancoCgTransformerFactory;
 import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgEnum;
-import blanco.cg.valueobject.BlancoCgEnumElement;
 import blanco.cg.valueobject.BlancoCgField;
 import blanco.cg.valueobject.BlancoCgInterface;
 import blanco.cg.valueobject.BlancoCgMethod;
@@ -26,12 +25,13 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
  * 
  * @author IGA Tosiki
  */
-public class BlancoCgTransformerSwiftTest extends TestCase {
+public class BlancoCgTransformerSwiftTest {
     /**
      * The test for Swift.
      * 
      * @throws Exception
      */
+    @Test
     public void testTransformerSwift() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
@@ -54,19 +54,19 @@ public class BlancoCgTransformerSwiftTest extends TestCase {
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("Foundation.WebException2"));
 
-if(false){
-        // Enumeration
-        final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
-                "Testing enumerated type.");
-        cgClass.getEnumList().add(cgEnum);
-        final BlancoCgEnumElement cgEnumElementFirst = cgFactory
-                .createEnumElement("Red", "あか");
-        cgEnumElementFirst.setDefault("1");
-        cgEnum.getElementList().add(cgEnumElementFirst);
-        cgEnum.getElementList().add(
-                cgFactory.createEnumElement("Yellow", "きいろ"));
-        cgEnum.getElementList().add(cgFactory.createEnumElement("Blue", "あお"));
-}
+// if(false){
+//         // Enumeration
+//         final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
+//                 "Testing enumerated type.");
+//         cgClass.getEnumList().add(cgEnum);
+//         final BlancoCgEnumElement cgEnumElementFirst = cgFactory
+//                 .createEnumElement("Red", "あか");
+//         cgEnumElementFirst.setDefault("1");
+//         cgEnum.getElementList().add(cgEnumElementFirst);
+//         cgEnum.getElementList().add(
+//                 cgFactory.createEnumElement("Yellow", "きいろ"));
+//         cgEnum.getElementList().add(cgFactory.createEnumElement("Blue", "あお"));
+// }
 
         // Generates a field.
         final BlancoCgField cgField = cgFactory.createField("myField",
@@ -116,6 +116,7 @@ if(false){
      * 
      * @throws Exception
      */
+    @Test
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 

@@ -11,7 +11,8 @@ package blanco.cg;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import blanco.cg.transformer.BlancoCgTransformerFactory;
 import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgEnum;
@@ -26,12 +27,13 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
  * 
  * @author IGA Tosiki
  */
-public class BlancoCgTransformerCsTest extends TestCase {
+public class BlancoCgTransformerCsTest {
     /**
      * The test for C#.NET.
      * 
      * @throws Exception
      */
+    @Test
     public void testTransformerCs() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
@@ -117,6 +119,7 @@ public class BlancoCgTransformerCsTest extends TestCase {
      * 
      * @throws Exception
      */
+    @Test
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 

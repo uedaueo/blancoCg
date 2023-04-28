@@ -9,15 +9,23 @@
  */
 package blanco.cg;
 
-import blanco.cg.transformer.BlancoCgTransformerFactory;
-import blanco.cg.valueobject.*;
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
+import blanco.cg.transformer.BlancoCgTransformerFactory;
+import blanco.cg.valueobject.BlancoCgClass;
+import blanco.cg.valueobject.BlancoCgEnum;
+import blanco.cg.valueobject.BlancoCgEnumElement;
+import blanco.cg.valueobject.BlancoCgField;
+import blanco.cg.valueobject.BlancoCgInterface;
+import blanco.cg.valueobject.BlancoCgMethod;
+import blanco.cg.valueobject.BlancoCgParameter;
+import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.valueobject.BlancoCgType;
 
 /**
  * Generation test for Kotilin.
@@ -25,12 +33,13 @@ import java.util.Map;
  * @author IGA Tosiki
  * @author tueda
  */
-public class BlancoCgTransformerKotlinTest extends TestCase {
+public class BlancoCgTransformerKotlinTest {
     /**
      * An open class expansion test.
      *
      * @throws Exception
      */
+    @Test
     public void testTransformer() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
@@ -202,6 +211,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
      * A test for a class that is final.
      * @throws Exception
      */
+    @Test
     public void testTransformerFinal() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
@@ -302,6 +312,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
@@ -372,6 +383,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
      * Generics class test.
      * @throws Exception
      */
+    @Test
     public void testTransformercGenerics() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
@@ -421,6 +433,7 @@ public class BlancoCgTransformerKotlinTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testTransformerEnum() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 

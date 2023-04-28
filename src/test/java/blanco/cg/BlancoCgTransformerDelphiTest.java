@@ -11,13 +11,11 @@ package blanco.cg;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import blanco.cg.transformer.BlancoCgTransformerFactory;
 import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgEnum;
-import blanco.cg.valueobject.BlancoCgEnumElement;
 import blanco.cg.valueobject.BlancoCgField;
-import blanco.cg.valueobject.BlancoCgInterface;
 import blanco.cg.valueobject.BlancoCgMethod;
 import blanco.cg.valueobject.BlancoCgSourceFile;
 
@@ -26,12 +24,13 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
  * 
  * @author YAMAMOTO Koji
  */
-public class BlancoCgTransformerDelphiTest extends TestCase {
+public class BlancoCgTransformerDelphiTest {
     /**
      * The test for Delphi.
      * 
      * @throws Exception
      */
+    @Test
     public void testTransformerDelphi() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();

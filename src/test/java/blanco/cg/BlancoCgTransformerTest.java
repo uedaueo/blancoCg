@@ -13,22 +13,32 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import blanco.cg.util.BlancoCgLineUtil;
-import blanco.cg.valueobject.*;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import blanco.cg.transformer.BlancoCgTransformerFactory;
+import blanco.cg.valueobject.BlancoCgClass;
+import blanco.cg.valueobject.BlancoCgEnum;
+import blanco.cg.valueobject.BlancoCgEnumElement;
+import blanco.cg.valueobject.BlancoCgField;
+import blanco.cg.valueobject.BlancoCgInterface;
+import blanco.cg.valueobject.BlancoCgMethod;
+import blanco.cg.valueobject.BlancoCgParameter;
+import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.valueobject.BlancoCgType;
+import blanco.cg.valueobject.BlancoCgVirtualParameter;
 
 /**
  * Generation test for Java.
  *
  * @author IGA Tosiki
  */
-public class BlancoCgTransformerTest extends TestCase {
+public class BlancoCgTransformerTest {
     /**
      * The test of class expansion.
      *
      * @throws Exception
      */
+    @Test
     public void testTransformer() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
@@ -165,6 +175,7 @@ public class BlancoCgTransformerTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testTransformerInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
@@ -216,6 +227,7 @@ public class BlancoCgTransformerTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testTransformerAnnotationInterface() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
@@ -268,6 +280,7 @@ public class BlancoCgTransformerTest extends TestCase {
      *
      * @throws Exception
      */
+    @Test
     public void testTransformerEnum01() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 
@@ -361,6 +374,7 @@ public class BlancoCgTransformerTest extends TestCase {
         cgTransformerJava.transform(cgSourceFile, new File("./tmp/blanco"));
     }
 
+    @Test
     public void testTransformerEnum02() throws Exception {
         final BlancoCgObjectFactory cgOf = BlancoCgObjectFactory.getInstance();
 

@@ -11,7 +11,8 @@ package blanco.cg;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import blanco.cg.transformer.BlancoCgTransformerFactory;
 import blanco.cg.valueobject.BlancoCgClass;
 import blanco.cg.valueobject.BlancoCgField;
@@ -23,12 +24,13 @@ import blanco.cg.valueobject.BlancoCgSourceFile;
  * 
  * @author IGA Tosiki
  */
-public class BlancoCgTransformerJsTest extends TestCase {
+public class BlancoCgTransformerJsTest {
     /**
      * The test for JavaScript.
      * 
      * @throws Exception
      */
+    @Test
     public void testTransformerJs() throws Exception {
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
