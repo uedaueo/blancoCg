@@ -4,7 +4,7 @@
     <groupId>blanco.cg</groupId>
     <artifactId>blanco-cg</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
 
     <name>blanco-cg</name>
     <description>blancoCg is a simple code generator library. blancoCg supports Java/C#/JavaScript/VB.NET/PHP/Ruby/Python/Delphi/Swift/C++11/Kotlin/TypeScript.</description>
@@ -50,69 +50,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>blanco.anttask</groupId>
-            <artifactId>blanco-anttask</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.batchprocess</groupId>
-            <artifactId>blanco-batchprocess</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
             <groupId>blanco.commons.io</groupId>
             <artifactId>blanco-commons</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.cg</groupId>
-            <artifactId>blanco-cg</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.valueobject</groupId>
-            <artifactId>blanco-valueobject</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.constants</groupId>
-            <artifactId>blanco-constants</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.message</groupId>
-            <artifactId>blanco-message</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.meta2xml</groupId>
-            <artifactId>blanco-meta2xml</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.resourcebundle</groupId>
-            <artifactId>blanco-resourcebundle</artifactId>
-            <version>[2.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.beanutils</groupId>
-            <artifactId>blanco-beanutils</artifactId>
-            <version>[1.0,4.0)</version>
-        </dependency>
-
-        <dependency>
-            <groupId>blanco.stringgroup</groupId>
-            <artifactId>blanco-stringgroup</artifactId>
-            <version>[0.0,4.0)</version>
+            <version>[3.0,4.0)</version>
         </dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
@@ -225,6 +165,22 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
+                        <id>blanco-meta-stringgroup</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <taskdef name="blancostringgroup" classname="blanco.stringgroup.task.BlancoStringGroupTask" classpathref="maven.compile.classpath">
+                                </taskdef>
+    							<delete dir="target/classes" />
+                                <blancostringgroup metadir="meta/program" encoding="${project.build.sourceEncoding}" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
                         <id>blanco-meta-valueobject</id>
                         <phase>generate-sources</phase>
                         <configuration>
@@ -232,7 +188,6 @@
                                 <taskdef name="blancovalueobject" classname="blanco.valueobject.task.BlancoValueObjectTask" classpathref="maven.compile.classpath">
                                 </taskdef>
                                 <blancovalueobject metadir="meta/program" encoding="${project.build.sourceEncoding}" />
-                                <!--								<blancovalueobject metadir="meta/objects" encoding="${project.build.sourceEncoding}" sheetType="php" targetdir="sample" targetStyle="maven" verbose="true" />-->
                             </target>
                         </configuration>
                         <goals>
@@ -245,24 +200,10 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
+                                <delete dir="target/classes" />
                                 <taskdef name="blancoresourcebundle" classname="blanco.resourcebundle.task.BlancoResourceBundleTask" classpathref="maven.compile.classpath">
                                 </taskdef>
                                 <blancoresourcebundle metadir="meta/program" encoding="${project.build.sourceEncoding}" commenttimestamp="false" />
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>blanco-meta-stringgroup</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <target>
-                                <taskdef name="blancostringgroup" classname="blanco.stringgroup.task.BlancoStringGroupTask" classpathref="maven.compile.classpath">
-                                </taskdef>
-                                <blancostringgroup metadir="meta/program" encoding="${project.build.sourceEncoding}" />
                             </target>
                         </configuration>
                         <goals>
@@ -275,6 +216,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
+                                <delete dir="target/classes" />
                                 <java classname="blanco.cg.cg.BlancoCgCg" classpathref="maven.compile.classpath">
                                 </java>
                             </target>
@@ -388,7 +330,7 @@
             </plugin>
 
             <!-- copy jar files into lib directory. -->
-            <plugin>
+            <!-- <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -401,7 +343,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
 
             <plugin>
                 <groupId>com.github.github</groupId>
