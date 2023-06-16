@@ -24,6 +24,7 @@
  */
 package blanco.cg.transformer.kotlin;
 
+import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
@@ -44,37 +45,22 @@ class BlancoCgTypeKotlinSourceExpander {
 
     /**
      * Converts blancoCg type to a concrete string.
-     * 
+     *
      * It also expands "[]", which indicates arrays, and generics.<br>
      * TODO: The same class name of multiple packages (e.g., java.util.Date and java.sql.Date) is not considered.
      * The feature to use the same class name of multiple packages in a single source file is not provided.
-     * 
+     *
      * @param argType
      *            Type on blancoCg.
      * @return A string indicading a type in a programming language.
      */
     public static String toTypeString(final BlancoCgType argType) {
-        final StringBuffer buf = new StringBuffer();
-        buf.append(BlancoNameUtil.trimJavaPackage(argType.getName()));
-
-        // Expands an array.
-        if (argType.getArray()) {
-            for (int dimension = 0; dimension < argType.getArrayDimension(); dimension++) {
-                buf.append("[]");
-            }
-        }
-
-        // Expands generics.
-        if (BlancoStringUtil.null2Blank(argType.getGenerics()).length() > 0) {
-            buf.append("<" + BlancoNameUtil.trimJavaPackage(argType.getGenerics()) + ">");
-        }
-
-        return buf.toString();
+        return BlancoCgSourceUtil.extendTypeWithGenerics(argType);
     }
 
     /**
      * Checks if the given string is a reserved word of a programming language.
-     * 
+     *
      * @param argCheck
      *            A string to be checked.
      * @return Whether or not it corresponded to a reserved word.

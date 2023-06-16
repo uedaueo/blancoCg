@@ -24,24 +24,18 @@
  */
 package blanco.cg.transformer.kotlin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
 import blanco.cg.util.BlancoCgSourceUtil;
-import blanco.cg.valueobject.BlancoCgException;
-import blanco.cg.valueobject.BlancoCgLangDoc;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgParameter;
-import blanco.cg.valueobject.BlancoCgSourceFile;
-import blanco.commons.util.BlancoNameUtil;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Expands BlancoCgMethod into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -54,7 +48,7 @@ class BlancoCgMethodKotlinSourceExpander {
 
     /**
      * Expands a method here.
-     * 
+     *
      * @param cgMethod
      *            The method to be processed.
      * @param argSourceFile
@@ -95,7 +89,7 @@ class BlancoCgMethodKotlinSourceExpander {
 
     /**
      * Before source code expansion, gathers the necessary information.
-     * 
+     *
      * @param cgMethod
      *            A method object.
      * @param argSourceFile
@@ -121,21 +115,23 @@ class BlancoCgMethodKotlinSourceExpander {
         }
 
         for (BlancoCgParameter cgParameter : cgMethod.getParameterList()) {
+            // Converts generics to a genericsListTree if available.
+            BlancoCgType cgType = BlancoCgSourceUtil.parseTypeWithGenerics(cgParameter.getType());
+            cgParameter.setType(cgType);
+
             // Adds a type to the import statement.
-            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, cgParameter.getType().getName())) {
-                argSourceFile.getImportList().add(cgParameter.getType().getName());
-            }
+            BlancoCgSourceFileKotlinSourceExpander.typeToImport(cgType, argSourceFile);
 
             // Adds a parameter to the language document.
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
         if (cgMethod.getReturn() != null) {
+            BlancoCgType cgType = BlancoCgSourceUtil.parseTypeWithGenerics(cgMethod.getReturn().getType());
+            cgMethod.getReturn().setType(cgType);
+
             // Adds a type to the import statement.
-            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, cgMethod.getReturn().getType().getName())) {
-                argSourceFile.getImportList().add(
-                        cgMethod.getReturn().getType().getName());
-            }
+            BlancoCgSourceFileKotlinSourceExpander.typeToImport(cgType, argSourceFile);
 
             // Adds return to the language document.
             cgMethod.getLangDoc().setReturn(cgMethod.getReturn());
@@ -155,7 +151,7 @@ class BlancoCgMethodKotlinSourceExpander {
 
     /**
      * Expands the body part of the method.
-     * 
+     *
      * @param cgMethod
      *            A method object.
      * @param argSourceLines
@@ -296,7 +292,7 @@ class BlancoCgMethodKotlinSourceExpander {
 
     /**
      * Expands the line.
-     * 
+     *
      * @param cgMethod
      *            Method information.
      * @param argSourceLines

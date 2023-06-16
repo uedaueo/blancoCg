@@ -39,7 +39,7 @@ import java.util.Map;
 
 /**
  * Expands BlancoCgClass into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -48,7 +48,7 @@ class BlancoCgClassKotlinSourceExpander {
 
     /**
      * Expands the class here.
-     * 
+     *
      * @param cgClass
      *            A class to be processed.
      * @param argSourceLines
@@ -239,12 +239,8 @@ class BlancoCgClassKotlinSourceExpander {
             final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
         boolean expanded = false;
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
-            final BlancoCgType type = cgClass.getExtendClassList().get(index);
+            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getExtendClassList().get(index));
             final String constractorArg = type.getConstructorArgs();
-            String generics = "";
-            if (BlancoStringUtil.null2Blank(type.getGenerics()).length() > 0) {
-                generics = "<" + type.getGenerics() + ">";
-            }
 
             // Adds a type to the import statement.
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
@@ -265,7 +261,7 @@ class BlancoCgClassKotlinSourceExpander {
 
     /**
      * Expands the parent interface.
-     * 
+     *
      * @param cgClass
      *            The class being processed.
      * @param argBuf
@@ -282,8 +278,7 @@ class BlancoCgClassKotlinSourceExpander {
         Map<String, String> delegateMap = cgClass.getDelegateMap();
 
         for (int index = 0; index < cgClass.getImplementInterfaceList().size(); index++) {
-            final BlancoCgType type = cgClass.getImplementInterfaceList().get(
-                    index);
+            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getImplementInterfaceList().get(index));
 
             // Adds a type to the import statement.
             if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
@@ -325,10 +320,10 @@ class BlancoCgClassKotlinSourceExpander {
 
     /**
      * Expands each field contained in the class.
-     * 
+     *
      * TODO: It is necessary to give priority to constant declarations, and then expands variable declarations.<br>
      * Currently, the source code is expanded in the order of registration.
-     * 
+     *
      * @param cgClass
      *            The class being processed.
      * @param argSourceFile

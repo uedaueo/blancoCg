@@ -26,10 +26,8 @@ package blanco.cg.transformer.kotlin;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgLineUtil;
-import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgEnum;
-import blanco.cg.valueobject.BlancoCgInterface;
-import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.util.BlancoCgSourceUtil;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoStringUtil;
 
 import java.util.ArrayList;
@@ -152,5 +150,26 @@ class BlancoCgSourceFileKotlinSourceExpander {
                 fCgSourceFile.getLangDoc(), fSourceLines);
 
         fSourceLines.add("*/");
+    }
+
+    /**
+     * Adds import statement for fully qualified class name.
+     *
+     * @param argCgType
+     * @param argSourceFile
+     * @author tueda
+     */
+    public static void typeToImport(
+            final BlancoCgType argCgType,
+            final BlancoCgSourceFile argSourceFile
+    ) {
+        if (argCgType != null) {
+            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, argCgType.getName())) {
+                argSourceFile.getImportList().add(argCgType.getName());
+            }
+            for (BlancoCgType nextCgType : argCgType.getGenericsTree()) {
+                typeToImport(nextCgType, argSourceFile);
+            }
+        }
     }
 }

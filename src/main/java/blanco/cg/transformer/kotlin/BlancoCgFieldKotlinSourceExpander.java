@@ -35,12 +35,13 @@ import blanco.cg.util.BlancoCgSourceUtil;
 import blanco.cg.valueobject.BlancoCgField;
 import blanco.cg.valueobject.BlancoCgLangDoc;
 import blanco.cg.valueobject.BlancoCgSourceFile;
+import blanco.cg.valueobject.BlancoCgType;
 import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
  * Expands BlancoCgField into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -53,7 +54,7 @@ class BlancoCgFieldKotlinSourceExpander {
 
     /**
      * Expands a field here.
-     * 
+     *
      * @param cgField
      *            The field to be processed.
      * @param argSourceFile
@@ -111,10 +112,12 @@ class BlancoCgFieldKotlinSourceExpander {
             buf.append("open ");
         }
 
+        // Converts generics into genericsListTree.
+        BlancoCgType cgType = BlancoCgSourceUtil.parseTypeWithGenerics(cgField.getType());
+        cgField.setType(cgType);
+
         // Adds the type to the import statement.
-        if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, cgField.getType().getName())) {
-            argSourceFile.getImportList().add(cgField.getType().getName());
-        }
+        BlancoCgSourceFileKotlinSourceExpander.typeToImport(cgType, argSourceFile);
 
         // Expands the body part of the field generation.
         if (cgField.getConst()) {
@@ -123,7 +126,7 @@ class BlancoCgFieldKotlinSourceExpander {
             buf.append("var ");
         }
         buf.append(cgField.getName() + " : ");
-        buf.append(BlancoCgTypeKotlinSourceExpander.toTypeString(cgField.getType()));
+        buf.append(BlancoCgTypeKotlinSourceExpander.toTypeString(cgType));
 
         if (!cgField.getNotnull()) {
             // nullable

@@ -37,7 +37,7 @@ import blanco.commons.util.BlancoStringUtil;
 
 /**
  * Expands BlancoCgInterface into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -46,7 +46,7 @@ class BlancoCgInterfaceKotlinSourceExpander {
 
     /**
      * Expands the interface here.
-     * 
+     *
      * @param cgInterface
      *            The interface to be processed.
      * @param argSourceLines
@@ -113,12 +113,10 @@ class BlancoCgInterfaceKotlinSourceExpander {
     private void expandExtendClassList(final BlancoCgInterface cgClass,
                                           final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
-            final BlancoCgType type = cgClass.getExtendClassList().get(index);
+            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getExtendClassList().get(index));
 
             // Adds a type to the import statement.
-            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
-                argSourceFile.getImportList().add(type.getName());
-            }
+            BlancoCgSourceFileKotlinSourceExpander.typeToImport(type, argSourceFile);
 
             if (index == 0) {
                 argBuf.append(" : "
