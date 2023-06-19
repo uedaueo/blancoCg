@@ -160,6 +160,7 @@ public class BlancoCgTransformerKotlinTest {
         cgField4.setStatic(true);
         cgField4.setFinal(true);
         cgField4.setConst(true);
+        cgField4.getType().setGenerics("kotlin.String");
 
         // Testing static initializer.
         {

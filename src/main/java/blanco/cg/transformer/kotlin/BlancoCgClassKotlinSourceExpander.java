@@ -159,11 +159,11 @@ class BlancoCgClassKotlinSourceExpander {
 
         int count = 0;
         for (blanco.cg.valueobject.BlancoCgField constField : constructorArgs) {
-            final BlancoCgType type = constField.getType();
+            final BlancoCgType cgConstArgType = BlancoCgSourceUtil.parseTypeWithGenerics(constField.getType());
+            constField.setType(cgConstArgType);
+
             // Adds a type to the import statement.
-            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
-                argSourceFile.getImportList().add(type.getName());
-            }
+            BlancoCgSourceFileKotlinSourceExpander.typeToImport(cgConstArgType, argSourceFile);
 
             if (count != 0) {
                 argBuf.append(",");
@@ -205,7 +205,7 @@ class BlancoCgClassKotlinSourceExpander {
             } else {
                 argBuf.append("var ");
             }
-            argBuf.append(constField.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+            argBuf.append(constField.getName() + " : " + BlancoCgTypeKotlinSourceExpander.toTypeString(cgConstArgType));
             if (!constField.getNotnull()) {
                 // nullable
                 argBuf.append("?");
