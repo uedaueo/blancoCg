@@ -239,7 +239,9 @@ class BlancoCgClassKotlinSourceExpander {
             final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
         boolean expanded = false;
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
-            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getExtendClassList().get(index));
+            final BlancoCgType orgType = cgClass.getExtendClassList().get(index);
+            final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(orgType);
+            type.setConstructorArgs(orgType.getConstructorArgs());
             final String constractorArg = type.getConstructorArgs();
 
             // Adds a type to the import statement.

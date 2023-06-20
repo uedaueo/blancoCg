@@ -58,8 +58,10 @@ public class BlancoCgTransformerKotlinTest {
         cgSourceFile.getClassList().add(cgClass);
         cgClass.getLangDoc().getTagList().add(
                 cgFactory.createLangDocTag("author", null, "blanco Framework"));
-        cgClass.getExtendClassList().add(
-                cgFactory.createType("java.lang.Thread"));
+        BlancoCgType extType = cgFactory.createType("java.lang.Thread");
+        cgClass.getExtendClassList().add(extType);
+        extType.setGenerics("MyGenerics<S, T>");
+        extType.setConstructorArgs("vc");
         cgClass.getImplementInterfaceList().add(
                 cgFactory.createType("java.lang.Runnable"));
         cgClass.getImplementInterfaceList().add(
