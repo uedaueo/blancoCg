@@ -245,9 +245,7 @@ class BlancoCgClassKotlinSourceExpander {
             final String constractorArg = type.getConstructorArgs();
 
             // Adds a type to the import statement.
-            if (BlancoCgSourceUtil.isCanonicalClassName(BlancoCgSupportedLang.KOTLIN, type.getName())) {
-                argSourceFile.getImportList().add(type.getName());
-            }
+            BlancoCgSourceFileKotlinSourceExpander.typeToImport(type, argSourceFile);
 
             if (index == 0) {
                 argBuf.append(" : "
