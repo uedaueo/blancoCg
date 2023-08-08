@@ -145,6 +145,14 @@ public class BlancoCgClass {
     private List<String> fPlainTextList = new java.util.ArrayList<java.lang.String>();
 
     /**
+     * primary constructor に JsonCreator アノテーションを付与します。
+     *
+     * フィールド: [jsonCreator]。
+     * デフォルト: [false]。
+     */
+    private boolean fJsonCreator = false;
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [このクラスの名前です。パッケージ名を除くクラス名を指定する点に注意してください。]。
@@ -536,6 +544,29 @@ public class BlancoCgClass {
     }
 
     /**
+     * フィールド [jsonCreator] の値を設定します。
+     *
+     * フィールドの説明: [primary constructor に JsonCreator アノテーションを付与します。]。
+     *
+     * @param argJsonCreator フィールド[jsonCreator]に設定する値。
+     */
+    public void setJsonCreator(final boolean argJsonCreator) {
+        fJsonCreator = argJsonCreator;
+    }
+
+    /**
+     * フィールド [jsonCreator] の値を取得します。
+     *
+     * フィールドの説明: [primary constructor に JsonCreator アノテーションを付与します。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[jsonCreator]から取得した値。
+     */
+    public boolean getJsonCreator() {
+        return fJsonCreator;
+    }
+
+    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -567,6 +598,7 @@ public class BlancoCgClass {
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",constructorArgList=" + fConstructorArgList);
         buf.append(",plainTextList=" + fPlainTextList);
+        buf.append(",jsonCreator=" + fJsonCreator);
         buf.append("]");
         return buf.toString();
     }
@@ -640,5 +672,8 @@ public class BlancoCgClass {
         // Name: fPlainTextList
         // Type: java.util.List
         // Field[fPlainTextList] is an unsupported type[java.util.Listjava.lang.String].
+        // Name: fJsonCreator
+        // Type: boolean
+        target.fJsonCreator = this.fJsonCreator;
     }
 }

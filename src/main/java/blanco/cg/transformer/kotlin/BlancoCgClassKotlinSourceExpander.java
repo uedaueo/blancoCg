@@ -151,6 +151,10 @@ class BlancoCgClassKotlinSourceExpander {
             return;
         }
 
+        if (cgClass.getJsonCreator()) {
+            argBuf.append(" @JsonCreator ");
+        }
+
         argBuf.append(" constructor (");
 
         // If the Constractor specification exists, a new line is created here.

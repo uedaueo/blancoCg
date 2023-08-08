@@ -70,6 +70,8 @@ public class BlancoCgTransformerKotlinTest {
         List<String> classAnnotationList = new ArrayList<>();
         classAnnotationList.add("hoge(\n\"fuga: boge\"\n)");
         cgClass.setAnnotationList(classAnnotationList);
+        // Add JsonCreator annotation
+        cgClass.setJsonCreator(true);
 
         // Testing the primary constructor.
         BlancoCgField constParam = new BlancoCgField();
