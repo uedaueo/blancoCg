@@ -67,6 +67,14 @@ public class BlancoCgEnum {
     private List<BlancoCgMethod> fMethodList = new java.util.ArrayList<blanco.cg.valueobject.BlancoCgMethod>();
 
     /**
+     * このクラスに付与されているアノテーションのリストです。
+     *
+     * フィールド: [annotationList]。
+     * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
+     */
+    private List<String> fAnnotationList = new java.util.ArrayList<java.lang.String>();
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [この列挙体の名前です。]。
@@ -247,6 +255,29 @@ public class BlancoCgEnum {
     }
 
     /**
+     * フィールド [annotationList] の値を設定します。
+     *
+     * フィールドの説明: [このクラスに付与されているアノテーションのリストです。]。
+     *
+     * @param argAnnotationList フィールド[annotationList]に設定する値。
+     */
+    public void setAnnotationList(final List<String> argAnnotationList) {
+        fAnnotationList = argAnnotationList;
+    }
+
+    /**
+     * フィールド [annotationList] の値を取得します。
+     *
+     * フィールドの説明: [このクラスに付与されているアノテーションのリストです。]。
+     * デフォルト: [new java.util.ArrayList&lt;java.lang.String&gt;()]。
+     *
+     * @return フィールド[annotationList]から取得した値。
+     */
+    public List<String> getAnnotationList() {
+        return fAnnotationList;
+    }
+
+    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -269,6 +300,7 @@ public class BlancoCgEnum {
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",constructorArgList=" + fConstructorArgList);
         buf.append(",methodList=" + fMethodList);
+        buf.append(",annotationList=" + fAnnotationList);
         buf.append("]");
         return buf.toString();
     }
@@ -315,5 +347,8 @@ public class BlancoCgEnum {
         // Name: fMethodList
         // Type: java.util.List
         // Field[fMethodList] is an unsupported type[java.util.Listblanco.cg.valueobject.BlancoCgMethod].
+        // Name: fAnnotationList
+        // Type: java.util.List
+        // Field[fAnnotationList] is an unsupported type[java.util.Listjava.lang.String].
     }
 }

@@ -71,7 +71,7 @@ class BlancoCgEnumKotlinSourceExpander {
                 .getLangDoc(), argSourceLines);
 
         // Expands annotations.
-        // Not support annotations yet.
+        BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, argCgEnum.getAnnotationList(), argSourceLines);
 
         final StringBuffer buf = new StringBuffer();
 

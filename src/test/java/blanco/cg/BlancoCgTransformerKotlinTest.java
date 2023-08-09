@@ -454,6 +454,10 @@ public class BlancoCgTransformerKotlinTest {
         cgEnum.getLangDoc().getTagList().add(
                 cgOf.createLangDocTag("author", null, "blanco Framework"));
 
+        // Testing annotation
+        cgEnum.getAnnotationList().add("Introspected");
+        cgSourceFile.getImportList().add("io.micronaut.core.annotation.Introspected");
+
         // Testing the primary constructor.
         BlancoCgField constParam = new BlancoCgField();
         BlancoCgType constType = new BlancoCgType();
