@@ -212,4 +212,65 @@ public class BlancoCgTransformerPhp8Test {
                 .getPhp8SourceTransformer();
         cgTransformerPhp8.transform(cgSourceFile, new File("./tmp/blanco"));
     }
+
+    @Test
+    public void testTransformerInterface() throws Exception {
+        final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
+                .getInstance();
+
+        // Generates a source file.
+        final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
+                "myprog.space", "Class for testing");
+        cgSourceFile.setNamespace("Blanco\\myprog\\space");
+        cgSourceFile.setEncoding("UTF-8");
+        // Two tabs are common in TypeScript.
+        cgSourceFile.setTabs(4);
+        // Normal import test. These will all be ignored.
+        cgSourceFile.getImportList().add("java\\text\\NumberFormat");
+        // Import test of the same package.
+        cgSourceFile.getImportList().add("myprog\\space\\MyClass2");
+
+        // Generates the class.
+        final BlancoCgInterface cgInterface = cgFactory.createInterface("MyInterface",
+                "This interface is for testing.");
+        cgSourceFile.getInterfaceList().add(cgInterface);
+        cgInterface.getLangDoc().getTagList().add(
+                cgFactory.createLangDocTag("author", null, "blanco Framework"));
+        cgInterface.setAccess("");
+        cgInterface.getExtendClassList().add(
+                cgFactory.createType("myprog\\MyClass"));
+
+        // Generates a method.
+        final BlancoCgMethod cgDoPostMethod = cgFactory.createMethod("doPost",
+                "Testing a method.");
+        cgInterface.getMethodList().add(cgDoPostMethod);
+        // TypeScript uses the "get" accessor.
+        cgDoPostMethod.setAccess("public");
+
+        // Adds a parameter.
+        cgDoPostMethod.getParameterList().add(
+                cgFactory.createParameter("request", "LoginPostRequest",
+                        "String argument."));
+
+        // Sets the return value.
+        cgDoPostMethod.setReturn(cgFactory.createReturn("LoginPostResponse", "Returns the value."));
+
+        // Generates a method.
+        final BlancoCgMethod cgDoGetMethod = cgFactory.createMethod("doGet",
+                "Testing a Setter method.");
+        cgInterface.getMethodList().add(cgDoGetMethod);
+        cgDoGetMethod.setAccess("public");
+
+        // Adds a parameter.
+        cgDoGetMethod.getParameterList().add(
+                cgFactory.createParameter("request", "LoginPostRequest",
+                        "String argument."));
+
+        // Sets the return value.
+        cgDoPostMethod.setReturn(cgFactory.createReturn("JsonResponse|LoginPostResponse", "Returns the value."));
+
+        final BlancoCgTransformer cgTransformerPhp8 = BlancoCgTransformerFactory
+                .getPhp8SourceTransformer();
+        cgTransformerPhp8.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
 }

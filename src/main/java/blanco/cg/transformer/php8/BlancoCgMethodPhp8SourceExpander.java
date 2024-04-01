@@ -167,12 +167,7 @@ class BlancoCgMethodPhp8SourceExpander {
         final StringBuffer buf = new StringBuffer();
 
         if (BlancoStringUtil.null2Blank(cgMethod.getAccess()).length() > 0) {
-            if (argIsInterface && cgMethod.getAccess().equals("public")) {
-                // If it's an interface and public, the output is suppressed.
-                // This is a countermeasure to Checkstyle.
-            } else {
-                buf.append(cgMethod.getAccess() + " ");
-            }
+            buf.append(cgMethod.getAccess() + " ");
         }
 
         if (cgMethod.getAbstract() && argIsInterface == false) {
