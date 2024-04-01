@@ -33,6 +33,7 @@ import blanco.cg.transformer.java.BlancoCgJavaSourceTransformer;
 import blanco.cg.transformer.js.BlancoCgJsSourceTransformer;
 import blanco.cg.transformer.kotlin.BlancoCgKotlinSourceTransformer;
 import blanco.cg.transformer.php.BlancoCgPhpSourceTransformer;
+import blanco.cg.transformer.php8.BlancoCgPhp8SourceTransformer;
 import blanco.cg.transformer.python.BlancoCgPythonSourceTransformer;
 import blanco.cg.transformer.ruby.BlancoCgRubySourceTransformer;
 import blanco.cg.transformer.swift.BlancoCgSwiftSourceTransformer;
@@ -82,6 +83,8 @@ public class BlancoCgTransformerFactory {
             return BlancoCgTransformerFactory.getKotlinSourceTransformer();
         case BlancoCgSupportedLang.TS:
             return BlancoCgTransformerFactory.getTsSourceTransformer();
+        case BlancoCgSupportedLang.PHP8:
+            return BlancoCgTransformerFactory.getPhp8SourceTransformer();
         default:
             throw new IllegalArgumentException(
                     "BlancoCgTransformerFactory.getSourceTransformer: An unsupported programming language ("
@@ -197,5 +200,14 @@ public class BlancoCgTransformerFactory {
      */
     public static BlancoCgTransformer getTsSourceTransformer() {
         return new BlancoCgTsSourceTransformer();
+    }
+
+    /**
+     * Gets a transformer that generates the PHP8 later source code.
+     *
+     * @return A transformer that generates the PHP8 source code.
+     */
+    public static BlancoCgTransformer getPhp8SourceTransformer() {
+        return new BlancoCgPhp8SourceTransformer();
     }
 }

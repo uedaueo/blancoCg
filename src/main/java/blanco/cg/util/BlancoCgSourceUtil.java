@@ -69,6 +69,7 @@ public class BlancoCgSourceUtil {
         case BlancoCgSupportedLang.VB:
             return BlancoVbSourceUtil.escapeStringAsVbSource(originalString);
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.PHP8:
         case BlancoCgSupportedLang.RUBY: // TODO: Validity check
         case BlancoCgSupportedLang.PYTHON: // TODO: Validity check
             return BlancoPhpSourceUtil.escapeStringAsPhpSource(originalString);
@@ -107,6 +108,7 @@ public class BlancoCgSourceUtil {
         case BlancoCgSupportedLang.SWIFT:
         case BlancoCgSupportedLang.KOTLIN:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
                 return BlancoJavaSourceUtil.escapeStringAsJavaDoc(originalString);
         default:
             throw new IllegalArgumentException(

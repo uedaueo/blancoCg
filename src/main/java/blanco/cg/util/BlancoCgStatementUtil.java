@@ -34,7 +34,7 @@ import blanco.commons.util.BlancoStringUtil;
  *
  * @author IGA Tosiki
  */
-class BlancoCgStatementUtil {
+public class BlancoCgStatementUtil {
     /**
      * Gets a string indicating the start of the "if" statement.
      *
@@ -55,6 +55,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.KOTLIN:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
             return "if (" + argExpr + ") {";
         case BlancoCgSupportedLang.VB:
             return "If (" + argExpr + ") Then";
@@ -74,7 +75,7 @@ class BlancoCgStatementUtil {
     /**
      * Gets a string indicating the end of the "if" statement.
      *
-     * In Python, the end of an "if" statement is not grammatically necessary, 
+     * In Python, the end of an "if" statement is not grammatically necessary,
      * but the comment string is returned to format the auto-generated source code.
      *
      * @param argTargetLang
@@ -89,6 +90,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.KOTLIN:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
             return "}";
         case BlancoCgSupportedLang.VB:
             return "End If";
@@ -127,6 +129,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.CS:
         case BlancoCgSupportedLang.JS:
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.PHP8:
             return "for (" + argExpr1 + "; " + argExpr2 + "; " + argExpr3
                     + ") {";
         default:
@@ -307,6 +310,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.KOTLIN:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
             return "}";
         case BlancoCgSupportedLang.VB:
             // The loop variable is omitted.
@@ -344,6 +348,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.KOTLIN:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
             return "break";
         case BlancoCgSupportedLang.VB:
             return "Exit For";
@@ -405,8 +410,8 @@ class BlancoCgStatementUtil {
     /**
      * Gets a string indicating the end of the "while" statement.
      *
-     * Ruby and Python are supported. 
-     * In Python, the end of an "while" statement is not grammatically necessary, 
+     * Ruby and Python are supported.
+     * In Python, the end of an "while" statement is not grammatically necessary,
      * but the comment string is returned to format the auto-generated source code.
      *
      * @param argTargetLang
@@ -492,6 +497,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
             return ";";
         case BlancoCgSupportedLang.VB:
         case BlancoCgSupportedLang.RUBY:
@@ -528,6 +534,7 @@ class BlancoCgStatementUtil {
         case BlancoCgSupportedLang.PYTHON:
         case BlancoCgSupportedLang.DELPHI:
         case BlancoCgSupportedLang.KOTLIN:
+        case BlancoCgSupportedLang.PHP8:
             // Note: Semicolons are not included.
             return "return " + argExpr;
         case BlancoCgSupportedLang.VB:

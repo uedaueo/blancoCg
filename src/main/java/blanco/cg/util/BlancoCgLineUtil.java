@@ -60,6 +60,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.SWIFT:
         case BlancoCgSupportedLang.KOTLIN:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
             return "// ";
         case BlancoCgSupportedLang.VB:
             return "' ";
@@ -90,6 +91,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.VB:
         case BlancoCgSupportedLang.KOTLIN:
         case BlancoCgSupportedLang.TS:
+        case BlancoCgSupportedLang.PHP8:
             return "\"";
         case BlancoCgSupportedLang.PHP:
         case BlancoCgSupportedLang.RUBY:
@@ -124,6 +126,7 @@ public class BlancoCgLineUtil {
         case BlancoCgSupportedLang.TS:
             return "+";
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.PHP8:
             return ".";
         default:
             throw new IllegalArgumentException(
@@ -146,6 +149,7 @@ public class BlancoCgLineUtil {
     public static final String getVariablePrefix(final int argTargetLang) {
         switch (argTargetLang) {
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.PHP8:
             return "$";
         default:
             return "";
@@ -188,6 +192,7 @@ public class BlancoCgLineUtil {
             result = "Dim " + argVariableName + " As " + argTypeShortName;
             break;
         case BlancoCgSupportedLang.PHP:
+        case BlancoCgSupportedLang.PHP8:
             // The type name is not used.
             result = BlancoCgLineUtil.getVariablePrefix(argTargetLang)
                     + argVariableName;
@@ -202,7 +207,7 @@ public class BlancoCgLineUtil {
             result = "var " + argVariableName + " : " + argTypeShortName;
             break;
         case BlancoCgSupportedLang.TS:
-                // Generates only variables here.
+            // Generates only variables here.
             result = "let " + argVariableName + ": " + argTypeShortName;
             break;
         }
@@ -283,8 +288,8 @@ public class BlancoCgLineUtil {
     /**
      * Gets a string indicating the start of the "for" statement.
      *
-     * Java, C#, JavaScript and PHP are supported. 
-     * The actual processing will be delegated to 
+     * Java, C#, JavaScript and PHP are supported.
+     * The actual processing will be delegated to
      * {@link BlancoCgStatementUtil#getForBeginJava(int, java.lang.String, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
@@ -307,7 +312,7 @@ public class BlancoCgLineUtil {
      * Gets a string indicating the start of the "for" statement.
      *
      * VB.NET is supported.
-     * The actual processing will be delegated to 
+     * The actual processing will be delegated to
      * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang
@@ -328,7 +333,7 @@ public class BlancoCgLineUtil {
      * Gets a string indicating the start of the "for" statement.
      *
      * VB.NET is supported.
-     * The actual processing will be delegated to 
+     * The actual processing will be delegated to
      * {@link BlancoCgStatementUtil#getForBeginVb(int, java.lang.String, java.lang.String, java.lang.String)}.
      *
      * @param argTargetLang

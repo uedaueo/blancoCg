@@ -65,6 +65,11 @@ public class BlancoCgSupportedLang {
     public static final int TS = 12;
 
     /**
+     * No.13 説明:PHP言語（型宣言対応版）。
+     */
+    public static final int PHP8 = 13;
+
+    /**
      * Undefined. A string or constant other than a string group that is undefined.
      */
     public static final int NOT_DEFINED = -1;
@@ -136,6 +141,11 @@ public class BlancoCgSupportedLang {
         if ("ts".equals(argCheck)) {
             return true;
         }
+        // No.13
+        // 説明:PHP言語（型宣言対応版）。
+        if ("php8".equals(argCheck)) {
+            return true;
+        }
         return false;
     }
 
@@ -204,6 +214,11 @@ public class BlancoCgSupportedLang {
         // No.12
         // 説明:TypeScript言語。
         if ("ts".equalsIgnoreCase(argCheck)) {
+            return true;
+        }
+        // No.13
+        // 説明:PHP言語（型宣言対応版）。
+        if ("php8".equalsIgnoreCase(argCheck)) {
             return true;
         }
         return false;
@@ -278,6 +293,11 @@ public class BlancoCgSupportedLang {
         if ("ts".equals(argCheck)) {
             return TS;
         }
+        // No.13
+        // 説明:PHP言語（型宣言対応版）。
+        if ("php8".equals(argCheck)) {
+            return PHP8;
+        }
 
         // No matching constants were found.
         return NOT_DEFINED;
@@ -351,6 +371,11 @@ public class BlancoCgSupportedLang {
         // 説明:TypeScript言語。
         if (argCheck == TS) {
             return "ts";
+        }
+        // No.13
+        // 説明:PHP言語（型宣言対応版）。
+        if (argCheck == PHP8) {
+            return "php8";
         }
         // Undefined.
         if (argCheck == NOT_DEFINED) {
