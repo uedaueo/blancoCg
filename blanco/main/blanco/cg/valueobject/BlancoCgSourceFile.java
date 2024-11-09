@@ -107,6 +107,14 @@ public class BlancoCgSourceFile {
     private boolean fIsImport = true;
 
     /**
+     * nullableな型に対して | undefined | null を追加付与するかどうかのフラグです
+     *
+     * フィールド: [isStrictNullable]。
+     * デフォルト: [false]。
+     */
+    private boolean fIsStrictNullable = false;
+
+    /**
      * フィールド [name] の値を設定します。
      *
      * フィールドの説明: [このファイルのファイル名です。]。
@@ -404,6 +412,29 @@ public class BlancoCgSourceFile {
     }
 
     /**
+     * フィールド [isStrictNullable] の値を設定します。
+     *
+     * フィールドの説明: [nullableな型に対して | undefined | null を追加付与するかどうかのフラグです]。
+     *
+     * @param argIsStrictNullable フィールド[isStrictNullable]に設定する値。
+     */
+    public void setIsStrictNullable(final boolean argIsStrictNullable) {
+        fIsStrictNullable = argIsStrictNullable;
+    }
+
+    /**
+     * フィールド [isStrictNullable] の値を取得します。
+     *
+     * フィールドの説明: [nullableな型に対して | undefined | null を追加付与するかどうかのフラグです]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[isStrictNullable]から取得した値。
+     */
+    public boolean getIsStrictNullable() {
+        return fIsStrictNullable;
+    }
+
+    /**
      * Gets the string representation of this value object.
      *
      * <P>Precautions for use</P>
@@ -431,6 +462,7 @@ public class BlancoCgSourceFile {
         buf.append(",classList=" + fClassList);
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",isImport=" + fIsImport);
+        buf.append(",isStrictNullable=" + fIsStrictNullable);
         buf.append("]");
         return buf.toString();
     }
@@ -492,5 +524,8 @@ public class BlancoCgSourceFile {
         // Name: fIsImport
         // Type: boolean
         target.fIsImport = this.fIsImport;
+        // Name: fIsStrictNullable
+        // Type: boolean
+        target.fIsStrictNullable = this.fIsStrictNullable;
     }
 }

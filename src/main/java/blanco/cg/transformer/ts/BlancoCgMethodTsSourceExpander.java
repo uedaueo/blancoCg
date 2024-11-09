@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * Expands BlancoCgMethod into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.
  *
  * @author IGA Tosiki
@@ -47,7 +47,7 @@ class BlancoCgMethodTsSourceExpander {
 
     /**
      * Expands a method here.
-     * 
+     *
      * @param cgMethod
      *            The method to be processed.
      * @param argSourceFile
@@ -83,12 +83,12 @@ class BlancoCgMethodTsSourceExpander {
         expandAnnotationList(cgMethod, argSourceLines);
 
         // Expands the body part of the method.
-        expandMethodBody(cgMethod, argSourceLines, argIsInterface);
+        expandMethodBody(cgMethod, argSourceLines, argIsInterface, argSourceFile);
     }
 
     /**
      * Before source code expansion, gathers the necessary information.
-     * 
+     *
      * @param cgMethod
      *            A method object.
      * @param argSourceFile
@@ -142,7 +142,7 @@ class BlancoCgMethodTsSourceExpander {
 
     /**
      * Expands the body part of the method.
-     * 
+     *
      * @param cgMethod
      *            A method object.
      * @param argSourceLines
@@ -150,10 +150,11 @@ class BlancoCgMethodTsSourceExpander {
      * @param argIsInterface
      *            Whether it is an instance or not.
      */
-    private void expandMethodBody(final BlancoCgMethod cgMethod,
+    private void expandMethodBody(
+            final BlancoCgMethod cgMethod,
             final List<String> argSourceLines,
-            final boolean argIsInterface) {
-
+            final boolean argIsInterface,
+            final BlancoCgSourceFile argSourceFile) {
         boolean isSetter = false;
         final StringBuffer buf = new StringBuffer();
 
@@ -201,6 +202,9 @@ class BlancoCgMethodTsSourceExpander {
             if (!cgParameter.getNotnull()) {
                 // nullable
                 buf.append(" | undefined");
+                if (argSourceFile.getIsStrictNullable()) {
+                    buf.append(" | null");
+                }
             }
 
             // If a default value is specified, this will be expanded.
@@ -226,6 +230,9 @@ class BlancoCgMethodTsSourceExpander {
                 if (!cgMethod.getNotnull()) {
                     // nullable
                     buf.append(" | undefined");
+                    if (argSourceFile.getIsStrictNullable()) {
+                        buf.append(" | null");
+                    }
                 }
             } else {
                 /*
@@ -287,7 +294,7 @@ class BlancoCgMethodTsSourceExpander {
 
     /**
      * Expands the line.
-     * 
+     *
      * @param cgMethod
      *            Method information.
      * @param argSourceLines

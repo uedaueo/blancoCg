@@ -55,6 +55,8 @@ public class BlancoCgTransformerTsTest {
 
         // Generates a TypeScript-style import statement.
         cgSourceFile.getHeaderList().add("import {MyInterface} from \"./MyInterface\"");
+        // Strict Nullable
+        cgSourceFile.setIsStrictNullable(true);
 
         // Generates the class.
         final BlancoCgClass cgClass = cgFactory.createClass("MyClass",

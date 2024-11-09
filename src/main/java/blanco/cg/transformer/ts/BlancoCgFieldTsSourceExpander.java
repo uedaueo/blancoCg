@@ -131,11 +131,16 @@ class BlancoCgFieldTsSourceExpander {
         if (!cgField.getNotnull() ||
                 (!argIsInterface && BlancoStringUtil.null2Blank(cgField.getDefault()).length() == 0)) {
             // nullable
-            buf.append("?");
+            if (!argSourceFile.getIsStrictNullable()) {
+                buf.append("?");
+            }
         }
         /* type inference (omit type declaration) */
         if (!cgField.getTypeInference()) {
             buf.append(": " + BlancoCgTypeTsSourceExpander.toTypeString(cgField.getType()));
+            if (!cgField.getNotnull() && argSourceFile.getIsStrictNullable()) {
+                buf.append(" | undefined | null");
+            }
         }
 
         // If a default value is specified, this will be expanded.
