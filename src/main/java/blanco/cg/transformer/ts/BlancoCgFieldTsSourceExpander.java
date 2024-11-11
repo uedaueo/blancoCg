@@ -131,9 +131,7 @@ class BlancoCgFieldTsSourceExpander {
         if (!cgField.getNotnull() ||
                 (!argIsInterface && BlancoStringUtil.null2Blank(cgField.getDefault()).length() == 0)) {
             // nullable
-            if (!argSourceFile.getIsStrictNullable()) {
-                buf.append("?");
-            }
+            buf.append("?");
         }
         /* type inference (omit type declaration) */
         if (!cgField.getTypeInference()) {
