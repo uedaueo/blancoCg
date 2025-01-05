@@ -192,6 +192,24 @@ class BlancoCgMethodKotlinSourceExpander {
 
             buf.append("fun ");
 
+            /* expand virtual parameters if exits */
+            if (cgMethod.getVirtualParameterList() != null && cgMethod.getVirtualParameterList().size() > 0 ) {
+                // Assumes that "<>" is not included.
+                buf.append("<");
+                int count = 0;
+                for (BlancoCgVirtualParameter vparm : cgMethod.getVirtualParameterList()) {
+                    if (count > 0) {
+                        buf.append(", ");
+                    }
+                    buf.append(vparm.getType().getName());
+                    count++;
+                }
+                buf.append("> ");
+            } else if (cgMethod.getVirtualParameterDefinition() != null && cgMethod.getVirtualParameterDefinition().length() > 0) {
+                // Assumes that "< >" is included.
+                buf.append(cgMethod.getVirtualParameterDefinition() + " ");
+            }
+
             buf.append(cgMethod.getName() + "(");
             for (int index = 0; index < cgMethod.getParameterList().size(); index++) {
                 final BlancoCgParameter cgParameter = cgMethod

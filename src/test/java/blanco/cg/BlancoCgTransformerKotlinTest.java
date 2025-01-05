@@ -14,18 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import blanco.cg.valueobject.*;
 import org.junit.jupiter.api.Test;
 
 import blanco.cg.transformer.BlancoCgTransformerFactory;
-import blanco.cg.valueobject.BlancoCgClass;
-import blanco.cg.valueobject.BlancoCgEnum;
-import blanco.cg.valueobject.BlancoCgEnumElement;
-import blanco.cg.valueobject.BlancoCgField;
-import blanco.cg.valueobject.BlancoCgInterface;
-import blanco.cg.valueobject.BlancoCgMethod;
-import blanco.cg.valueobject.BlancoCgParameter;
-import blanco.cg.valueobject.BlancoCgSourceFile;
-import blanco.cg.valueobject.BlancoCgType;
 
 /**
  * Generation test for Kotilin.
@@ -189,6 +181,14 @@ public class BlancoCgTransformerKotlinTest {
                 .add(
                         cgFactory.createParameter("argDate", "java.util.Date",
                                 "Date argument."));
+
+        // Defines the virtual parameters.
+//        cgMethod.setVirtualParameterDefinition("<T>");
+        BlancoCgVirtualParameter vparam = cgFactory.createVirtualParameter("typeT", "T", "This is a virtual parameter of the generic type T.");
+        cgMethod.getVirtualParameterList().add(vparam);
+        vparam = cgFactory.createVirtualParameter("typeS", "S", "This is a virtual parameter of the generic type S.");
+        cgMethod.getVirtualParameterList().add(vparam);
+
         // Sets the return value.
         cgMethod.setReturn(cgFactory.createReturn("boolean", "True if success."));
 
