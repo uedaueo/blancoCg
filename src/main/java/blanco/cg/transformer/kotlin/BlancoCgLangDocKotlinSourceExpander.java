@@ -28,16 +28,13 @@ import java.util.List;
 
 import blanco.cg.BlancoCgSupportedLang;
 import blanco.cg.util.BlancoCgSourceUtil;
-import blanco.cg.valueobject.BlancoCgException;
-import blanco.cg.valueobject.BlancoCgLangDoc;
-import blanco.cg.valueobject.BlancoCgLangDocTag;
-import blanco.cg.valueobject.BlancoCgParameter;
+import blanco.cg.valueobject.*;
 import blanco.commons.util.BlancoNameUtil;
 import blanco.commons.util.BlancoStringUtil;
 
 /**
  * Expands BlancoCgLangDoc (language document) into source code.
- * 
+ *
  * This class is a separate expansion feature of the transformer that auto-generates source code from blancoCg value objects.<br>
  * This is a common process to expand various language documents such as classes, methods, and fields.
  *
@@ -51,7 +48,7 @@ class BlancoCgLangDocKotlinSourceExpander {
 
     /**
      * Expands the source code based on the language document information.
-     * 
+     *
      * @param langDoc
      *            The language document information.
      * @param argSourceLines
@@ -69,7 +66,7 @@ class BlancoCgLangDocKotlinSourceExpander {
 
     /**
      * Expands the main body of the language document.
-     * 
+     *
      * This method is also used from the file header expansion of the source file.
      *
      * @param langDoc
@@ -157,6 +154,25 @@ class BlancoCgLangDocKotlinSourceExpander {
                 bufParameter.append(" "
                         + BlancoCgSourceUtil.escapeStringAsLangDoc(TARGET_LANG,
                                 cgParameter.getDescription()));
+            }
+            argSourceLines.add(bufParameter.toString());
+        }
+
+        // Expands virtual parameters.
+        for (BlancoCgVirtualParameter cgVirtualParameter : langDoc.getVirtualParameterList()) {
+            // Inserts a blank line.
+            if (isLangDocTagStarted == false) {
+                isLangDocTagStarted = true;
+                argSourceLines.add("*");
+            }
+
+            final StringBuffer bufParameter = new StringBuffer();
+            bufParameter.append("* @param <" + cgVirtualParameter.getType().getName() + "> ");
+            if (BlancoStringUtil.null2Blank(cgVirtualParameter.getDescription())
+                    .length() > 0) {
+                bufParameter.append(" "
+                        + BlancoCgSourceUtil.escapeStringAsLangDoc(TARGET_LANG,
+                        cgVirtualParameter.getDescription()));
             }
             argSourceLines.add(bufParameter.toString());
         }

@@ -126,6 +126,11 @@ class BlancoCgMethodKotlinSourceExpander {
             cgMethod.getLangDoc().getParameterList().add(cgParameter);
         }
 
+        // Adds virtual parameter (generic) to langDoc.
+        if (cgMethod.getVirtualParameterList() != null && cgMethod.getVirtualParameterList().size() > 0) {
+            cgMethod.getLangDoc().getVirtualParameterList().addAll(cgMethod.getVirtualParameterList());
+        }
+
         if (cgMethod.getReturn() != null) {
             BlancoCgType cgType = BlancoCgSourceUtil.parseTypeWithGenerics(cgMethod.getReturn().getType());
             cgMethod.getReturn().setType(cgType);
