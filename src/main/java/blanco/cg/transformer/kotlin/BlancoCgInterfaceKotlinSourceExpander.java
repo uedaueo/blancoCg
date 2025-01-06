@@ -120,7 +120,7 @@ class BlancoCgInterfaceKotlinSourceExpander {
 
             if (index == 0) {
                 argBuf.append(" : "
-                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + "()");
+                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + " ");
             } else {
                 throw new IllegalArgumentException("In Kotlin, inheritance can only be performed once.");
             }

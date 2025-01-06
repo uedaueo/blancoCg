@@ -332,8 +332,10 @@ public class BlancoCgTransformerKotlinTest {
         cgSourceFile.getInterfaceList().add(cgInterface);
         cgInterface.getLangDoc().getTagList().add(
                 cgOf.createLangDocTag("author", null, "blanco Framework"));
+//        cgInterface.getExtendClassList().add(
+//                cgOf.createType("java.lang.Thread"));
         cgInterface.getExtendClassList().add(
-                cgOf.createType("java.lang.Thread"));
+                cgOf.createType("java.util.ArrayList"));
 
         // Generates a field.
         final BlancoCgField cgField = cgOf.createField("myField",
