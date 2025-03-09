@@ -336,6 +336,8 @@ public class BlancoCgTransformerKotlinTest {
 //                cgOf.createType("java.lang.Thread"));
         cgInterface.getExtendClassList().add(
                 cgOf.createType("java.util.ArrayList"));
+        cgInterface.getExtendClassList().add(
+                cgOf.createType("java.util.Map"));
 
         // Generates a field.
         final BlancoCgField cgField = cgOf.createField("myField",

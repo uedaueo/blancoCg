@@ -112,6 +112,7 @@ class BlancoCgInterfaceKotlinSourceExpander {
      */
     private void expandExtendClassList(final BlancoCgInterface cgClass,
                                           final BlancoCgSourceFile argSourceFile, final StringBuffer argBuf) {
+        Boolean isFirst = true;
         for (int index = 0; index < cgClass.getExtendClassList().size(); index++) {
             final BlancoCgType type = BlancoCgSourceUtil.parseTypeWithGenerics(cgClass.getExtendClassList().get(index));
 
@@ -120,10 +121,17 @@ class BlancoCgInterfaceKotlinSourceExpander {
 
             if (index == 0) {
                 argBuf.append(" : "
-                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type) + " ");
+                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+                isFirst = false;
             } else {
-                throw new IllegalArgumentException("In Kotlin, inheritance can only be performed once.");
+                // In kotlin multiple extends of interface is permitted.
+                argBuf.append(", "
+                        + BlancoCgTypeKotlinSourceExpander.toTypeString(type));
+//                throw new IllegalArgumentException("In Kotlin, inheritance can only be performed once.");
             }
+        }
+        if (!isFirst) {
+            argBuf.append(" ");
         }
     }
 
