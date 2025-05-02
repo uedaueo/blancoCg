@@ -122,6 +122,14 @@ public class BlancoCgClass {
     private boolean fNoClassDeclare = false;
 
     /**
+     * trueの場合、class に代えて object でクラス宣言を行います。
+     *
+     * フィールド: [objectClassDeclare]。
+     * デフォルト: [false]。
+     */
+    private boolean fObjectClassDeclare = false;
+
+    /**
      * 言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。
      *
      * フィールド: [langDoc]。
@@ -476,6 +484,29 @@ public class BlancoCgClass {
     }
 
     /**
+     * フィールド [objectClassDeclare] の値を設定します。
+     *
+     * フィールドの説明: [trueの場合、class に代えて object でクラス宣言を行います。]。
+     *
+     * @param argObjectClassDeclare フィールド[objectClassDeclare]に設定する値。
+     */
+    public void setObjectClassDeclare(final boolean argObjectClassDeclare) {
+        fObjectClassDeclare = argObjectClassDeclare;
+    }
+
+    /**
+     * フィールド [objectClassDeclare] の値を取得します。
+     *
+     * フィールドの説明: [trueの場合、class に代えて object でクラス宣言を行います。]。
+     * デフォルト: [false]。
+     *
+     * @return フィールド[objectClassDeclare]から取得した値。
+     */
+    public boolean getObjectClassDeclare() {
+        return fObjectClassDeclare;
+    }
+
+    /**
      * フィールド [langDoc] の値を設定します。
      *
      * フィールドの説明: [言語ドキュメントを蓄えます。デフォルト以上の表現を追加する場合には、インスタンスを生成して値をセットしてから自動生成します。]。
@@ -595,6 +626,7 @@ public class BlancoCgClass {
         buf.append(",fieldList=" + fFieldList);
         buf.append(",methodList=" + fMethodList);
         buf.append(",noClassDeclare=" + fNoClassDeclare);
+        buf.append(",objectClassDeclare=" + fObjectClassDeclare);
         buf.append(",langDoc=" + fLangDoc);
         buf.append(",constructorArgList=" + fConstructorArgList);
         buf.append(",plainTextList=" + fPlainTextList);
@@ -663,6 +695,9 @@ public class BlancoCgClass {
         // Name: fNoClassDeclare
         // Type: boolean
         target.fNoClassDeclare = this.fNoClassDeclare;
+        // Name: fObjectClassDeclare
+        // Type: boolean
+        target.fObjectClassDeclare = this.fObjectClassDeclare;
         // Name: fLangDoc
         // Type: blanco.cg.valueobject.BlancoCgLangDoc
         // Field[fLangDoc] is an unsupported type[blanco.cg.valueobject.BlancoCgLangDoc].

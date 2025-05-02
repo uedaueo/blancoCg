@@ -522,4 +522,105 @@ public class BlancoCgTransformerKotlinTest {
                 .getKotlinSourceTransformer();
         cgTransformerKotlin.transform(cgSourceFile, new File("./tmp/blanco"));
     }
+
+    /**
+     * A test for an object class.
+     * @throws Exception
+     */
+    @Test
+    public void testTransformerObject() throws Exception {
+        final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
+                .getInstance();
+
+        // Generates a source file.
+        final BlancoCgSourceFile cgSourceFile = cgFactory.createSourceFile(
+                "myprog", "Class for testing");
+        cgSourceFile.setEncoding("UTF-8");
+        cgSourceFile.getImportList().add("java.text.NumberFormat");
+        // Import test of the same package.
+        cgSourceFile.getImportList().add("myprog.MyClass");
+
+        // Generates the class.
+        final BlancoCgClass cgClass = cgFactory.createClass("MyObject",
+                "This class is for testing.");
+        cgSourceFile.getClassList().add(cgClass);
+        cgClass.getLangDoc().getTagList().add(
+                cgFactory.createLangDocTag("author", null, "blanco Framework"));
+        cgClass.setGenerics("S");
+        BlancoCgType extendsStr = cgFactory.createType("myprog.MyClass");
+        extendsStr.setConstructorArgs("hoge");
+        extendsStr.setGenerics("S");
+        cgClass.getExtendClassList().add(extendsStr);
+        cgClass.getImplementInterfaceList().add(
+                cgFactory.createType("myprog.MyInterface"));
+        cgClass.setFinal(true);
+        cgClass.setObjectClassDeclare(true);
+
+        // Enumeration. Does not support auto-generation of enumerations in kotlin.
+        final BlancoCgEnum cgEnum = cgFactory.createEnum("FavorColor",
+                "Testing enumerated type.");
+        cgClass.getEnumList().add(cgEnum);
+        cgEnum.getElementList().add(cgFactory.createEnumElement("Red", "あか"));
+        cgEnum.getElementList().add(
+                cgFactory.createEnumElement("Yellow", "きいろ"));
+        cgEnum.getElementList().add(cgFactory.createEnumElement("Blue", "あお"));
+
+        // Generates a field.
+        final BlancoCgField cgField = cgFactory.createField("myField",
+                "java.util.Date", "Testing a date field.");
+        cgClass.getFieldList().add(cgField);
+        cgField.setDefault("Date()");
+
+//        final BlancoCgField cgField2 = cgFactory.createField("myField2",
+//                "java.util.Date", "Testing a date field v2.");
+//        cgClass.getFieldList().add(cgField2);
+//        cgField2.getType().setArray(true);
+//        cgField2.getType().setArrayDimension(1);
+
+        // Testing static initializer.
+        {
+            // Generates methods.
+            final BlancoCgMethod cgMethod = cgFactory.createMethod("myStatic",
+                    "Testing static initializer.");
+            cgClass.getMethodList().add(cgMethod);
+            cgMethod.setStaticInitializer(true);
+            cgMethod.getLineList().add("println()");
+        }
+
+        // Generates a method.
+        final BlancoCgMethod cgMethod = cgFactory.createMethod("myMethod",
+                "Testing method.");
+        cgClass.getMethodList().add(cgMethod);
+
+        // Adds parameters.
+        BlancoCgParameter param01 = cgFactory.createParameter("argString", "java.lang.String",
+                "String argument.");
+        cgMethod.getParameterList().add(param01);
+        param01.getAnnotationList().add("Body");
+        param01.getAnnotationList().add("NotNull");
+        cgMethod.getParameterList()
+                .add(
+                        cgFactory.createParameter("argDate", "java.util.Date",
+                                "Date argument."));
+        // Sets the return value.
+        cgMethod.setReturn(cgFactory.createReturn("boolean", "True if success."));
+//        cgMethod.getReturn().setNullable(true);
+
+        cgMethod.getThrowList().add(
+                cgFactory.createException("java.io.IOException",
+                        "If an I/O exception occurs."));
+
+        // Adds an annotation.
+        cgMethod.getAnnotationList().add(
+                "Copyright(value=\"blanco Framework\")");
+        cgMethod.setOverride(true);
+
+        // Adds the contents of the method.
+        cgMethod.getLineList().add("// Testing assignment.");
+        cgMethod.getLineList().add("val a : Int = 0");
+
+        final BlancoCgTransformer cgTransformerKotlin = BlancoCgTransformerFactory
+                .getKotlinSourceTransformer();
+        cgTransformerKotlin.transform(cgSourceFile, new File("./tmp/blanco"));
+    }
 }

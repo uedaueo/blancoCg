@@ -81,14 +81,18 @@ class BlancoCgClassKotlinSourceExpander {
                 buf.append(cgClass.getAccess() + " ");
             }
         }
-        if (cgClass.getAbstract()) {
-            buf.append("abstract ");
+        if (!cgClass.getObjectClassDeclare()) {
+            if (cgClass.getAbstract()) {
+                buf.append("abstract ");
+            }
+            // In Kotlin, it defaults final.
+            if (!cgClass.getFinal()) {
+                buf.append("open ");
+            }
+            buf.append("class " + cgClass.getName());
+        } else {
+            buf.append("object " + cgClass.getName());
         }
-        // In Kotlin, it defaults final.
-        if (!cgClass.getFinal()) {
-            buf.append("open ");
-        }
-        buf.append("class " + cgClass.getName());
 
         // Expands the Generic of the class.
         if (cgClass.getGenerics() != null && cgClass.getGenerics().length() > 0) {
