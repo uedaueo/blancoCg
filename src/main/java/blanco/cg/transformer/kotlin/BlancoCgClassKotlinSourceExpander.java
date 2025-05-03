@@ -57,6 +57,9 @@ class BlancoCgClassKotlinSourceExpander {
     public void transformClass(final BlancoCgClass cgClass,
             final BlancoCgSourceFile argSourceFile,
             final List<java.lang.String> argSourceLines) {
+
+        boolean hasFields = false;
+
         // First, it expands the class information into a LangDoc.
         if (cgClass.getLangDoc() == null) {
             // If LangDoc is not specified, creates an instance here.
@@ -70,59 +73,61 @@ class BlancoCgClassKotlinSourceExpander {
         new BlancoCgLangDocKotlinSourceExpander().transformLangDoc(cgClass
                 .getLangDoc(), argSourceLines);
 
-        // Expands annotations.
-        BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgClass.getAnnotationList(), argSourceLines);
+        Boolean isClassStyle = !cgClass.getNoClassDeclare();
+        if (isClassStyle) {
+            // Expands annotations.
+            BlancoCgLineUtil.expandAnnotationList(BlancoCgSupportedLang.KOTLIN, cgClass.getAnnotationList(), argSourceLines);
 
-        final StringBuffer buf = new StringBuffer();
+            final StringBuffer buf = new StringBuffer();
 
-        if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0) {
-            // In Kotlin, it defaults public.
-            if (!"public".equals(cgClass.getAccess())) {
-                buf.append(cgClass.getAccess() + " ");
+            if (BlancoStringUtil.null2Blank(cgClass.getAccess()).length() > 0) {
+                // In Kotlin, it defaults public.
+                if (!"public".equals(cgClass.getAccess())) {
+                    buf.append(cgClass.getAccess() + " ");
+                }
             }
-        }
-        if (!cgClass.getObjectClassDeclare()) {
-            if (cgClass.getAbstract()) {
-                buf.append("abstract ");
+            if (!cgClass.getObjectClassDeclare()) {
+                if (cgClass.getAbstract()) {
+                    buf.append("abstract ");
+                }
+                // In Kotlin, it defaults final.
+                if (!cgClass.getFinal()) {
+                    buf.append("open ");
+                }
+                buf.append("class " + cgClass.getName());
+            } else {
+                buf.append("object " + cgClass.getName());
             }
-            // In Kotlin, it defaults final.
-            if (!cgClass.getFinal()) {
-                buf.append("open ");
+
+            // Expands the Generic of the class.
+            if (cgClass.getGenerics() != null && cgClass.getGenerics().length() > 0) {
+                buf.append("<" + cgClass.getGenerics() + ">");
             }
-            buf.append("class " + cgClass.getName());
-        } else {
-            buf.append("object " + cgClass.getName());
+
+            // Expands the primary constructor.
+            /*
+             * In Kotlin, the primary constructor is written as part of the class definition.
+             */
+            expandPrimaryConstructorList(cgClass, argSourceFile, buf, argSourceLines);
+
+            // Expands a parent class.
+            boolean expanded = expandExtendClassList(cgClass, argSourceFile, buf);
+
+            // Expands a parent interface.
+            expandImplementInterfaceList(cgClass, argSourceFile, buf, expanded);
+
+            if (cgClass.getMethodList().size() > 0 ||
+                    cgClass.getEnumList().size() > 0 ||
+                    cgClass.getFieldList().size() > 0
+            ) {
+                // The start of a class block.
+                buf.append(" {");
+                hasFields = true;
+            }
+
+            // Finalizes the line and performs the export.
+            argSourceLines.add(buf.toString());
         }
-
-        // Expands the Generic of the class.
-        if (cgClass.getGenerics() != null && cgClass.getGenerics().length() > 0) {
-            buf.append("<" + cgClass.getGenerics() + ">");
-        }
-
-        // Expands the primary constructor.
-        /*
-         * In Kotlin, the primary constructor is written as part of the class definition.
-         */
-        expandPrimaryConstructorList(cgClass, argSourceFile, buf, argSourceLines);
-
-        // Expands a parent class.
-        boolean expanded = expandExtendClassList(cgClass, argSourceFile, buf);
-
-        // Expands a parent interface.
-        expandImplementInterfaceList(cgClass, argSourceFile, buf, expanded);
-
-        boolean hasFields = false;
-        if (cgClass.getMethodList().size() > 0 ||
-                cgClass.getEnumList().size() > 0 ||
-                cgClass.getFieldList().size() > 0
-        ) {
-            // The start of a class block.
-            buf.append(" {");
-            hasFields = true;
-        }
-
-        // Finalizes the line and performs the export.
-        argSourceLines.add(buf.toString());
 
         // In Kotlin, an enumeration is defined as a class, but for the time being, it is not subject to auto-generation. (tueda)
 
